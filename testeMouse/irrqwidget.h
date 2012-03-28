@@ -23,7 +23,6 @@ public:
     void deleteNo(ISceneNode* node);
     void buildIrrlichtScene();
     void createIrrlichtDevice();
-    void createSeguidor(line3df line);
     //-------------------------EVENTOS-DE-MOUSE---------------------------//
     void mouseMoveEvent( QMouseEvent* event );
     void mousePressEvent( QMouseEvent* event );
