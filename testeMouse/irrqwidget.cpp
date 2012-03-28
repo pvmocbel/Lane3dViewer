@@ -65,12 +65,7 @@ void IrrQWidget::buildIrrlichtScene(){
             seletor->drop();
         }
         posicao = cube->getPosition();
-//        if(seguidor){
-//            mesh_seguidor = geo->createCylinderMesh(1.0f,150.0f,10,SColor(255, 255, 0, 0),true,0.f);
-//            seguidor = iscene->addMeshSceneNode(mesh_seguidor);
-//            seguidor->setPosition(vector3df(40,0,100));
-//            seguidor->setRotation(vector3df(90,0,0));
-//        }
+
         //--------------------------------------ILUMINAÇÃO---------------------------------//
         ILightSceneNode *light = iscene->addLightSceneNode();
         light->setLightType( ELT_DIRECTIONAL );
@@ -88,8 +83,9 @@ void IrrQWidget::drawIrrlichtScene(){
        rot+=1;
        vector3df intersection;
        triangle3df tri;
+       
        line3df ray = iscene->getSceneCollisionManager()->getRayFromScreenCoordinates(idevice->getCursorControl()->getPosition(), camera);
-//       createSeguidor(ray);
+
        if (highlightedSceneNode){
             highlightedSceneNode->setMaterialFlag(EMF_WIREFRAME, false);
             highlightedSceneNode = 0;
@@ -119,6 +115,7 @@ void IrrQWidget::resizeEvent(QResizeEvent* event){
      }
     QWidget::resizeEvent(event);
 }
+
 void IrrQWidget::paintEvent( QPaintEvent *event ){
     if ( idevice != 0 ){
         QWidget::paintEvent(event);
@@ -133,12 +130,6 @@ QPaintEngine * IrrQWidget::paintEngine() const{
     }
 }
 //------------------------------------FIM-METODOS-QT---------------------------------//
-void IrrQWidget::createSeguidor(line3df line){
-//    if(seguidor!=0){
-//        seguidor->setPosition(vector3df(line.start.X,line.start.Y,0));
-////        seguidor->setPosition(vector3df(,myCursor->getPosition().Y,0));
-//    }
-}
 
 //-------------------------------------EVENTOS-DE-MOUSE---------------------------------------//
 void IrrQWidget::sendMouseEventToIrrlicht(QMouseEvent* event, bool pressedDown){
@@ -167,11 +158,10 @@ void IrrQWidget::sendMouseEventToIrrlicht(QMouseEvent* event, bool pressedDown){
         }
         irrEvent.MouseInput.X = event->x()-(idriver->getScreenSize().Width)/2;
         irrEvent.MouseInput.Y = -event->y()+ (idriver->getScreenSize().Height)/2;
-        qDebug()<<"MOUSE X "<< irrEvent.MouseInput.X<<"\tMOUSE Y "<<irrEvent.MouseInput.Y;
         irrEvent.MouseInput.Wheel = 0.0f; // Zero is better than undefined
-        idevice->postEventFromUser(irrEvent);
-        qDebug()<<"MOUSE X "<< idevice->getCursorControl()->getPosition().X<<"\tMOUSE Y "<<idevice->getCursorControl()->getPosition().Y;
+        idevice->postEventFromUser(irrEvent);       
 }
+
 void IrrQWidget::mouseMoveEvent(QMouseEvent *event){
     if (idevice != 0){
         sendMouseEventToIrrlicht(event, false);
@@ -179,6 +169,7 @@ void IrrQWidget::mouseMoveEvent(QMouseEvent *event){
     }
     event->ignore();
 }
+
 void IrrQWidget::mousePressEvent( QMouseEvent* event ){
     if (idevice != 0){
             sendMouseEventToIrrlicht(event, true);
@@ -186,6 +177,7 @@ void IrrQWidget::mousePressEvent( QMouseEvent* event ){
     }
     event->ignore();
 }
+
 void IrrQWidget::mouseReleaseEvent( QMouseEvent* event){
     if (idevice != 0){
             sendMouseEventToIrrlicht(event, false);
