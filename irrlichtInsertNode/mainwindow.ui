@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="start">
+      <property name="maximumSize">
+       <size>
+        <width>92</width>
+        <height>27</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="cubo">
+      <property name="maximumSize">
+       <size>
+        <width>85</width>
+        <height>27</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>cubo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="linha">
+      <property name="maximumSize">
+       <size>
+        <width>92</width>
+        <height>27</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>linha</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="esfera">
+      <property name="maximumSize">
+       <size>
+        <width>92</width>
+        <height>27</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>esfera</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="cone">
+      <property name="maximumSize">
+       <size>
+        <width>92</width>
+        <height>27</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>cone</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
