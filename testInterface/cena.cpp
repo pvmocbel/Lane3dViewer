@@ -1,16 +1,21 @@
 #include "cena.h"
 #include "getdimcube.h"
 
-Cena::Cena():IrrViewer(0),camera(0),light(0),mouse_key_test(false),
-    selectedSceneNode(0),highlightedSceneNode(0),collMan(0),duplicateNode_mouse_key(false)
+Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
+    selectedSceneNode(0),highlightedSceneNode(0),
+    collMan(0),duplicateNode_mouse_key(false),
+    mouseXi(0),mouseYi(0),dx(0),dy(0)
 {
+    camera[0] = 0;
+    camera[1] = 0;
+    camera[2] = 0;
+    camera[3] = 0;
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
     key_m_on = false;
 }
 
-Cena::~Cena()
-{}
+Cena::~Cena(){}
 
 void Cena::cenaIrrlicht()
 {
@@ -24,9 +29,11 @@ void Cena::cenaIrrlicht()
 
 void Cena::cenaCameras(){
     if (smgr) {
-        camera  = smgr->addCameraSceneNode();
-        camera->setPosition(irr::core::vector3df(60,0,0));
-        camera->setTarget(irr::core::vector3df(0,0,0));
+        camera[0] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
+        camera[1] = smgr->addCameraSceneNode(0, Vector3df(0, 100, 0), Vector3df(0, 0, 0));
+        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
+        camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
+        smgr->setActiveCamera(camera[0]);
     }
 }
 
@@ -40,9 +47,7 @@ void Cena::cenaIluminacao(){
     }
 }
 
-void Cena::cenaVisualizacoes(){
-
-}
+void Cena::cenaVisualizacoes(){}
 
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
@@ -54,7 +59,19 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 duplicateSceneNode();
                 break;
             case (Qt::Key_M):
-                key_m_on = true;
+                key_m_on =true;
+                break;
+            case (Qt::Key_1):
+                smgr->setActiveCamera(camera[0]);
+                break;
+            case (Qt::Key_2):
+                smgr->setActiveCamera(camera[1]);
+                break;
+            case (Qt::Key_3):
+                smgr->setActiveCamera(camera[2]);
+                break;
+            case (Qt::Key_4):
+                smgr->setActiveCamera(camera[3]);
                 break;
             default:
                 break;
@@ -64,11 +81,13 @@ void Cena::keyPressEvent(QKeyEvent *event){
    event->ignore();
 }
 
-
 void Cena::mousePressEvent( QMouseEvent* event )
 {
     if (smgr) {
+        mouseXi = event->x();
+        mouseYi = event->y();
        sendMouseEventToIrrlicht(event, true);
+       (key_m_on)?(false):(true);
        drawIrrlichtScene();
     }
     event->ignore();
@@ -78,12 +97,30 @@ void Cena::mouseReleaseEvent( QMouseEvent* event )
 {
     if (smgr) {
         sendMouseEventToIrrlicht(event, false);
-        if(key_m_on) moveSceneNode(mouse_release_position);
         duplicateNode_mouse_key = false;
+//        key_m_on = false;
         drawIrrlichtScene();
     }
     event->ignore();
 }
+
+void Cena::mouseMoveEvent(QMouseEvent *event)
+{
+    if(smgr)
+    {
+        if(highlightedSceneNode!=0 && selectedSceneNode!=0 && key_m_on){
+            dx = event->x() - mouseXi;
+            dy = event->y() - mouseYi;
+            highlightedSceneNode->setPosition(Vector3df(highlightedSceneNode->getPosition().X + 0.3*dx,
+                                                        highlightedSceneNode->getPosition().Y - 0.3*dy,
+                                                        highlightedSceneNode->getPosition().Z));
+            drawIrrlichtScene();
+        }
+
+    }
+    event->ignore();
+}
+
 
 void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 {
@@ -119,13 +156,12 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
     event->ignore();
 }
 
-void Cena::insertNode(int id, IrrNode* node){
-
+void Cena::insertNode(int id, IrrNode* node)
+{
     if(smgr){
         getDimCube* w = new getDimCube(0);
         w->show();
         w->exec();
-
         if(w->isOk()){
             Dim3df dim = w->getDimension();
             Pos3df p = w->getPosition();
@@ -133,7 +169,6 @@ void Cena::insertNode(int id, IrrNode* node){
             nodes[id] = node;
             drawIrrlichtScene();
         }
-
         delete w;
     }
 }
@@ -142,15 +177,8 @@ IrrNode* Cena::getNode(int id){
 
 }
 
-void Cena::moveSceneNode(Vector3df position){
-    if(smgr){
-        if(highlightedSceneNode!=0 && selectedSceneNode!=0){
-            selectedSceneNode->setPosition(Vector3df(position.X+mouse_press_position.X,position.Y-mouse_press_position.Y,0));
-        }
-    }
-}
-
-void Cena::duplicateSceneNode(){
+void Cena::duplicateSceneNode()
+{
     if(smgr){
         if(highlightedSceneNode!=0 && selectedSceneNode!=0){
             irr::scene::ISceneNode* node =  selectedSceneNode->clone();
@@ -161,7 +189,8 @@ void Cena::duplicateSceneNode(){
     }
 }
 
-void Cena::removeSceneNode(){
+void Cena::removeSceneNode()
+{
     if(smgr){
         if(highlightedSceneNode!=0 && selectedSceneNode!=0){
             selectedSceneNode->remove();
@@ -176,7 +205,7 @@ void Cena::drawIrrlichtScene()
     if(smgr){
         irr::core::vector3df intersection;
         irr::core::triangle3df tri;
-        irr::core::line3df ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(device->getCursorControl()->getPosition(), camera);
+        irr::core::line3df ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(device->getCursorControl()->getPosition(), smgr->getActiveCamera());
 
         if (highlightedSceneNode){
              highlightedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
@@ -188,6 +217,7 @@ void Cena::drawIrrlichtScene()
         if (selectedSceneNode){
               highlightedSceneNode = selectedSceneNode;
               highlightedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
+              qDebug()<<"position x ="<<highlightedSceneNode->getPosition().X<<" y = "<<highlightedSceneNode->getPosition().Y<<" z = "<<highlightedSceneNode->getPosition().Z;
         }
 
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));

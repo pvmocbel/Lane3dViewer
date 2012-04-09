@@ -20,7 +20,7 @@ private:
 
     irr::scene::ISceneNode *highlightedSceneNode;
     irr::scene::ISceneNode *selectedSceneNode;
-    irr::scene::ICameraSceneNode *camera;
+    irr::scene::ICameraSceneNode *camera[4];
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
 
@@ -45,6 +45,11 @@ public:
 
     bool mouse_key_test;
 
+    float mouseXi;
+    float mouseYi;
+    float dx;
+    float dy;
+
     void insertNode(int id, IrrNode* node);
     IrrNode* getNode(int id);
 
@@ -55,12 +60,11 @@ public:
 
     inline void removeSceneNode();
     inline void duplicateSceneNode();
-    inline void moveSceneNode(Vector3df );
 
     void drawIrrlichtScene();
 
     void keyPressEvent(QKeyEvent *event);
-
+    void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
     void sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown);
