@@ -4,7 +4,7 @@
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),highlightedSceneNode(0),
     collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0)
+    mouseXi(0),mouseYi(0),dx(0),dy(0),pivo(0),seta_pivo(0)
 {
     camera[0] = 0;
     camera[1] = 0;
@@ -28,11 +28,10 @@ void Cena::cenaIrrlicht()
 }
 
 void Cena::gizmo(){
-    if(smgr && key_m_on && highlightedSceneNode && selectedSceneNode)
+    if(smgr && key_m_on && highlightedSceneNode && selectedSceneNode )
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(highlightedSceneNode,smgr);
-        qDebug()<<"olaola";
+        node->criaGizmo(highlightedSceneNode,smgr, gizmo_X, gizmo_Y, gizmo_Z);
         drawIrrlichtScene();
     }
 }
@@ -119,13 +118,22 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 {
     if(smgr)
     {
-        if(highlightedSceneNode!=0 && selectedSceneNode!=0 && key_m_on){
+//        if(highlightedSceneNode!=0 && selectedSceneNode!=0 && key_m_on){
+//            dx = event->x() - mouseXi;
+//            dy = event->y() - mouseYi;
+//            highlightedSceneNode->setPosition(Vector3df(highlightedSceneNode->getPosition().X + 0.3*dx,
+//                                                        highlightedSceneNode->getPosition().Y - 0.3*dy,
+//                                                        highlightedSceneNode->getPosition().Z));
+//            drawIrrlichtScene();
+//        }
+
+        if(seta_pivo!=0 /*&& selectedSceneNode!=0 */&& key_m_on){
             dx = event->x() - mouseXi;
             dy = event->y() - mouseYi;
-            highlightedSceneNode->setPosition(Vector3df(highlightedSceneNode->getPosition().X + 0.3*dx,
-                                                        highlightedSceneNode->getPosition().Y - 0.3*dy,
-                                                        highlightedSceneNode->getPosition().Z));
-            drawIrrlichtScene();
+            seta_pivo->setPosition(Vector3df(seta_pivo->getPosition().X + 0.3*dx,
+                                                        seta_pivo->getPosition().Y - 0.3*dy,
+                                                        seta_pivo->getPosition().Z));
+        drawIrrlichtScene();
         }
 
     }
@@ -176,7 +184,7 @@ void Cena::insertNode(int id, IrrNode* node)
         if(w->isOk()){
             Dim3df dim = w->getDimension();
             Pos3df p = w->getPosition();
-            node->criaCubo(&id, smgr, p, dim);
+            node->criaCubo(&id, smgr, p, dim, video_driver);
             nodes[id] = node;
             drawIrrlichtScene();
         }
@@ -223,12 +231,29 @@ void Cena::drawIrrlichtScene()
              highlightedSceneNode = 0;
         }
 
-        selectedSceneNode = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, IDFlag_IsPickable);
+        pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, IDFlag_IsPickable);
+
+
+
+        if(pivo)
+        {
+            qDebug()<<"id "<<pivo->getID();
+            if((pivo->getID() & 1<<2) == 1<<2)
+            {
+                qDebug()<<"id "<<pivo->getID();
+                seta_pivo = pivo;
+            }
+            else{
+                selectedSceneNode = pivo;
+                qDebug()<<"selecao";
+            }
+
+        }
+        else {selectedSceneNode = 0;}
 
         if (selectedSceneNode){
               highlightedSceneNode = selectedSceneNode;
               highlightedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
-              qDebug()<<"position x ="<<highlightedSceneNode->getPosition().X<<" y = "<<highlightedSceneNode->getPosition().Y<<" z = "<<highlightedSceneNode->getPosition().Z;
         }
 
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));

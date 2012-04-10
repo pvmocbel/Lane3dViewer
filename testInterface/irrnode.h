@@ -17,11 +17,12 @@ public:
 
     IrrNode();
     irr::scene::ISceneNode* getNode()const {return selectedSceneNode;}
-    void criaCubo(const int* id, IrrSmgr* const , const Pos3df&, const Dim3df&);
+    void criaCubo(const int* id, IrrSmgr* const , const Pos3df&, const Dim3df&,  irr::video::IVideoDriver *video_driver);
     void criaReta();
     void criaEsfera();
     void criaCone();
-    void criaGizmo( irr::scene::ISceneNode* , IrrSmgr* const);
+    void criaGizmo( irr::scene::ISceneNode* , IrrSmgr* const, irr::scene::IMeshSceneNode*gizmo_X,
+                    irr::scene::IMeshSceneNode*gizmo_Y,  irr::scene::IMeshSceneNode *gizmo_Z);
 };
 
 #endif // IRRNODE_H

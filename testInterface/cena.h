@@ -18,9 +18,15 @@ private:
 
     irr::scene::ISceneNode *highlightedSceneNode;
     irr::scene::ISceneNode *selectedSceneNode;
+    irr::scene::ISceneNode *pivo;
+    irr::scene::ISceneNode *seta_pivo;
     irr::scene::ICameraSceneNode *camera[4];
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
+
+    irr::scene::IMeshSceneNode *gizmo_X;
+    irr::scene::IMeshSceneNode *gizmo_Y;
+    irr::scene::IMeshSceneNode *gizmo_Z;
 
     std::map<int, IrrNode*> nodes;
 

@@ -7,7 +7,9 @@
 typedef irr::core::vector3df Pos3df;
 typedef irr::core::vector3df Dim3df;
 typedef irr::scene::ISceneManager IrrSmgr;
+
 enum {ID_IsNotPickable = 0, IDFlag_IsPickable = 1 << 0, IDFlag_IsHighlightable = 1 << 1 };
+
 typedef irr::core::vector3df Vector3df;
 
 class IrrViewer : public QWidget
