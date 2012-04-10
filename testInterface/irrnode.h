@@ -2,7 +2,7 @@
 #define IRRNODE_H
 
 #include"irrviewer.h"
-
+typedef irr::core::vector3df Vector3df;
 class IrrNode
 {
 private:
@@ -21,6 +21,7 @@ public:
     void criaReta();
     void criaEsfera();
     void criaCone();
+    void criaGizmo( irr::scene::ISceneNode* , IrrSmgr* const);
 };
 
 #endif // IRRNODE_H

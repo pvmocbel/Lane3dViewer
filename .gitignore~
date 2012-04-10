@@ -2,3 +2,4 @@ moc_*
 *.o
 lane3D-buil-desktop/*
 Makefile
+*.pro*

@@ -40,3 +40,38 @@ void IrrNode::criaEsfera(){
 //    const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
 }
+
+void IrrNode::criaGizmo(irr::scene::ISceneNode* node, IrrSmgr* const smgr)
+{
+    const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+
+    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4, 8, 20.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,235,200,100), irr::video::SColor(255) );
+    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4, 8, 20.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,235,200,100), irr::video::SColor(255) );
+    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4, 8, 20.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,235,200,100), irr::video::SColor(255) );
+
+    irr::scene::IMeshSceneNode *gizmo_X = smgr->addMeshSceneNode(mesh_gizmo_X);
+    irr::scene::IMeshSceneNode *gizmo_Y = smgr->addMeshSceneNode(mesh_gizmo_Y);
+    irr::scene::IMeshSceneNode *gizmo_Z = smgr->addMeshSceneNode(mesh_gizmo_Z);
+
+    if(gizmo_X && gizmo_Y && gizmo_Z){
+
+//        gizmo_X->setPosition(Vector3df(node->getPosition().X, node->getPosition().Y, node->getPosition().Z));
+        gizmo_X->setPosition(Vector3df(0,0,0));
+        seletor = smgr->createOctTreeTriangleSelector(gizmo_X->getMesh(),gizmo_X,128);
+        gizmo_X->setTriangleSelector(seletor);
+        seletor->drop();
+
+        gizmo_Y->setRotation(Vector3df(0,0,90));
+//        gizmo_Y->setPosition(Vector3df(node->getPosition().X, node->getPosition().Y, node->getPosition().Z));
+        gizmo_Y->setPosition(Vector3df(0,0,0));
+        seletor = smgr->createOctTreeTriangleSelector(gizmo_Y->getMesh(),gizmo_Y,128);
+        gizmo_Y->setTriangleSelector(seletor);
+        seletor->drop();
+
+        gizmo_Z->setRotation(Vector3df(-90,0,0));
+//        gizmo_Z->setPosition(Vector3df(node->getPosition().X, node->getPosition().Y, node->getPosition().Z));
+        seletor = smgr->createOctTreeTriangleSelector(gizmo_Z->getMesh(),gizmo_Z,128);
+        gizmo_Z->setTriangleSelector(seletor);
+        seletor->drop();
+    }
+}

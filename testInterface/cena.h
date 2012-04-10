@@ -12,8 +12,6 @@
 typedef std::pair<int, int> PairInt;
 typedef std::map<int, std::map<int, std::set<int> > > MapNodes;
 
-typedef irr::core::vector3df Vector3df;
-
 class Cena: public IrrViewer
 {
 private:
@@ -55,6 +53,7 @@ public:
 
     void cenaIrrlicht();
     inline void cenaCameras();
+    inline void gizmo();
     inline void cenaIluminacao();
     inline void cenaVisualizacoes();
 

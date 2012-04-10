@@ -27,6 +27,16 @@ void Cena::cenaIrrlicht()
     }
 }
 
+void Cena::gizmo(){
+    if(smgr && key_m_on && highlightedSceneNode && selectedSceneNode)
+    {
+        IrrNode* node = new IrrNode();
+        node->criaGizmo(highlightedSceneNode,smgr);
+        qDebug()<<"olaola";
+        drawIrrlichtScene();
+    }
+}
+
 void Cena::cenaCameras(){
     if (smgr) {
         camera[0] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
@@ -59,6 +69,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 duplicateSceneNode();
                 break;
             case (Qt::Key_M):
+                gizmo();
                 key_m_on =true;
                 break;
             case (Qt::Key_1):
