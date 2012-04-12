@@ -21,7 +21,7 @@ public:
     void criaReta();
     void criaEsfera();
     void criaCone();
-    void criaGizmo( irr::scene::ISceneNode* , IrrSmgr* const, irr::scene::IMeshSceneNode*gizmo_X,
+    void criaGizmo( irr::scene::ISceneNode* , IrrSmgr* const, irr::scene::IMeshSceneNode**gizmo_X,
                     irr::scene::IMeshSceneNode*gizmo_Y,  irr::scene::IMeshSceneNode *gizmo_Z);
 };
 

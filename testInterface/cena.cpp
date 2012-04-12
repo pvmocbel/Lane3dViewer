@@ -15,6 +15,9 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     key_w_on = false;
     locked = true;
     yi = 0;
+    gizmo_X= 0;
+    gizmo_Y = 0;
+    gizmo_Z = 0;
 }
 
 Cena::~Cena(){}
@@ -33,7 +36,7 @@ void Cena::gizmo(){
     if(smgr && key_m_on && selectedSceneNode )
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(selectedSceneNode,smgr, gizmo_X, gizmo_Y, gizmo_Z);
+        node->criaGizmo(selectedSceneNode,smgr, &gizmo_X, gizmo_Y, gizmo_Z);
         drawIrrlichtScene();
     }
 }
@@ -101,7 +104,7 @@ void Cena::mousePressEvent( QMouseEvent* event )
     if (smgr) {
         mouseXi = event->x();
         mouseYi = device->getCursorControl()->getPosition().Y;
-        if(MoveSceneNode) yi = MoveSceneNode->getPosition().Y;
+        if(pivo) yi = pivo->getPosition().Y;
        sendMouseEventToIrrlicht(event, true);
 //       (key_m_on)?(false):(true);
        drawIrrlichtScene();
@@ -129,7 +132,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
         {
             dx = event->x() - mouseXi;
             dy = device->getCursorControl()->getPosition().Y - mouseYi;
-            seta_pivo->setPosition(Vector3df(0, yi - 0.1*dy, 0));
+            seta_pivo->setPosition(Vector3df(MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z));
             MoveSceneNode->setPosition(seta_pivo->getPosition());
             drawIrrlichtScene();
         }
@@ -225,13 +228,17 @@ void Cena::drawIrrlichtScene()
                     selectedSceneNode = 0;
         }
 
-        pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, IDFlag_IsPickable);
+        pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, S);
 
         if(pivo){
-           if((pivo->getID() & 1<<2) == 1<<2)   seta_pivo = pivo;
-           else selectedSceneNode = pivo;
-         }
-         else selectedSceneNode = 0;
+            if((pivo->getID() & MASK) == ID_FLAG_GIZMO_Y)   seta_pivo = pivo;
+           else{
+               selectedSceneNode = pivo;
+               if(gizmo_X)
+                   gizmo_X->setPosition(selectedSceneNode->getPosition());
+            }
+        }
+        else selectedSceneNode = 0;
 
          if (selectedSceneNode){
              MoveSceneNode = selectedSceneNode;
