@@ -9,15 +9,11 @@
 #include "irrviewer.h"
 #include "irrnode.h"
 
-typedef std::pair<int, int> PairInt;
-typedef std::map<int, std::map<int, std::set<int> > > MapNodes;
-
 class Cena: public IrrViewer
 {
 private:
-
-    irr::scene::ISceneNode *highlightedSceneNode;
     irr::scene::ISceneNode *selectedSceneNode;
+    irr::scene::ISceneNode *MoveSceneNode;
     irr::scene::ISceneNode *pivo;
     irr::scene::ISceneNode *seta_pivo;
     irr::scene::ICameraSceneNode *camera[4];
@@ -28,24 +24,18 @@ private:
     irr::scene::IMeshSceneNode *gizmo_Y;
     irr::scene::IMeshSceneNode *gizmo_Z;
 
-    std::map<int, IrrNode*> nodes;
-
     bool duplicateNode_mouse_key;
     bool key_m_on;
+    bool key_w_on;
+    bool locked;
+    double yi;
 
     Vector3df mouse_press_position;
     Vector3df mouse_release_position;
 
 public:
     Cena();
-
     ~Cena();
-
-    int get_serialize_id(){
-        static int id = 0;
-        ++id;
-        return id;
-    }
 
     bool mouse_key_test;
 
@@ -54,8 +44,7 @@ public:
     float dx;
     float dy;
 
-    void insertNode(int id, IrrNode* node);
-    IrrNode* getNode(int id);
+    void insertNode(IrrNode* node);
 
     void cenaIrrlicht();
     inline void cenaCameras();
@@ -75,5 +64,4 @@ public:
     void sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown);
 
 };  //fim da classe Cena
-
 #endif // CENA_H

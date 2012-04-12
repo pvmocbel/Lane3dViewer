@@ -2,9 +2,8 @@
 #include "getdimcube.h"
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
-    selectedSceneNode(0),highlightedSceneNode(0),
-    collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0),pivo(0),seta_pivo(0)
+    selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
+    mouseXi(0),mouseYi(0),dx(0),dy(0),pivo(0),seta_pivo(0),MoveSceneNode(0)
 {
     camera[0] = 0;
     camera[1] = 0;
@@ -13,6 +12,9 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
     key_m_on = false;
+    key_w_on = false;
+    locked = true;
+    yi = 0;
 }
 
 Cena::~Cena(){}
@@ -28,19 +30,19 @@ void Cena::cenaIrrlicht()
 }
 
 void Cena::gizmo(){
-    if(smgr && key_m_on && highlightedSceneNode && selectedSceneNode )
+    if(smgr && key_m_on && selectedSceneNode )
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(highlightedSceneNode,smgr, gizmo_X, gizmo_Y, gizmo_Z);
+        node->criaGizmo(selectedSceneNode,smgr, gizmo_X, gizmo_Y, gizmo_Z);
         drawIrrlichtScene();
     }
 }
 
 void Cena::cenaCameras(){
     if (smgr) {
-        camera[0] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
-        camera[1] = smgr->addCameraSceneNode(0, Vector3df(0, 100, 0), Vector3df(0, 0, 0));
-        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
+        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
+        camera[1] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
+        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
         camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
         smgr->setActiveCamera(camera[0]);
     }
@@ -71,6 +73,9 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 gizmo();
                 key_m_on =true;
                 break;
+            case (Qt::Key_W):
+                key_w_on = true;
+                break;
             case (Qt::Key_1):
                 smgr->setActiveCamera(camera[0]);
                 break;
@@ -95,9 +100,10 @@ void Cena::mousePressEvent( QMouseEvent* event )
 {
     if (smgr) {
         mouseXi = event->x();
-        mouseYi = event->y();
+        mouseYi = device->getCursorControl()->getPosition().Y;
+        if(MoveSceneNode) yi = MoveSceneNode->getPosition().Y;
        sendMouseEventToIrrlicht(event, true);
-       (key_m_on)?(false):(true);
+//       (key_m_on)?(false):(true);
        drawIrrlichtScene();
     }
     event->ignore();
@@ -109,6 +115,7 @@ void Cena::mouseReleaseEvent( QMouseEvent* event )
         sendMouseEventToIrrlicht(event, false);
         duplicateNode_mouse_key = false;
 //        key_m_on = false;
+        key_w_on = false;
         drawIrrlichtScene();
     }
     event->ignore();
@@ -118,32 +125,23 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 {
     if(smgr)
     {
-//        if(highlightedSceneNode!=0 && selectedSceneNode!=0 && key_m_on){
-//            dx = event->x() - mouseXi;
-//            dy = event->y() - mouseYi;
-//            highlightedSceneNode->setPosition(Vector3df(highlightedSceneNode->getPosition().X + 0.3*dx,
-//                                                        highlightedSceneNode->getPosition().Y - 0.3*dy,
-//                                                        highlightedSceneNode->getPosition().Z));
-//            drawIrrlichtScene();
-//        }
-
-        if(seta_pivo!=0 /*&& selectedSceneNode!=0 */&& key_m_on){
+        if(MoveSceneNode!=0 && seta_pivo!=0 && key_m_on )
+        {
             dx = event->x() - mouseXi;
-            dy = event->y() - mouseYi;
-            seta_pivo->setPosition(Vector3df(seta_pivo->getPosition().X + 0.3*dx,
-                                                        seta_pivo->getPosition().Y - 0.3*dy,
-                                                        seta_pivo->getPosition().Z));
-        drawIrrlichtScene();
+            dy = device->getCursorControl()->getPosition().Y - mouseYi;
+            seta_pivo->setPosition(Vector3df(0, yi - 0.1*dy, 0));
+            MoveSceneNode->setPosition(seta_pivo->getPosition());
+            drawIrrlichtScene();
         }
 
     }
     event->ignore();
 }
 
-
 void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 {
-    if (smgr) {
+    if (smgr)
+    {
         irr::SEvent irrEvent;
         irrEvent.EventType = irr::EET_MOUSE_INPUT_EVENT;
 
@@ -175,7 +173,7 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
     event->ignore();
 }
 
-void Cena::insertNode(int id, IrrNode* node)
+void Cena::insertNode(IrrNode* node)
 {
     if(smgr){
         getDimCube* w = new getDimCube(0);
@@ -184,26 +182,21 @@ void Cena::insertNode(int id, IrrNode* node)
         if(w->isOk()){
             Dim3df dim = w->getDimension();
             Pos3df p = w->getPosition();
-            node->criaCubo(&id, smgr, p, dim, video_driver);
-            nodes[id] = node;
+            node->criaCubo(smgr, p, dim, video_driver);
             drawIrrlichtScene();
         }
         delete w;
     }
 }
 
-IrrNode* Cena::getNode(int id){
-
-}
-
 void Cena::duplicateSceneNode()
 {
     if(smgr){
-        if(highlightedSceneNode!=0 && selectedSceneNode!=0){
+        if(selectedSceneNode){
             irr::scene::ISceneNode* node =  selectedSceneNode->clone();
             node->setPosition(mouse_release_position);
             node->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-            highlightedSceneNode = 0;
+            selectedSceneNode = 0;
         }
     }
 }
@@ -211,55 +204,43 @@ void Cena::duplicateSceneNode()
 void Cena::removeSceneNode()
 {
     if(smgr){
-        if(highlightedSceneNode!=0 && selectedSceneNode!=0){
+        if(selectedSceneNode){
             selectedSceneNode->remove();
             selectedSceneNode = 0;
-            highlightedSceneNode = 0;
         }
     }
 }
 
 void Cena::drawIrrlichtScene()
 {
-    if(smgr){
+    if(smgr)
+    {
         irr::core::vector3df intersection;
         irr::core::triangle3df tri;
-        irr::core::line3df ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(device->getCursorControl()->getPosition(), smgr->getActiveCamera());
-
-        if (highlightedSceneNode){
-             highlightedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-             highlightedSceneNode = 0;
+        irr::core::line3df ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(
+                                                        device->getCursorControl()->getPosition(),
+                                                        smgr->getActiveCamera());
+        if (selectedSceneNode){
+                    selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
+                    selectedSceneNode = 0;
         }
 
         pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, IDFlag_IsPickable);
 
+        if(pivo){
+           if((pivo->getID() & 1<<2) == 1<<2)   seta_pivo = pivo;
+           else selectedSceneNode = pivo;
+         }
+         else selectedSceneNode = 0;
 
-
-        if(pivo)
-        {
-            qDebug()<<"id "<<pivo->getID();
-            if((pivo->getID() & 1<<2) == 1<<2)
-            {
-                qDebug()<<"id "<<pivo->getID();
-                seta_pivo = pivo;
-            }
-            else{
-                selectedSceneNode = pivo;
-                qDebug()<<"selecao";
-            }
-
-        }
-        else {selectedSceneNode = 0;}
-
-        if (selectedSceneNode){
-              highlightedSceneNode = selectedSceneNode;
-              highlightedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
-        }
+         if (selectedSceneNode){
+             MoveSceneNode = selectedSceneNode;
+             selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
+         }
 
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));
         smgr->drawAll();
         env->drawAll();
         video_driver->endScene();
-
     }
 }

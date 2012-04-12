@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'getdimcube.ui'
 **
-** Created: Tue Apr 10 15:43:48 2012
+** Created: Thu Apr 12 10:16:58 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,11 +16,11 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
 #include <QtGui/QDialogButtonBox>
+#include <QtGui/QDoubleSpinBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
 
 QT_BEGIN_NAMESPACE
 
@@ -31,19 +31,19 @@ public:
     QGroupBox *groupBox_3;
     QGridLayout *gridLayout_3;
     QLabel *label_7;
-    QLineEdit *text_x_position;
     QLabel *label_8;
-    QLineEdit *text_y_position;
     QLabel *label_9;
-    QLineEdit *text_z_position;
+    QDoubleSpinBox *position_x;
+    QDoubleSpinBox *position_y;
+    QDoubleSpinBox *position_z;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout_2;
     QLabel *label_4;
-    QLineEdit *text_x_dimension;
     QLabel *label_5;
-    QLineEdit *text_y_dimension;
     QLabel *label_6;
-    QLineEdit *text_z_dimension;
+    QDoubleSpinBox *dimension_x;
+    QDoubleSpinBox *dimension_y;
+    QDoubleSpinBox *dimension_z;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *getDimCube)
@@ -67,41 +67,42 @@ public:
         label_7 = new QLabel(groupBox_3);
         label_7->setObjectName(QString::fromUtf8("label_7"));
 
-        gridLayout_3->addWidget(label_7, 0, 0, 1, 1);
-
-        text_x_position = new QLineEdit(groupBox_3);
-        text_x_position->setObjectName(QString::fromUtf8("text_x_position"));
-        sizePolicy.setHeightForWidth(text_x_position->sizePolicy().hasHeightForWidth());
-        text_x_position->setSizePolicy(sizePolicy);
-        text_x_position->setMaximumSize(QSize(61, 20));
-
-        gridLayout_3->addWidget(text_x_position, 0, 1, 1, 1);
+        gridLayout_3->addWidget(label_7, 1, 0, 1, 1);
 
         label_8 = new QLabel(groupBox_3);
         label_8->setObjectName(QString::fromUtf8("label_8"));
 
-        gridLayout_3->addWidget(label_8, 1, 0, 1, 1);
-
-        text_y_position = new QLineEdit(groupBox_3);
-        text_y_position->setObjectName(QString::fromUtf8("text_y_position"));
-        sizePolicy.setHeightForWidth(text_y_position->sizePolicy().hasHeightForWidth());
-        text_y_position->setSizePolicy(sizePolicy);
-        text_y_position->setMaximumSize(QSize(61, 20));
-
-        gridLayout_3->addWidget(text_y_position, 1, 1, 1, 1);
+        gridLayout_3->addWidget(label_8, 2, 0, 1, 1);
 
         label_9 = new QLabel(groupBox_3);
         label_9->setObjectName(QString::fromUtf8("label_9"));
 
-        gridLayout_3->addWidget(label_9, 2, 0, 1, 1);
+        gridLayout_3->addWidget(label_9, 3, 0, 1, 1);
 
-        text_z_position = new QLineEdit(groupBox_3);
-        text_z_position->setObjectName(QString::fromUtf8("text_z_position"));
-        sizePolicy.setHeightForWidth(text_z_position->sizePolicy().hasHeightForWidth());
-        text_z_position->setSizePolicy(sizePolicy);
-        text_z_position->setMaximumSize(QSize(61, 20));
+        position_x = new QDoubleSpinBox(groupBox_3);
+        position_x->setObjectName(QString::fromUtf8("position_x"));
+        position_x->setDecimals(1);
+        position_x->setMinimum(-70);
+        position_x->setMaximum(70);
+        position_x->setSingleStep(1);
 
-        gridLayout_3->addWidget(text_z_position, 2, 1, 1, 1);
+        gridLayout_3->addWidget(position_x, 1, 1, 1, 1);
+
+        position_y = new QDoubleSpinBox(groupBox_3);
+        position_y->setObjectName(QString::fromUtf8("position_y"));
+        position_y->setDecimals(1);
+        position_y->setMinimum(-70);
+        position_y->setMaximum(70);
+
+        gridLayout_3->addWidget(position_y, 2, 1, 1, 1);
+
+        position_z = new QDoubleSpinBox(groupBox_3);
+        position_z->setObjectName(QString::fromUtf8("position_z"));
+        position_z->setDecimals(1);
+        position_z->setMinimum(-70);
+        position_z->setMaximum(70);
+
+        gridLayout_3->addWidget(position_z, 3, 1, 1, 1);
 
 
         gridLayout->addWidget(groupBox_3, 0, 0, 1, 1);
@@ -116,39 +117,39 @@ public:
 
         gridLayout_2->addWidget(label_4, 0, 0, 1, 1);
 
-        text_x_dimension = new QLineEdit(groupBox_2);
-        text_x_dimension->setObjectName(QString::fromUtf8("text_x_dimension"));
-        sizePolicy.setHeightForWidth(text_x_dimension->sizePolicy().hasHeightForWidth());
-        text_x_dimension->setSizePolicy(sizePolicy);
-        text_x_dimension->setMaximumSize(QSize(61, 20));
-
-        gridLayout_2->addWidget(text_x_dimension, 0, 1, 1, 1);
-
         label_5 = new QLabel(groupBox_2);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         gridLayout_2->addWidget(label_5, 1, 0, 1, 1);
-
-        text_y_dimension = new QLineEdit(groupBox_2);
-        text_y_dimension->setObjectName(QString::fromUtf8("text_y_dimension"));
-        sizePolicy.setHeightForWidth(text_y_dimension->sizePolicy().hasHeightForWidth());
-        text_y_dimension->setSizePolicy(sizePolicy);
-        text_y_dimension->setMaximumSize(QSize(61, 20));
-
-        gridLayout_2->addWidget(text_y_dimension, 1, 1, 1, 1);
 
         label_6 = new QLabel(groupBox_2);
         label_6->setObjectName(QString::fromUtf8("label_6"));
 
         gridLayout_2->addWidget(label_6, 2, 0, 1, 1);
 
-        text_z_dimension = new QLineEdit(groupBox_2);
-        text_z_dimension->setObjectName(QString::fromUtf8("text_z_dimension"));
-        sizePolicy.setHeightForWidth(text_z_dimension->sizePolicy().hasHeightForWidth());
-        text_z_dimension->setSizePolicy(sizePolicy);
-        text_z_dimension->setMaximumSize(QSize(61, 20));
+        dimension_x = new QDoubleSpinBox(groupBox_2);
+        dimension_x->setObjectName(QString::fromUtf8("dimension_x"));
+        dimension_x->setDecimals(1);
+        dimension_x->setMaximum(40);
+        dimension_x->setValue(10);
 
-        gridLayout_2->addWidget(text_z_dimension, 2, 1, 1, 1);
+        gridLayout_2->addWidget(dimension_x, 0, 1, 1, 1);
+
+        dimension_y = new QDoubleSpinBox(groupBox_2);
+        dimension_y->setObjectName(QString::fromUtf8("dimension_y"));
+        dimension_y->setDecimals(1);
+        dimension_y->setMaximum(40);
+        dimension_y->setValue(10);
+
+        gridLayout_2->addWidget(dimension_y, 1, 1, 1, 1);
+
+        dimension_z = new QDoubleSpinBox(groupBox_2);
+        dimension_z->setObjectName(QString::fromUtf8("dimension_z"));
+        dimension_z->setDecimals(1);
+        dimension_z->setMaximum(40);
+        dimension_z->setValue(10);
+
+        gridLayout_2->addWidget(dimension_z, 2, 1, 1, 1);
 
 
         gridLayout->addWidget(groupBox_2, 0, 1, 1, 1);

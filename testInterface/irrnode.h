@@ -17,7 +17,7 @@ public:
 
     IrrNode();
     irr::scene::ISceneNode* getNode()const {return selectedSceneNode;}
-    void criaCubo(const int* id, IrrSmgr* const , const Pos3df&, const Dim3df&,  irr::video::IVideoDriver *video_driver);
+    void criaCubo(IrrSmgr* const , const Pos3df&, const Dim3df&,  irr::video::IVideoDriver *video_driver);
     void criaReta();
     void criaEsfera();
     void criaCone();

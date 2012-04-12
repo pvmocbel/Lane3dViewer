@@ -31,8 +31,7 @@ void MainWindow::initIrrlichtWindow(){
 }
 
 void MainWindow::criaSomenting(){
-    int id = cena->get_serialize_id();
-    cena->insertNode(id,new IrrNode());
+    cena->insertNode(new IrrNode());
 }
 
 
