@@ -53,7 +53,6 @@ void IrrViewer::resizeEvent( QResizeEvent *event )
         size.Width = event->size().width();
         size.Height = event->size().height();
         video_driver->OnResize(size);
-//        video_driver->
      }
     QWidget::resizeEvent(event);
 }

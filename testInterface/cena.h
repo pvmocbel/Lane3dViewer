@@ -30,8 +30,8 @@ private:
     bool locked;
     double yi;
 
-    Vector3df mouse_press_position;
-    Vector3df mouse_release_position;
+    Pos3df mouse_press_position;
+    Pos3df mouse_release_position;
 
 public:
     Cena();

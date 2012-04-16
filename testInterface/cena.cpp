@@ -36,7 +36,7 @@ void Cena::gizmo(){
     if(smgr && key_m_on && selectedSceneNode )
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(selectedSceneNode,smgr, &gizmo_X, gizmo_Y, gizmo_Z);
+        node->criaGizmo(selectedSceneNode->getPosition(), smgr, /*&gizmo_X,*/ &gizmo_Y/*, &gizmo_Z*/);
         drawIrrlichtScene();
     }
 }
@@ -103,9 +103,9 @@ void Cena::mousePressEvent( QMouseEvent* event )
 {
     if (smgr) {
         selection();
-        mouseXi = event->x();
+//        mouseXi = event->x();
         mouseYi = device->getCursorControl()->getPosition().Y;
-        if(pivo) yi = pivo->getPosition().Y;
+        if(pivo) yi = pivo->getPosition().Z;
        sendMouseEventToIrrlicht(event, true);
 //       (key_m_on)?(false):(true);
        drawIrrlichtScene();
@@ -130,9 +130,9 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
     {
         if(MoveSceneNode!=0 && seta_pivo!=0 && key_m_on )
         {
-            dx = event->x() - mouseXi;
+//            dx = event->x() - mouseXi;
             dy = device->getCursorControl()->getPosition().Y - mouseYi;
-            seta_pivo->setPosition(Vector3df(MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z));
+            seta_pivo->setPosition(Vector3df(MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, yi - 0.1*dy));
             MoveSceneNode->setPosition(seta_pivo->getPosition());
             drawIrrlichtScene();            
         }
@@ -195,11 +195,12 @@ void Cena::duplicateSceneNode()
 {
     if(smgr){
         if(selectedSceneNode){
-            irr::scene::ISceneNode* node =  selectedSceneNode->clone();
+            irr::scene::ISceneNode* node =  (irr::scene::ISceneNode*)selectedSceneNode->clone();
             node->setPosition(mouse_release_position);
             node->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-            selectedSceneNode = 0;
-        }
+            selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
+            node->setID(S);
+         }
     }
 }
 
@@ -230,11 +231,11 @@ void Cena::selection()
         pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, S);
 
         if(pivo){
-            if((pivo->getID() & MASK) == ID_FLAG_GIZMO_Y)   seta_pivo = pivo;
+            if((pivo->getID() & MASK) == ID_FLAG_GIZMO_Z)   seta_pivo = pivo;
            else{
                selectedSceneNode = pivo;
-               if(gizmo_X)
-                   gizmo_X->setPosition(selectedSceneNode->getPosition());
+               if(gizmo_Z)
+                   gizmo_Z->setPosition(selectedSceneNode->getPosition());
             }
         }
         else selectedSceneNode = 0;
