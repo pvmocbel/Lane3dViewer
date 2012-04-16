@@ -46,9 +46,10 @@ public:
 
     void insertNode(IrrNode* node);
 
+    inline void gizmo();
     void cenaIrrlicht();
     inline void cenaCameras();
-    inline void gizmo();
+    inline void selection();
     inline void cenaIluminacao();
     inline void cenaVisualizacoes();
 

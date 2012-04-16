@@ -43,7 +43,7 @@ void Cena::gizmo(){
 
 void Cena::cenaCameras(){
     if (smgr) {
-        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
+        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, -50), Vector3df(0, 0, 0));
         camera[1] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
         camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
         camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
@@ -102,6 +102,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 void Cena::mousePressEvent( QMouseEvent* event )
 {
     if (smgr) {
+        selection();
         mouseXi = event->x();
         mouseYi = device->getCursorControl()->getPosition().Y;
         if(pivo) yi = pivo->getPosition().Y;
@@ -117,7 +118,6 @@ void Cena::mouseReleaseEvent( QMouseEvent* event )
     if (smgr) {
         sendMouseEventToIrrlicht(event, false);
         duplicateNode_mouse_key = false;
-//        key_m_on = false;
         key_w_on = false;
         drawIrrlichtScene();
     }
@@ -134,9 +134,8 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
             dy = device->getCursorControl()->getPosition().Y - mouseYi;
             seta_pivo->setPosition(Vector3df(MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z));
             MoveSceneNode->setPosition(seta_pivo->getPosition());
-            drawIrrlichtScene();
+            drawIrrlichtScene();            
         }
-
     }
     event->ignore();
 }
@@ -214,7 +213,7 @@ void Cena::removeSceneNode()
     }
 }
 
-void Cena::drawIrrlichtScene()
+void Cena::selection()
 {
     if(smgr)
     {
@@ -244,7 +243,14 @@ void Cena::drawIrrlichtScene()
              MoveSceneNode = selectedSceneNode;
              selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
          }
+    }
 
+}
+
+void Cena::drawIrrlichtScene()
+{
+    if(smgr)
+    {
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));
         smgr->drawAll();
         env->drawAll();
