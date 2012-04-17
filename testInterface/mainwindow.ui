@@ -23,9 +23,30 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QPushButton" name="cria_alguma_coisa">
+     <widget class="QPushButton" name="cubo">
       <property name="text">
-       <string>cria_alguma_coisa</string>
+       <string>cubo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="esfera">
+      <property name="text">
+       <string>esfera</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="cone">
+      <property name="text">
+       <string>cone</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="cilindro">
+      <property name="text">
+       <string>cilindro</string>
       </property>
      </widget>
     </item>
@@ -37,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>514</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

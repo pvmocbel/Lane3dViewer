@@ -6,7 +6,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     connect( ui->start, SIGNAL(clicked()), this, SLOT(initIrrlichtWindow()));
-    connect( ui->cria_alguma_coisa, SIGNAL(clicked()), this, SLOT(criaSomenting()));
+    connect( ui->cubo, SIGNAL(clicked()), this, SLOT(criaCubo()));
+    connect( ui->esfera, SIGNAL(clicked()), this, SLOT(criaEsfera()));
+    connect( ui->cone, SIGNAL(clicked()), this, SLOT(criaCone()));
+    connect( ui->cilindro, SIGNAL(clicked()), this, SLOT(criaCilindro()));
 }
 
 MainWindow::~MainWindow()
@@ -24,16 +27,27 @@ void MainWindow::initIrrlichtWindow(){
     cena = new Cena();
     cena->resize(2048, 2048);
 
-    ui->gridLayout->addWidget(cena, 1, 0, 3, 3);
+    ui->gridLayout->addWidget(cena, 1, 0, 5, 5);
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
 }
 
-void MainWindow::criaSomenting(){
-    cena->insertNode(new IrrNode());
+void MainWindow::criaCubo(){
+    cena->insertCubo(new IrrNode());
 }
 
+void MainWindow::criaEsfera(){
+    cena->insertEsfera(new IrrNode());
+}
+
+void MainWindow::criaCone(){
+    cena->insertCone(new IrrNode());
+}
+
+void MainWindow::criaCilindro(){
+    cena->insertCilindro(new IrrNode());
+}
 
 void MainWindow::keyPressEvent( QKeyEvent * event){
     cena->keyPressEvent(event);

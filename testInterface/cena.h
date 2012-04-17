@@ -14,8 +14,6 @@ class Cena: public IrrViewer
 private:
     irr::scene::ISceneNode *selectedSceneNode;
     irr::scene::ISceneNode *MoveSceneNode;
-    irr::scene::ISceneNode *pivo;
-    irr::scene::ISceneNode *seta_pivo;
     irr::scene::ICameraSceneNode *camera[4];
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
@@ -25,10 +23,16 @@ private:
     irr::scene::IMeshSceneNode *gizmo_Z;
 
     bool duplicateNode_mouse_key;
+
     bool key_m_on;
     bool key_w_on;
-    bool locked;
+    bool key_x_on;
+    bool key_y_on;
+    bool key_z_on;
+
+    double xi;
     double yi;
+    double zi;
 
     Pos3df mouse_press_position;
     Pos3df mouse_release_position;
@@ -44,7 +48,10 @@ public:
     float dx;
     float dy;
 
-    void insertNode(IrrNode* node);
+    void insertCubo(IrrNode* node);
+    void insertEsfera(IrrNode* node);
+    void insertCone(IrrNode* node);
+    void insertCilindro(IrrNode* node);
 
     inline void gizmo();
     void cenaIrrlicht();
@@ -58,7 +65,7 @@ public:
 
     void drawIrrlichtScene();
 
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );

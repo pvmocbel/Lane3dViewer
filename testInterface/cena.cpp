@@ -1,21 +1,34 @@
 #include "cena.h"
 #include "getdimcube.h"
+#include "getdimcone.h"
+#include "getdimesfera.h"
+//#include "getdimcilindro.h"
+#include "getdimcilindro.h"
+
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0),pivo(0),seta_pivo(0),MoveSceneNode(0)
+    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0)
 {
     camera[0] = 0;
     camera[1] = 0;
     camera[2] = 0;
     camera[3] = 0;
+
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
+
     key_m_on = false;
     key_w_on = false;
-    locked = true;
+    key_x_on = false;
+    key_y_on = false;
+    key_z_on = false;
+
+    xi = 0;
     yi = 0;
-    gizmo_X= 0;
+    zi = 0;
+
+    gizmo_X = 0;
     gizmo_Y = 0;
     gizmo_Z = 0;
 }
@@ -28,15 +41,16 @@ void Cena::cenaIrrlicht()
         collMan = smgr->getSceneCollisionManager();
         cenaCameras();
         cenaIluminacao();
+        gizmo();
         drawIrrlichtScene();
     }
 }
 
 void Cena::gizmo(){
-    if(smgr && key_m_on && selectedSceneNode )
+    if(smgr)
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(selectedSceneNode->getPosition(), smgr, /*&gizmo_X,*/ &gizmo_Y/*, &gizmo_Z*/);
+        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z);
         drawIrrlichtScene();
     }
 }
@@ -65,16 +79,56 @@ void Cena::cenaVisualizacoes(){}
 
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
+
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_A)){
+            key_x_on = true;
+            key_y_on = true;
+            key_z_on = false;
+        }
+
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_S)){
+            key_x_on = true;
+            key_y_on = false;
+            key_z_on = true;
+        }
+
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_D)){
+            key_x_on = false;
+            key_y_on = true;
+            key_z_on = true;
+        }
+
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_F)){
+            key_x_on = true;
+            key_y_on = true;
+            key_z_on = true;
+        }
+
         switch(event->key()){
+
             case (Qt::Key_X):
+                key_x_on = true;
+                key_y_on = false;
+                key_z_on = false;
+                break;
+            case (Qt::Key_Y):
+                key_y_on = true;
+                key_x_on = false;
+                key_z_on = false;
+                break;
+            case (Qt::Key_Z):
+                key_z_on = true;
+                key_x_on = false;
+                key_y_on = false;
+                break;
+            case (Qt::Key_R):
                 removeSceneNode();
                 break;
-            case (Qt::Key_D):
+            case (Qt::Key_C):
                 duplicateSceneNode();
                 break;
             case (Qt::Key_M):
-                gizmo();
-                key_m_on =true;
+                key_m_on = true;
                 break;
             case (Qt::Key_W):
                 key_w_on = true;
@@ -103,12 +157,17 @@ void Cena::mousePressEvent( QMouseEvent* event )
 {
     if (smgr) {
         selection();
-//        mouseXi = event->x();
+
+        mouseXi = device->getCursorControl()->getPosition().X;
         mouseYi = device->getCursorControl()->getPosition().Y;
-        if(pivo) yi = pivo->getPosition().Z;
-       sendMouseEventToIrrlicht(event, true);
-//       (key_m_on)?(false):(true);
-       drawIrrlichtScene();
+        if(selectedSceneNode)
+        {
+            xi = selectedSceneNode->getPosition().X;
+            yi = selectedSceneNode->getPosition().Y;
+            zi = selectedSceneNode->getPosition().Z;
+        }
+        sendMouseEventToIrrlicht(event, true);
+        drawIrrlichtScene();
     }
     event->ignore();
 }
@@ -128,13 +187,53 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 {
     if(smgr)
     {
-        if(MoveSceneNode!=0 && seta_pivo!=0 && key_m_on )
+        if(MoveSceneNode!=0 && key_m_on && gizmo_X!=0 && gizmo_Y!=0 && gizmo_Z!=0 )
         {
-//            dx = event->x() - mouseXi;
+            dx = device->getCursorControl()->getPosition().X - mouseXi;
             dy = device->getCursorControl()->getPosition().Y - mouseYi;
-            seta_pivo->setPosition(Vector3df(MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, yi - 0.1*dy));
-            MoveSceneNode->setPosition(seta_pivo->getPosition());
-            drawIrrlichtScene();            
+
+            if(key_x_on)
+            {
+                MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx, MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
+
+                gizmo_X->setPosition(MoveSceneNode->getPosition());
+                gizmo_X->setVisible(true);
+
+                gizmo_Y->setPosition(MoveSceneNode->getPosition());
+                gizmo_Y->setVisible(true);
+
+                gizmo_Z->setPosition(MoveSceneNode->getPosition());
+                gizmo_Z->setVisible(true);
+                drawIrrlichtScene();
+            }
+            if(key_y_on)
+            {
+                MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
+
+                gizmo_X->setPosition(MoveSceneNode->getPosition());
+                gizmo_X->setVisible(true);
+
+                gizmo_Y->setPosition(MoveSceneNode->getPosition());
+                gizmo_Y->setVisible(true);
+
+                gizmo_Z->setPosition(MoveSceneNode->getPosition());
+                gizmo_Z->setVisible(true);
+                drawIrrlichtScene();
+            }
+            if(key_z_on)
+            {
+                MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, zi + 0.1*(dx)));
+
+                gizmo_X->setPosition(MoveSceneNode->getPosition());
+                gizmo_X->setVisible(true);
+
+                gizmo_Y->setPosition(MoveSceneNode->getPosition());
+                gizmo_Y->setVisible(true);
+
+                gizmo_Z->setPosition(MoveSceneNode->getPosition());
+                gizmo_Z->setVisible(true);
+                drawIrrlichtScene();
+            }
         }
     }
     event->ignore();
@@ -175,7 +274,7 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
     event->ignore();
 }
 
-void Cena::insertNode(IrrNode* node)
+void Cena::insertCubo(IrrNode* node)
 {
     if(smgr){
         getDimCube* w = new getDimCube(0);
@@ -187,6 +286,63 @@ void Cena::insertNode(IrrNode* node)
             node->criaCubo(smgr, p, dim, video_driver);
             drawIrrlichtScene();
         }
+        delete w;
+    }
+}
+
+void Cena::insertCone(IrrNode* node)
+{
+    if(smgr)
+    {
+        getDimCone *w = new getDimCone();
+
+        w->show();
+        w->exec();
+
+        Dim3df dim = w->getDimension();
+        Pos3df p = w->getPosition();
+
+        node->criaCone(smgr, p, dim);
+
+        drawIrrlichtScene();
+        delete w;
+    }
+}
+
+void Cena::insertCilindro(IrrNode* node)
+{
+    if(smgr)
+    {
+        getDimCilindro*w = new getDimCilindro();
+
+        w->show();
+        w->exec();
+
+        Dim3df dim = w->getDimension();
+        Pos3df p = w->getPosition();
+        node->criaCilindro(smgr, p, dim);
+
+        drawIrrlichtScene();
+
+        delete w;
+    }
+}
+
+void Cena::insertEsfera(IrrNode* node)
+{
+    if(smgr)
+    {
+        getDimEsfera* w = new getDimEsfera(0);
+
+        w->show();
+        w->exec();
+
+        double raio = w->getDimension();
+        Pos3df p = w->getPosition();
+        node->criaEsfera(smgr, p, raio);
+
+        drawIrrlichtScene();
+
         delete w;
     }
 }
@@ -225,27 +381,25 @@ void Cena::selection()
                                                         smgr->getActiveCamera());
         if (selectedSceneNode){
                     selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-                    selectedSceneNode = 0;
+                    selectedSceneNode = 0;                    
         }
 
-        pivo = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, S);
-
-        if(pivo){
-            if((pivo->getID() & MASK) == ID_FLAG_GIZMO_Z)   seta_pivo = pivo;
-           else{
-               selectedSceneNode = pivo;
-               if(gizmo_Z)
-                   gizmo_Z->setPosition(selectedSceneNode->getPosition());
-            }
-        }
-        else selectedSceneNode = 0;
+        selectedSceneNode = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, S);
 
          if (selectedSceneNode){
              MoveSceneNode = selectedSceneNode;
              selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
          }
+         else{
+             MoveSceneNode = 0;
+             gizmo_X->setVisible(false);
+             gizmo_Y->setVisible(false);
+             gizmo_Z->setVisible(false);
+             key_x_on = false;
+             key_y_on = false;
+             key_z_on = false;
+         }
     }
-
 }
 
 void Cena::drawIrrlichtScene()

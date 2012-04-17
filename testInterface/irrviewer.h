@@ -13,7 +13,7 @@ enum { MASK = 0xFFFF << 1};
 enum { S = 1 << 0, A = 1 << 1, B = 1 << 2, C = 1 << 3 , D = 1<<4};
 enum { ID_FLAG_GIZMO_X = 0, ID_FLAG_GIZMO_Y = A, ID_FLAG_GIZMO_Z = B,
        ID_FLAG_CUBO = A|B, ID_FLAG_ESFERA = C, ID_FLAG_CONE = C|A,
-       ID_FLAG_LINHA = C|B };
+       ID_FLAG_CILINDRO = C|B};
 
 class IrrViewer : public QWidget
 {

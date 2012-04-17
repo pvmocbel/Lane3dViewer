@@ -6,6 +6,8 @@ getDimCube::getDimCube(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::getDimCube)
 {
+    position.set(Vector3df(0,0,0));
+    dimension.set(Vector3df(0,0,0));
     ui->setupUi(this);
     ok = false;
     connect( ui->buttonBox, SIGNAL(accepted()), this, SLOT(parser()));

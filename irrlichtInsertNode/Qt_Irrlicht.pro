@@ -18,11 +18,11 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH +=  /irrlicht-1.7.2/include \
+INCLUDEPATH +=  /usr/include/irrlicht \
                 /usr/X11R6/include #/home/er/tmp/irrlicht_src/irrlicht/include
 
 LIBS += -L/usr/X11R6/lib \
-        -L/irrlicht-1.7.2/lib/Linux \
+        -L/usr/include/irrlicht \
         -lIrrlicht \
         -lGL \
         -lX11 \

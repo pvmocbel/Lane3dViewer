@@ -6,7 +6,7 @@ IrrQWidget::IrrQWidget(QWidget *parent) : QWidget(parent){
     iscene = 0;
     idriver = 0;
     rot =0;
-    driverType = irr::video::EDT_OPENGL;
+    driverType = irr::video::EDT_SOFTWARE;
     selectedSceneNode = 0;
     highlightedSceneNode = 0;
     seletor = 0;

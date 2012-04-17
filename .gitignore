@@ -1,5 +1,5 @@
 moc_*
 *.o
-/lane3D-buil-desktop/*
+./lane3D-buil-desktop/*
 Makefile
 *.pro*

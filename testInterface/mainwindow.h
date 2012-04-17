@@ -24,8 +24,10 @@ private:
 
 public slots:
     void initIrrlichtWindow();
-    void criaSomenting();
-
+    void criaCubo();
+    void criaEsfera();
+    void criaCone();
+    void criaCilindro();
 };
 
 #endif // MAINWINDOW_H

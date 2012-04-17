@@ -16,17 +16,26 @@ SOURCES += main.cpp\
     myeventreceiver.cpp \
     cena.cpp \
     irrnode.cpp \
-    getdimcube.cpp
+    getdimcube.cpp \
+    getdimcone.cpp \
+    getdimesfera.cpp \
+    getdimcilindro.cpp
 
 HEADERS  += mainwindow.h \
         irrviewer.h \
     myeventreceiver.h \
     cena.h \
     irrnode.h \
-    getdimcube.h
+    getdimcube.h \
+    getdimcone.h \
+    getdimesfera.h \
+    getdimcilindro.h
 
 FORMS    += mainwindow.ui \
-    getdimcube.ui
+    getdimcube.ui \
+    getdimcone.ui \
+    getdimesfera.ui \
+    getdimcilindro.ui
 
 INCLUDEPATH +=  /usr/include/irrlicht \
                 /usr/X11R6/include
