@@ -165,21 +165,21 @@ void IrrNode::criaRegiaoLivre(IrrSmgr* const smgr, const Dim3df& dim)
 
 void IrrNode::criaRegiaoAnalise(IrrSmgr* const smgr, const Dim3df& dim)
 {
-//    if(smgr)
-//    {
-//        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-//        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(dim);
-//        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(dim);
+        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
 
-//        if (cube_node)
-//        {
-////          cube_node->setPosition(pos);
-//          cube_node->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
-//          cube_node->setID(ID_FLAG_CUBO);
+        if (cube_node)
+        {
+//          cube_node->setPosition(pos);
+          cube_node->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
+          cube_node->setID(ID_FLAG_CUBO);
 
-//          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
-//          cube_node->setTriangleSelector(seletor);
-//          seletor->drop();
-//        }
-//    }
+          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
+          cube_node->setTriangleSelector(seletor);
+          seletor->drop();
+        }
+    }
 }

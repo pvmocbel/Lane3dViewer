@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Apr 12 10:16:58 2012
+** Created: Wed Apr 18 14:27:34 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -31,7 +31,10 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPushButton *start;
-    QPushButton *cria_alguma_coisa;
+    QPushButton *cubo;
+    QPushButton *esfera;
+    QPushButton *cone;
+    QPushButton *cilindro;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -52,15 +55,30 @@ public:
 
         gridLayout->addWidget(start, 0, 0, 1, 1);
 
-        cria_alguma_coisa = new QPushButton(centralWidget);
-        cria_alguma_coisa->setObjectName(QString::fromUtf8("cria_alguma_coisa"));
+        cubo = new QPushButton(centralWidget);
+        cubo->setObjectName(QString::fromUtf8("cubo"));
 
-        gridLayout->addWidget(cria_alguma_coisa, 0, 1, 1, 1);
+        gridLayout->addWidget(cubo, 0, 1, 1, 1);
+
+        esfera = new QPushButton(centralWidget);
+        esfera->setObjectName(QString::fromUtf8("esfera"));
+
+        gridLayout->addWidget(esfera, 0, 2, 1, 1);
+
+        cone = new QPushButton(centralWidget);
+        cone->setObjectName(QString::fromUtf8("cone"));
+
+        gridLayout->addWidget(cone, 0, 3, 1, 1);
+
+        cilindro = new QPushButton(centralWidget);
+        cilindro->setObjectName(QString::fromUtf8("cilindro"));
+
+        gridLayout->addWidget(cilindro, 0, 4, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 514, 25));
+        menuBar->setGeometry(QRect(0, 0, 514, 24));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -78,7 +96,10 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         start->setText(QApplication::translate("MainWindow", "start", 0, QApplication::UnicodeUTF8));
-        cria_alguma_coisa->setText(QApplication::translate("MainWindow", "cria_alguma_coisa", 0, QApplication::UnicodeUTF8));
+        cubo->setText(QApplication::translate("MainWindow", "cubo", 0, QApplication::UnicodeUTF8));
+        esfera->setText(QApplication::translate("MainWindow", "esfera", 0, QApplication::UnicodeUTF8));
+        cone->setText(QApplication::translate("MainWindow", "cone", 0, QApplication::UnicodeUTF8));
+        cilindro->setText(QApplication::translate("MainWindow", "cilindro", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

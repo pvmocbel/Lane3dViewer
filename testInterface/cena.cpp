@@ -2,7 +2,6 @@
 #include "getdimcube.h"
 #include "getdimcone.h"
 #include "getdimesfera.h"
-//#include "getdimcilindro.h"
 #include "getdimcilindro.h"
 
 
@@ -41,9 +40,50 @@ void Cena::cenaIrrlicht()
         collMan = smgr->getSceneCollisionManager();
         cenaCameras();
         cenaIluminacao();
+        criaRegiaoAnalise();
         gizmo();
         drawIrrlichtScene();
     }
+}
+
+void Cena::cenaCameras(){
+    if (smgr) {
+        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, -50), Vector3df(0, 0, 0));
+        camera[0]->bindTargetAndRotation(true);
+        camera[1] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
+        camera[1]->bindTargetAndRotation(true);
+        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
+        camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
+        smgr->setActiveCamera(camera[0]);
+//        camera->getProjectionMatrix().
+
+
+    }
+}
+
+void Cena::cenaIluminacao(){
+    if (smgr) {
+        light = smgr->addLightSceneNode();
+        light->setLightType( irr::video::ELT_DIRECTIONAL );
+        light->setRotation( irr::core::vector3df( 45.0f, 45.0f, 0.0f ));
+        light->getLightData().AmbientColor = irr::video::SColorf( 0.2f, 0.2f, 0.2f, 1.0f );
+        light->getLightData().DiffuseColor = irr::video::SColorf( 0.8f, 0.8f, 0.8f, 1.0f );
+
+    }
+}
+
+void Cena::cenaVisualizacoes(){}
+
+void Cena::criaRegiaoAnalise(){
+    if(smgr){
+        IrrNode* no = new IrrNode();
+        no->criaRegiaoAnalise(smgr,Vector3df(40,40,40));
+    }
+}
+
+void Cena::criaRegiaoLivre(){
+
+
 }
 
 void Cena::gizmo(){
@@ -55,28 +95,7 @@ void Cena::gizmo(){
     }
 }
 
-void Cena::cenaCameras(){
-    if (smgr) {
-        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, -50), Vector3df(0, 0, 0));
-        camera[1] = smgr->addCameraSceneNode(0, Vector3df(50, 0, 0), Vector3df(0, 0, 0));
-        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
-        camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
-        smgr->setActiveCamera(camera[0]);
-    }
-}
-
-void Cena::cenaIluminacao(){
-    if (smgr) {
-        light = smgr->addLightSceneNode();
-        light->setLightType( irr::video::ELT_DIRECTIONAL );
-        light->setRotation( irr::core::vector3df( 45.0f, 45.0f, 0.0f ));
-        light->getLightData().AmbientColor = irr::video::SColorf( 0.2f, 0.2f, 0.2f, 1.0f );
-        light->getLightData().DiffuseColor = irr::video::SColorf( 0.8f, 0.8f, 0.8f, 1.0f );
-    }
-}
-
-void Cena::cenaVisualizacoes(){}
-
+//--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
 
@@ -273,7 +292,9 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
     }
     event->ignore();
 }
+//-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 
+//-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
 void Cena::insertCubo(IrrNode* node)
 {
     if(smgr){
@@ -369,7 +390,9 @@ void Cena::removeSceneNode()
         }
     }
 }
+//--------------------------------FIM-MODIFICADORES-DE-OBEJTOS--------------------------------------//
 
+//-----------------------------------------SELECAO-E-PINTURA---------------------------------------------//
 void Cena::selection()
 {
     if(smgr)
@@ -412,3 +435,4 @@ void Cena::drawIrrlichtScene()
         video_driver->endScene();
     }
 }
+//---------------------------------------FIM-SELECAO-E-PINTURA-------------------------------------------//

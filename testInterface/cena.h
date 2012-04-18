@@ -1,3 +1,4 @@
+
 #ifndef CENA_H
 #define CENA_H
 
@@ -53,15 +54,18 @@ public:
     void insertCone(IrrNode* node);
     void insertCilindro(IrrNode* node);
 
-    inline void gizmo();
-    void cenaIrrlicht();
-    inline void cenaCameras();
-    inline void selection();
-    inline void cenaIluminacao();
-    inline void cenaVisualizacoes();
-
     inline void removeSceneNode();
     inline void duplicateSceneNode();
+
+    inline void gizmo();
+    void cenaIrrlicht();
+
+    inline void selection();
+    inline void cenaCameras();
+    inline void criaRegiaoAnalise();
+    inline void criaRegiaoLivre();
+    inline void cenaIluminacao();
+    inline void cenaVisualizacoes();
 
     void drawIrrlichtScene();
 
