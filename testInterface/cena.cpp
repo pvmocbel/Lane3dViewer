@@ -3,6 +3,7 @@
 #include "getdimcone.h"
 #include "getdimesfera.h"
 #include "getdimcilindro.h"
+#include <math.h>
 
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
@@ -27,9 +28,21 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     yi = 0;
     zi = 0;
 
+    fator_x_dx = 0;
+    fator_x_dy = 0;
+
+    fator_y_dx = 0;
+    fator_y_dy = 0;
+
+    fator_z_dx = 0;
+    fator_z_dy = 0;
+
     gizmo_X = 0;
     gizmo_Y = 0;
     gizmo_Z = 0;
+
+    float x[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    matrix.setM(x);
 }
 
 Cena::~Cena(){}
@@ -48,17 +61,13 @@ void Cena::cenaIrrlicht()
 
 void Cena::cenaCameras(){
     if (smgr) {
-        camera[0] = smgr->addCameraSceneNode(0, Vector3df(0, 0, -50), Vector3df(0, 0, 0));
-        camera[0]->bindTargetAndRotation(true);
+        camera[0] = smgr->addCameraSceneNode();
+        camera[0]->setPosition(Vector3df(0,0,-50));
         camera[1] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
-        camera[1]->bindTargetAndRotation(true);
         camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
         camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
         smgr->setActiveCamera(camera[0]);
-//        camera->getProjectionMatrix().
-
-
-    }
+     }
 }
 
 void Cena::cenaIluminacao(){
@@ -68,7 +77,6 @@ void Cena::cenaIluminacao(){
         light->setRotation( irr::core::vector3df( 45.0f, 45.0f, 0.0f ));
         light->getLightData().AmbientColor = irr::video::SColorf( 0.2f, 0.2f, 0.2f, 1.0f );
         light->getLightData().DiffuseColor = irr::video::SColorf( 0.8f, 0.8f, 0.8f, 1.0f );
-
     }
 }
 
@@ -83,7 +91,6 @@ void Cena::criaRegiaoAnalise(){
 
 void Cena::criaRegiaoLivre(){
 
-
 }
 
 void Cena::gizmo(){
@@ -92,6 +99,16 @@ void Cena::gizmo(){
         IrrNode* node = new IrrNode();
         node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z);
         drawIrrlichtScene();
+    }
+}
+
+void Cena::atualizaFatores(){
+    if(smgr)
+    {
+        /*qDebug()<<"y rotation"<<camera[0]->getAbsoluteTransformation().getTranslation().Z*/;
+        float aux = camera[0]->getAbsoluteTransformation().getTranslation().Z;
+        if(aux<90 || aux>270)  fator_x_dx = 1;
+        else fator_x_dx = -1;
     }
 }
 
@@ -153,16 +170,30 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 key_w_on = true;
                 break;
             case (Qt::Key_1):
-                smgr->setActiveCamera(camera[0]);
+
+                camera[0]->setPosition(Vector3df(0, 0, -50));
+                camera[0]->setRotation(Vector3df(0,180,0));
+                camera[0]->setTarget(Vector3df(0, 0, 0));
+
+                matrix.setRotationDegrees(Vector3df(0,180,0));
+                qDebug()<<"angulo y "<< matrix.getRotationDegrees().X;
+                atualizaFatores();
                 break;
+
             case (Qt::Key_2):
-                smgr->setActiveCamera(camera[1]);
+                camera[0]->setPosition(Vector3df(0, 0, 50));
+                camera[0]->setTarget(Vector3df(0, 0, 0));
+
+  //                smgr->setActiveCamera(camera[1]);
+                atualizaFatores();
                 break;
             case (Qt::Key_3):
-                smgr->setActiveCamera(camera[2]);
+//                smgr->setActiveCamera(camera[2]);
+                atualizaFatores();
                 break;
             case (Qt::Key_4):
-                smgr->setActiveCamera(camera[3]);
+//                smgr->setActiveCamera(camera[3]);
+                atualizaFatores();
                 break;
             default:
                 break;
@@ -179,8 +210,8 @@ void Cena::mousePressEvent( QMouseEvent* event )
 
         mouseXi = device->getCursorControl()->getPosition().X;
         mouseYi = device->getCursorControl()->getPosition().Y;
-        if(selectedSceneNode)
-        {
+
+        if(selectedSceneNode){
             xi = selectedSceneNode->getPosition().X;
             yi = selectedSceneNode->getPosition().Y;
             zi = selectedSceneNode->getPosition().Z;
@@ -213,7 +244,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
-                MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx, MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
+                MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx , MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);

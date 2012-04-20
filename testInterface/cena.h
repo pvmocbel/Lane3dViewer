@@ -10,6 +10,8 @@
 #include "irrviewer.h"
 #include "irrnode.h"
 
+#define PI 3,14159265
+
 class Cena: public IrrViewer
 {
 private:
@@ -31,6 +33,8 @@ private:
     bool key_y_on;
     bool key_z_on;
 
+    irr::core::matrix4 matrix;
+
     double xi;
     double yi;
     double zi;
@@ -49,6 +53,16 @@ public:
     float dx;
     float dy;
 
+    int fator_x_dx;
+    int fator_x_dy;
+
+    int fator_y_dx;
+    int fator_y_dy;
+
+    int fator_z_dx;
+    int fator_z_dy;
+
+
     void insertCubo(IrrNode* node);
     void insertEsfera(IrrNode* node);
     void insertCone(IrrNode* node);
@@ -60,6 +74,7 @@ public:
     inline void gizmo();
     void cenaIrrlicht();
 
+    void atualizaFatores();
     inline void selection();
     inline void cenaCameras();
     inline void criaRegiaoAnalise();
