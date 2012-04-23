@@ -17,7 +17,7 @@ class Cena: public IrrViewer
 private:
     irr::scene::ISceneNode *selectedSceneNode;
     irr::scene::ISceneNode *MoveSceneNode;
-    irr::scene::ICameraSceneNode *camera[4];
+    irr::scene::ICameraSceneNode *camera;
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
 

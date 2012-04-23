@@ -10,10 +10,7 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
     mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0)
 {
-    camera[0] = 0;
-    camera[1] = 0;
-    camera[2] = 0;
-    camera[3] = 0;
+    camera = 0;
 
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
@@ -61,12 +58,9 @@ void Cena::cenaIrrlicht()
 
 void Cena::cenaCameras(){
     if (smgr) {
-        camera[0] = smgr->addCameraSceneNode();
-        camera[0]->setPosition(Vector3df(0,0,-50));
-        camera[1] = smgr->addCameraSceneNode(0, Vector3df(0, 0, 50), Vector3df(0, 0, 0));
-        camera[2] = smgr->addCameraSceneNode(0, Vector3df(0, 50, 0), Vector3df(0, 0, 0));
-        camera[3] = smgr->addCameraSceneNode(0, Vector3df(0, 10, 10), Vector3df(0, 0, 0));
-        smgr->setActiveCamera(camera[0]);
+        camera = smgr->addCameraSceneNode();
+        camera->setPosition(Vector3df(0,0,-50));
+        smgr->setActiveCamera(camera);
      }
 }
 
@@ -106,7 +100,7 @@ void Cena::atualizaFatores(){
     if(smgr)
     {
         /*qDebug()<<"y rotation"<<camera[0]->getAbsoluteTransformation().getTranslation().Z*/;
-        float aux = camera[0]->getAbsoluteTransformation().getTranslation().Z;
+        float aux = camera->getAbsoluteTransformation().getTranslation().Z;
         if(aux<90 || aux>270)  fator_x_dx = 1;
         else fator_x_dx = -1;
     }
@@ -170,30 +164,22 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 key_w_on = true;
                 break;
             case (Qt::Key_1):
+                camera->setPosition(Vector3df(0, 0, -50));
+                camera->setTarget(Vector3df(0, 0, 0));
 
-                camera[0]->setPosition(Vector3df(0, 0, -50));
-                camera[0]->setRotation(Vector3df(0,180,0));
-                camera[0]->setTarget(Vector3df(0, 0, 0));
-
-                matrix.setRotationDegrees(Vector3df(0,180,0));
-                qDebug()<<"angulo y "<< matrix.getRotationDegrees().X;
-                atualizaFatores();
+//                atualizaFatores();
                 break;
 
             case (Qt::Key_2):
-                camera[0]->setPosition(Vector3df(0, 0, 50));
-                camera[0]->setTarget(Vector3df(0, 0, 0));
-
-  //                smgr->setActiveCamera(camera[1]);
-                atualizaFatores();
+                camera->setPosition(Vector3df(0, 0, 50));
+                camera->setTarget(Vector3df(0, 0, 0));
+//                atualizaFatores();
                 break;
             case (Qt::Key_3):
-//                smgr->setActiveCamera(camera[2]);
-                atualizaFatores();
+//                atualizaFatores();
                 break;
             case (Qt::Key_4):
-//                smgr->setActiveCamera(camera[3]);
-                atualizaFatores();
+//                atualizaFatores();
                 break;
             default:
                 break;
