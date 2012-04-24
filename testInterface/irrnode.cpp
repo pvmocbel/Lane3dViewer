@@ -176,7 +176,6 @@ void IrrNode::criaRegiaoAnalise(IrrSmgr* const smgr, const Dim3df& dim)
 //          cube_node->setPosition(pos);
           cube_node->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
           cube_node->setID(ID_FLAG_CUBO);
-
           seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
           cube_node->setTriangleSelector(seletor);
           seletor->drop();

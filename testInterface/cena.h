@@ -25,6 +25,10 @@ private:
     irr::scene::IMeshSceneNode *gizmo_Y;
     irr::scene::IMeshSceneNode *gizmo_Z;
 
+    Vector3df vetor_normal_n;
+    Vector3df vetor_normal;
+    Vector3df vetor_target;
+
     bool duplicateNode_mouse_key;
 
     bool key_m_on;
@@ -52,6 +56,8 @@ public:
     float mouseYi;
     float dx;
     float dy;
+
+    int fat_dx,fat_dy,fat_dz;
 
     int fator_x_dx;
     int fator_x_dy;

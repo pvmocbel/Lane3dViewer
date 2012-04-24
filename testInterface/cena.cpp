@@ -12,6 +12,10 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
 {
     camera = 0;
 
+    vetor_normal.set(0,0,0);
+    vetor_target.set(0,0,0);
+    vetor_normal_n.set(0,0,0);
+
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
 
@@ -20,6 +24,10 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     key_x_on = false;
     key_y_on = false;
     key_z_on = false;
+
+    fat_dx = 0;
+    fat_dy = 0;
+    fat_dz = 0;
 
     xi = 0;
     yi = 0;
@@ -60,7 +68,9 @@ void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
         camera->setPosition(Vector3df(0,0,-50));
+        camera->setTarget(Vector3df(0,0,0));
         smgr->setActiveCamera(camera);
+        atualizaFatores();
      }
 }
 
@@ -83,10 +93,7 @@ void Cena::criaRegiaoAnalise(){
     }
 }
 
-void Cena::criaRegiaoLivre(){
-
-}
-
+void Cena::criaRegiaoLivre(){}
 void Cena::gizmo(){
     if(smgr)
     {
@@ -99,10 +106,30 @@ void Cena::gizmo(){
 void Cena::atualizaFatores(){
     if(smgr)
     {
-        /*qDebug()<<"y rotation"<<camera[0]->getAbsoluteTransformation().getTranslation().Z*/;
-        float aux = camera->getAbsoluteTransformation().getTranslation().Z;
-        if(aux<90 || aux>270)  fator_x_dx = 1;
-        else fator_x_dx = -1;
+        vetor_normal.set(vetor_target.X - camera->getPosition().X,
+                         vetor_target.Y - camera->getPosition().Y,
+                         vetor_target.Y - camera->getPosition().Z);
+
+        vetor_normal_n.set(vetor_normal);
+
+        if(vetor_normal_n.X>=0)
+            vetor_normal_n.X = 1;
+        else
+            vetor_normal_n.X = -1;
+
+        if(vetor_normal_n.Y>=0)
+            vetor_normal_n.Y = 1;
+        else
+            vetor_normal_n.Y = -1;
+
+        if(vetor_normal_n.Z>=0)
+            vetor_normal_n.Z = 1;
+        else
+            vetor_normal_n.Z = -1;
+
+        fat_dx = vetor_normal_n.X;
+        fat_dy = vetor_normal_n.Y;
+        fat_dz = vetor_normal_n.Z;
     }
 }
 
@@ -166,17 +193,17 @@ void Cena::keyPressEvent(QKeyEvent *event){
             case (Qt::Key_1):
                 camera->setPosition(Vector3df(0, 0, -50));
                 camera->setTarget(Vector3df(0, 0, 0));
-
-//                atualizaFatores();
+                atualizaFatores();
                 break;
-
             case (Qt::Key_2):
                 camera->setPosition(Vector3df(0, 0, 50));
                 camera->setTarget(Vector3df(0, 0, 0));
-//                atualizaFatores();
+                atualizaFatores();
                 break;
             case (Qt::Key_3):
-//                atualizaFatores();
+                camera->setPosition(Vector3df(0,50,0));
+                camera->setTarget(Vector3df(0,0,0));
+                atualizaFatores();
                 break;
             case (Qt::Key_4):
 //                atualizaFatores();
@@ -230,6 +257,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
+                dx = fat_dz*dx;
                 MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx , MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -258,6 +286,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
             }
             if(key_z_on)
             {
+                dy = fat_dy*dy;
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, zi + 0.1*(dx)));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
