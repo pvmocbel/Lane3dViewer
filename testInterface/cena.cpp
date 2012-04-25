@@ -200,35 +200,40 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 break;
 
             case (Qt::Key_1):   //padrão
-                camera->setPosition(Vector3df(0, 0, -50));
+                camera->setPosition(Vector3df(0, 0, -1000));
                 camera->setTarget(Vector3df(0, 0, 0));
                 atualizaFatores();
                 break;
             case (Qt::Key_2):   //direita
                 camera->setTarget(Vector3df(0, 0, 0));
-                camera->setPosition(Vector3df(50, 0, 0));
+                camera->setPosition(Vector3df(60, 0, 0));
                 atualizaFatores();
                 break;
             case (Qt::Key_3):   //esquerda
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(-50,0,1));
+                camera->setPosition(Vector3df(-60,0,1));
                 atualizaFatores();
                 break;
             case (Qt::Key_4):   //tras
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,0,50));
+                camera->setPosition(Vector3df(0,0,60));
                 atualizaFatores();
                 break;
             case (Qt::Key_5):   //topo
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,50,-0.1));
+                camera->setPosition(Vector3df(0,60,-0.1));
                 atualizaFatores();
                 break;
             case (Qt::Key_6):   //base
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,-50,-0.1));
+                camera->setPosition(Vector3df(0,-60,-0.1));
                 atualizaFatores();
                 break;
+            case (Qt::Key_7):   //base
+            camera->setTarget(Vector3df(0,0,0));
+            camera->setPosition(Vector3df(0,100,-100));
+            atualizaFatores();
+            break;
             default:
                 break;
         }
