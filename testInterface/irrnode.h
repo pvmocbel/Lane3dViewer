@@ -31,7 +31,8 @@ public:
     void criaGizmo( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **gizmo_X,
                     irr::scene::IMeshSceneNode **gizmo_Y,
-                    irr::scene::IMeshSceneNode **gizmo_Z);
+                    irr::scene::IMeshSceneNode **gizmo_Z,
+                    irr::video::IVideoDriver *video_driver);
 
     void criaRegiaoLivre(IrrSmgr* const,
                          const Dim3df&);

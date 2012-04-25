@@ -17,7 +17,7 @@ class Cena: public IrrViewer
 private:
     irr::scene::ISceneNode *selectedSceneNode;
     irr::scene::ISceneNode *MoveSceneNode;
-    irr::scene::ICameraSceneNode *camera;
+//    irr::scene::ICameraSceneNode *camera;
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
 
@@ -36,6 +36,8 @@ private:
     bool key_x_on;
     bool key_y_on;
     bool key_z_on;
+
+    float aproxima, afasta ;
 
     irr::core::matrix4 matrix;
 

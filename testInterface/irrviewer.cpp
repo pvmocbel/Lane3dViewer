@@ -1,6 +1,8 @@
 #include "irrviewer.h"
 
-IrrViewer::IrrViewer(QWidget *_parent=0):QWidget(_parent),device(0),smgr(0),video_driver(0),env(0),driveType(irr::video::EDT_SOFTWARE)
+IrrViewer::IrrViewer(QWidget *_parent=0):QWidget(_parent)
+  ,device(0),smgr(0),video_driver(0),env(0),camera(0),
+   driveType(irr::video::EDT_SOFTWARE)
 {}
 
 
@@ -53,6 +55,8 @@ void IrrViewer::resizeEvent( QResizeEvent *event )
         size.Width = event->size().width();
         size.Height = event->size().height();
         video_driver->OnResize(size);
+        if(camera)
+            camera->setAspectRatio((float)(size.Width/size.Height));
      }
     QWidget::resizeEvent(event);
 }

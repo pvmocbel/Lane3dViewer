@@ -8,7 +8,7 @@
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0)
+    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(1.0),afasta(1.0)
 {
     camera = 0;
 
@@ -98,7 +98,7 @@ void Cena::gizmo(){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z);
+        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z,video_driver);
         drawIrrlichtScene();
     }
 }
@@ -112,20 +112,15 @@ void Cena::atualizaFatores(){
 
         vetor_normal_n.set(vetor_normal);
 
-        if(vetor_normal_n.X>=0)
-            vetor_normal_n.X = 1;
-        else
-            vetor_normal_n.X = -1;
+        if(vetor_normal_n.X>0)    vetor_normal_n.X = 1;
+        else if(vetor_normal_n.X<0)    vetor_normal_n.X = -1;
 
-        if(vetor_normal_n.Y>=0)
-            vetor_normal_n.Y = 1;
-        else
-            vetor_normal_n.Y = -1;
+        if(vetor_normal_n.Y>0)     vetor_normal_n.Y = 1;
+        else if(vetor_normal_n.Y<0)   vetor_normal_n.Y = -1;
 
-        if(vetor_normal_n.Z>=0)
-            vetor_normal_n.Z = 1;
-        else
-            vetor_normal_n.Z = -1;
+
+        if(vetor_normal_n.Z>0)   vetor_normal_n.Z = 1;
+        else if(vetor_normal_n.Z<0) vetor_normal_n.Z = -1;
 
         fat_dx = vetor_normal_n.X;
         fat_dy = vetor_normal_n.Y;
@@ -161,6 +156,19 @@ void Cena::keyPressEvent(QKeyEvent *event){
             key_z_on = true;
         }
 
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_Plus)){
+                camera->setFOV((aproxima*PI)/(2.5));
+                qDebug()<<"FOV = "<<camera->getFOV();
+                aproxima +=0.09;
+        }
+
+
+        if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_Minus)){
+                camera->setFOV((PI)/(2.5+afasta));
+                qDebug()<<"FOV = "<<camera->getFOV();
+                afasta += 0.01;
+        }
+
         switch(event->key()){
 
             case (Qt::Key_X):
@@ -190,23 +198,36 @@ void Cena::keyPressEvent(QKeyEvent *event){
             case (Qt::Key_W):
                 key_w_on = true;
                 break;
-            case (Qt::Key_1):
+
+            case (Qt::Key_1):   //padrão
                 camera->setPosition(Vector3df(0, 0, -50));
                 camera->setTarget(Vector3df(0, 0, 0));
                 atualizaFatores();
                 break;
-            case (Qt::Key_2):
-                camera->setPosition(Vector3df(0, 0, 50));
+            case (Qt::Key_2):   //direita
                 camera->setTarget(Vector3df(0, 0, 0));
+                camera->setPosition(Vector3df(50, 0, 0));
                 atualizaFatores();
                 break;
-            case (Qt::Key_3):
-                camera->setPosition(Vector3df(0,50,0));
+            case (Qt::Key_3):   //esquerda
                 camera->setTarget(Vector3df(0,0,0));
+                camera->setPosition(Vector3df(-50,0,1));
                 atualizaFatores();
                 break;
-            case (Qt::Key_4):
-//                atualizaFatores();
+            case (Qt::Key_4):   //tras
+                camera->setTarget(Vector3df(0,0,0));
+                camera->setPosition(Vector3df(0,0,50));
+                atualizaFatores();
+                break;
+            case (Qt::Key_5):   //topo
+                camera->setTarget(Vector3df(0,0,0));
+                camera->setPosition(Vector3df(0,50,-0.1));
+                atualizaFatores();
+                break;
+            case (Qt::Key_6):   //base
+                camera->setTarget(Vector3df(0,0,0));
+                camera->setPosition(Vector3df(0,-50,-0.1));
+                atualizaFatores();
                 break;
             default:
                 break;
@@ -257,7 +278,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
-                dx = fat_dz*dx;
+                dx = fat_dz*dx ;
                 MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx , MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -272,6 +293,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
             }
             if(key_y_on)
             {
+//                dy = fat_dy*dy;
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -286,7 +308,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
             }
             if(key_z_on)
             {
-                dy = fat_dy*dy;
+                dx = -fat_dx*dx + fat_dy*dy;
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, zi + 0.1*(dx)));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -433,6 +455,9 @@ void Cena::removeSceneNode()
         if(selectedSceneNode){
             selectedSceneNode->remove();
             selectedSceneNode = 0;
+            gizmo_X->setVisible(false);
+            gizmo_Y->setVisible(false);
+            gizmo_Z->setVisible(false);
         }
     }
 }
