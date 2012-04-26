@@ -34,11 +34,6 @@ public:
                     irr::scene::IMeshSceneNode **gizmo_Z,
                     irr::video::IVideoDriver *video_driver);
 
-    void criaRegiaoLivre(IrrSmgr* const,
-                         const Dim3df&);
-
-    void criaRegiaoAnalise(IrrSmgr* const,
-                           const Dim3df&);
 };
 
 #endif // IRRNODE_H

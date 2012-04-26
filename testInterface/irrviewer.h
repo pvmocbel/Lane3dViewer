@@ -8,6 +8,7 @@ typedef irr::core::vector3df Pos3df;
 typedef irr::core::vector3df Dim3df;
 typedef irr::core::vector3df Vector3df;
 typedef irr::scene::ISceneManager IrrSmgr;
+typedef irr::video::IVideoDriver VideoDriver;
 
 enum { MASK = 0xFFFF << 1};
 enum { S = 1 << 0, A = 1 << 1, B = 1 << 2, C = 1 << 3 , D = 1<<4};

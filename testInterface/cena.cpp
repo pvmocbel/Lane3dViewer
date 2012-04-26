@@ -87,9 +87,16 @@ void Cena::cenaIluminacao(){
 void Cena::cenaVisualizacoes(){}
 
 void Cena::criaRegiaoAnalise(){
-    if(smgr){
-        IrrNode* no = new IrrNode();
-        no->criaRegiaoAnalise(smgr,Vector3df(40,40,40));
+    if(smgr)
+    {
+        video_driver->setTransform( irr::video::ETS_WORLD, irr::core::matrix4());
+        irr::video::SMaterial mat;
+        mat.Lighting = false;
+        video_driver->setMaterial( mat );
+        irr::core::aabbox3df box;
+        box.MinEdge.set(Vector3df(-50,-50,-50));
+        box.MaxEdge.set(Vector3df(50, 50, 50));
+        video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
     }
 }
 
@@ -489,11 +496,14 @@ void Cena::selection()
              MoveSceneNode = selectedSceneNode;
              selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
          }
-         else{
+         else
+         {
              MoveSceneNode = 0;
+
              gizmo_X->setVisible(false);
              gizmo_Y->setVisible(false);
              gizmo_Z->setVisible(false);
+
              key_x_on = false;
              key_y_on = false;
              key_z_on = false;
@@ -508,6 +518,8 @@ void Cena::drawIrrlichtScene()
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));
         smgr->drawAll();
         env->drawAll();
+        criaRegiaoAnalise();
+
         video_driver->endScene();
     }
 }

@@ -118,6 +118,7 @@ void IrrQWidget::createCubo(){
         IMeshSceneNode *cube_node = iscene->addMeshSceneNode(mesh_cube_node);
         if (cube_node){
             cube_node->setPosition(vector3df(40,0,0));
+            cube_node->setMaterialFlag(EMF_LIGHTING, false);
             seletor = iscene->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
             cube_node->setTriangleSelector(seletor);
             seletor->drop();

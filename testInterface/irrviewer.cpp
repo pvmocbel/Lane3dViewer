@@ -2,7 +2,7 @@
 
 IrrViewer::IrrViewer(QWidget *_parent=0):QWidget(_parent)
   ,device(0),smgr(0),video_driver(0),env(0),camera(0),
-   driveType(irr::video::EDT_SOFTWARE)
+   driveType(irr::video::EDT_BURNINGSVIDEO)
 {}
 
 
