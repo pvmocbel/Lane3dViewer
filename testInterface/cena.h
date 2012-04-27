@@ -17,7 +17,6 @@ class Cena: public IrrViewer
 private:
     irr::scene::ISceneNode *selectedSceneNode;
     irr::scene::ISceneNode *MoveSceneNode;
-//    irr::scene::ICameraSceneNode *camera;
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
 
@@ -32,14 +31,18 @@ private:
     bool duplicateNode_mouse_key;
 
     bool key_m_on;
-    bool key_w_on;
     bool key_x_on;
     bool key_y_on;
     bool key_z_on;
 
-    float aproxima, afasta ;
+    bool camera_01;
+    bool camera_02;
+    bool camera_03;
+    bool camera_04;
+    bool camera_05;
+    bool camera_06;
 
-    irr::core::matrix4 matrix;
+    float aproxima, afasta ;
 
     double xi;
     double yi;
@@ -56,20 +59,11 @@ public:
 
     float mouseXi;
     float mouseYi;
+
     float dx;
     float dy;
 
     int fat_dx,fat_dy,fat_dz;
-
-    int fator_x_dx;
-    int fator_x_dy;
-
-    int fator_y_dx;
-    int fator_y_dy;
-
-    int fator_z_dx;
-    int fator_z_dy;
-
 
     void insertCubo(IrrNode* node);
     void insertEsfera(IrrNode* node);
@@ -83,6 +77,8 @@ public:
     void cenaIrrlicht();
 
     void atualizaFatores();
+    void aproximaObjetoSelecionado();
+
     inline void selection();
     inline void cenaCameras();
     inline void criaRegiaoAnalise();

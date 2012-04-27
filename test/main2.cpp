@@ -37,22 +37,47 @@ void criaRegiaAnalise(core::aabbox3df box,video::IVideoDriver* driver){
                 driver->draw3DBox(box_aux, SColor(255,255,0,0));
             }
 
-//    bool test = true; //colocar antes do run para pintar de forma correta a esfera
-    // Draw circle on X/Y
-//    vector3df pV(25,0, 0 );
+    bool test = true; //colocar antes do run para pintar de forma correta a esfera
+//     Draw circle on X/Y
+    vector3df pV(25,0, 0 );
 
-//    for( f32 r = 0; r < 2 * PI; r += 2.f*PI/30.f )
-//    {
-//        f32 px = 25 * cos( r );
-//        f32 py = 25 * sin( r );
+    for( f32 r = 0; r < 2 * PI; r += 2.f*PI/30.f )
+    {
+        f32 px = 25 * cos( r );
+        f32 py = 25 * sin( r );
 
-//        if(test){
-//            driver->draw3DLine( vector3df(px-0.01f,py-0.01,0), vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
-//            test = false;
-//        }
-//        else    driver->draw3DLine( pV, vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
-//        pV = vector3df( px, py, 0 );
-//    }
+        if(test){
+            driver->draw3DLine( vector3df(px-0.01f,py-0.01,0), vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
+            test = false;
+        }
+        else    driver->draw3DLine( pV, vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
+        pV = vector3df( px, py, 0 );
+    }
+}
+
+void criaGizmosBicos(irr::video::IVideoDriver* driver){
+    driver->setTransform( ETS_WORLD, core::matrix4());
+    SMaterial mat;
+    mat.Lighting = false;
+    driver->setMaterial( mat );
+
+    bool test = true; //colocar antes do run para pintar de forma correta a esfera
+    vector3df pV(0,0, 0 );
+    for(f32 i = 100; i>0; i=i-0.9f){
+        test = true;
+        for(f32 ang = 0; ang < 2*PI; ang += (float)(2.f*PI/30))
+        {
+            f32 px = i * cos( ang );
+            f32 py = i * sin( ang );
+            if(test){
+                driver->draw3DLine( vector3df(px-0.01f,py-0.01,0), vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
+                test = false;
+            }
+            else    driver->draw3DLine( pV, vector3df( px, py, 0 ), SColor( 255, 0, 255, 0 ));
+            pV = vector3df( px, py, 0 );
+
+        }
+    }
 }
 
 int main()
@@ -83,7 +108,7 @@ int main()
 //        node->setVisible(false);
 //    }
 
-    smgr->addCameraSceneNode(0, vector3df(0,0,-250), vector3df(0,0,0));
+    smgr->addCameraSceneNode(0, vector3df(0,0,-50), vector3df(0,0,0));
 
     while(device->run())
     {
@@ -94,7 +119,9 @@ int main()
         driver->beginScene(true, true, SColor(250, 100, 150, 150));
         smgr->drawAll();
         guienv->drawAll();
-        criaRegiaAnalise(box, driver);
+        criaGizmosBicos(driver);
+
+//        criaRegiaAnalise(box, driver);
 
         driver->endScene();
     }
