@@ -4,7 +4,7 @@ IrrNode::IrrNode():selectedSceneNode(0),first_cube(true)
 {
 }
 
-void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim, irr::video::IVideoDriver *video_driver)
+void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim)
 {
     if(smgr)
     {
@@ -15,12 +15,11 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
         if (cube_node)
         {
           cube_node->setPosition(pos);
-          cube_node->setMaterialTexture(0,video_driver->getTexture("./media/rockwall.jpg"));
           cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
-          cube_node->getMaterial(0).EmissiveColor = irr::video::SColor(250,250,0,0);
           cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
           cube_node->setID(ID_FLAG_CUBO|S);
-          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
+
+          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 32);
           cube_node->setTriangleSelector(seletor);
           seletor->drop();
 
@@ -45,7 +44,7 @@ void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
           cone_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           cone_node->setID(ID_FLAG_CONE|S);
 
-          seletor = smgr->createOctTreeTriangleSelector(cone_node->getMesh(), cone_node, 128);
+          seletor = smgr->createOctTreeTriangleSelector(cone_node->getMesh(), cone_node, 32);
           cone_node->setTriangleSelector(seletor);
           seletor->drop();
 
@@ -68,7 +67,7 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df 
         {
           cilindro_node->setPosition(pos);
           cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cilindro_node->setID(ID_FLAG_ESFERA|S);
+          cilindro_node->setID(ID_FLAG_CILINDRO|S);
 
           seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
           cilindro_node->setTriangleSelector(seletor);
@@ -104,8 +103,7 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double ra
 void IrrNode::criaGizmo(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode** gizmo_X,
                         irr::scene::IMeshSceneNode** gizmo_Y,
-                        irr::scene::IMeshSceneNode** gizmo_Z,
-                        irr::video::IVideoDriver *video_driver)
+                        irr::scene::IMeshSceneNode** gizmo_Z)
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
@@ -122,27 +120,58 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
         (*gizmo_X)->setID(ID_FLAG_GIZMO_X);
         (*gizmo_X)->setPosition(Vector3df(0, 0, 0));
         (*gizmo_X)->setRotation(Vector3df(0,0,-90));
-        seletor = smgr->createOctTreeTriangleSelector((*gizmo_X)->getMesh(),(*gizmo_X),128);
-        (*gizmo_X)->setTriangleSelector(seletor);
-        seletor->drop();
-        (*gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,true);
+        (*gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_X)->setVisible(false);
 
         (*gizmo_Y)->setID(ID_FLAG_GIZMO_Y);
         (*gizmo_Y)->setPosition(Vector3df(0, 0, 0));
-        seletor = smgr->createOctTreeTriangleSelector((*gizmo_Y)->getMesh(),(*gizmo_Y),128);
-        (*gizmo_Y)->setTriangleSelector(seletor);
-        seletor->drop();
-        (*gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,true);
+        (*gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_Y)->setVisible(false);
 
         (*gizmo_Z)->setID(ID_FLAG_GIZMO_Z);
         (*gizmo_Z)->setPosition(Vector3df(0, 0, 0));
         (*gizmo_Z)->setRotation(Vector3df(-90,0,0));
-        seletor = smgr->createOctTreeTriangleSelector((*gizmo_Z)->getMesh(),(*gizmo_Z),128);
-        (*gizmo_Z)->setTriangleSelector(seletor);
-        seletor->drop();
-        (*gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,true);
+        (*gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_Z)->setVisible(false);
+    }
+}
+
+void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
+                        irr::scene::IMeshSceneNode **r_analise_gizmo_X,
+                        irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
+                        irr::scene::IMeshSceneNode **r_analise_gizmo_Z)
+{
+    const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2, 4, 108.0f, 101.0f, 0.5f, 1.2f,
+                                                            irr::video::SColor(200,0,0,200),
+                                                            irr::video::SColor(255,0,0,255) );
+
+    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2, 4, 108.0f, 101.0f, 0.5f, 1.2f,
+                                                            irr::video::SColor(200,0,200,0),
+                                                            irr::video::SColor(255,0,255,0) );
+
+    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2, 4, 108.0f, 101.0f, 0.5f, 1.2f,
+                                                            irr::video::SColor(200,200,0,0),
+                                                            irr::video::SColor(255,255,0,0) );
+
+    (*r_analise_gizmo_X) = smgr->addMeshSceneNode(mesh_gizmo_X);
+    (*r_analise_gizmo_Y) = smgr->addMeshSceneNode(mesh_gizmo_Y);
+    (*r_analise_gizmo_Z) = smgr->addMeshSceneNode(mesh_gizmo_Z);
+
+    if((*r_analise_gizmo_X)&& (*r_analise_gizmo_Y) && (*r_analise_gizmo_Z))
+    {
+        (*r_analise_gizmo_X)->setPosition(Vector3df(-50, -50, 50));
+        (*r_analise_gizmo_X)->setRotation(Vector3df(0,0,-90));
+        (*r_analise_gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
+        (*r_analise_gizmo_X)->setVisible(true);
+
+        (*r_analise_gizmo_Y)->setPosition(Vector3df(-50, -50, 50));
+        (*r_analise_gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
+        (*r_analise_gizmo_Y)->setVisible(true);
+
+        (*r_analise_gizmo_Z)->setPosition(Vector3df(-50, -50, 50));
+        (*r_analise_gizmo_Z)->setRotation(Vector3df(-90,0,0));
+        (*r_analise_gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
+        (*r_analise_gizmo_Z)->setVisible(true);
     }
 }

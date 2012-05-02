@@ -19,14 +19,15 @@ private:
     irr::scene::ISceneNode *MoveSceneNode;
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
+    irr::scene::ITriangleSelector* seletor;
 
     irr::scene::IMeshSceneNode *gizmo_X;
     irr::scene::IMeshSceneNode *gizmo_Y;
     irr::scene::IMeshSceneNode *gizmo_Z;
 
-    Vector3df vetor_normal_n;
-    Vector3df vetor_normal;
-    Vector3df vetor_target;
+    irr::scene::IMeshSceneNode *r_analise_gizmo_X;
+    irr::scene::IMeshSceneNode *r_analise_gizmo_Y;
+    irr::scene::IMeshSceneNode *r_analise_gizmo_Z;
 
     bool duplicateNode_mouse_key;
 
@@ -56,14 +57,13 @@ public:
     ~Cena();
 
     bool mouse_key_test;
+    irr::core::aabbox3df box;
 
     float mouseXi;
     float mouseYi;
 
     float dx;
     float dy;
-
-    int fat_dx,fat_dy,fat_dz;
 
     void insertCubo(IrrNode* node);
     void insertEsfera(IrrNode* node);
@@ -76,7 +76,6 @@ public:
     inline void gizmo();
     void cenaIrrlicht();
 
-    void atualizaFatores();
     void aproximaObjetoSelecionado();
 
     inline void selection();

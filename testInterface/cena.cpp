@@ -5,7 +5,6 @@
 #include "getdimcilindro.h"
 #include <math.h>
 
-
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
     mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(1.0),afasta(1.0)
@@ -19,10 +18,6 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     camera_05 = false;
     camera_06 = false;
 
-    vetor_normal.set(0,0,0);
-    vetor_target.set(0,0,0);
-    vetor_normal_n.set(0,0,0);
-
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
 
@@ -31,13 +26,13 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     key_y_on = false;
     key_z_on = false;
 
-    fat_dx = 0;
-    fat_dy = 0;
-    fat_dz = 0;
-
     xi = 0;
     yi = 0;
     zi = 0;
+
+    r_analise_gizmo_X = 0;
+    r_analise_gizmo_Y = 0;
+    r_analise_gizmo_Z = 0;
 
     gizmo_X = 0;
     gizmo_Y = 0;
@@ -65,8 +60,7 @@ void Cena::cenaCameras(){
         camera->setTarget(Vector3df(0,0,0));
         camera_01 = true;
         smgr->setActiveCamera(camera);
-        atualizaFatores();
-     }
+    }
 }
 
 void Cena::cenaIluminacao(){
@@ -84,18 +78,18 @@ void Cena::cenaVisualizacoes(){}
 void Cena::criaRegiaoAnalise(){
     if(smgr)
     {
+        IrrNode* node = new IrrNode();
         video_driver->setTransform( irr::video::ETS_WORLD, irr::core::matrix4());
         irr::video::SMaterial mat;
-        irr::core::aabbox3df box;
 
         mat.Lighting = false;
         video_driver->setMaterial( mat );
 
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z );
         box.MinEdge.set(Vector3df(-50,-50,-50));
         box.MaxEdge.set(Vector3df(50, 50, 50));
 
         video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
-
     }
 }
 
@@ -104,33 +98,8 @@ void Cena::gizmo(){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z,video_driver);
+        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z);
         drawIrrlichtScene();
-    }
-}
-
-void Cena::atualizaFatores(){
-    if(smgr)
-    {
-        vetor_normal.set(vetor_target.X - camera->getPosition().X,
-                         vetor_target.Y - camera->getPosition().Y,
-                         vetor_target.Y - camera->getPosition().Z);
-
-        vetor_normal_n.set(vetor_normal);
-
-        if(vetor_normal_n.X>0)    vetor_normal_n.X = 1;
-        else if(vetor_normal_n.X<0)    vetor_normal_n.X = -1;
-
-        if(vetor_normal_n.Y>0)     vetor_normal_n.Y = 1;
-        else if(vetor_normal_n.Y<0)   vetor_normal_n.Y = -1;
-
-
-        if(vetor_normal_n.Z>0)   vetor_normal_n.Z = 1;
-        else if(vetor_normal_n.Z<0) vetor_normal_n.Z = -1;
-
-        fat_dx = vetor_normal_n.X;
-        fat_dy = vetor_normal_n.Y;
-        fat_dz = vetor_normal_n.Z;
     }
 }
 
@@ -167,34 +136,34 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
         if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_P))//aproxima camera
         {
-            if((fat_dz==1) && (camera_01)){
+            if(camera_01){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z + aproxima*2));
             }
-            else if((fat_dz =(-1)) && (camera_04)){
+            else if(camera_04){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z - aproxima*2));
             }
 
-            if((fat_dy==1) && (camera_06)){
+            else if(camera_06){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y + aproxima*2,
                                               camera->getPosition().Z ));
             }
-            else if((fat_dy =(-1)) && (camera_05)){
+            else if(camera_05){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y - aproxima*2,
                                               camera->getPosition().Z));
             }
 
-            if((fat_dx==1) && (camera_03)){
+            else if(camera_03){
                 camera->setPosition(Vector3df(camera->getPosition().X + aproxima*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
             }
-            else if(fat_dx =(-1) && (camera_02)){
+            else if(camera_02){
                 camera->setPosition(Vector3df(camera->getPosition().X - aproxima*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
@@ -204,34 +173,34 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
         if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_O))//afasta camera
         {
-            if((fat_dz==1) && (camera_01)){
+            if(camera_01){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z - afasta*2));
             }
-            else if((fat_dz =(-1)) && (camera_04)){
+            else if(camera_04){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z + afasta*2));
             }
 
-            if((fat_dy==1) && (camera_06)){
+            else if(camera_06){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y - afasta*2,
                                               camera->getPosition().Z ));
             }
-            else if((fat_dy =(-1)) && (camera_05)){
+            else if(camera_05){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y + afasta*2,
                                               camera->getPosition().Z));
             }
 
-            if((fat_dx==1) && (camera_03)){
+            else if(camera_03){
                 camera->setPosition(Vector3df(camera->getPosition().X - afasta*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
             }
-            else if(fat_dx =(-1) && (camera_02)){
+            else if(camera_02){
                 camera->setPosition(Vector3df(camera->getPosition().X + afasta*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
@@ -284,8 +253,6 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = false;
                 camera_05 = false;
                 camera_06 = false;
-
-                atualizaFatores();
                 break;
 
             case (Qt::Key_2):  //camera posionada na direita
@@ -298,13 +265,11 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = false;
                 camera_05 = false;
                 camera_06 = false;
-
-                atualizaFatores();
                 break;
 
             case (Qt::Key_3):   //camera posicionada na esquerda
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(-150,0,1));
+                camera->setPosition(Vector3df(-200,0,0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -312,13 +277,11 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = false;
                 camera_05 = false;
                 camera_06 = false;
-
-                atualizaFatores();
                 break;
 
             case (Qt::Key_4):   //camera posionada na parte de tras
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,0,150));
+                camera->setPosition(Vector3df(0,0,200));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -326,13 +289,12 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = true;
                 camera_05 = false;
                 camera_06 = false;
-
-                atualizaFatores();
                 break;
 
             case (Qt::Key_5):   //camera posionada no topo
-                camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,150,-0.1));
+                camera->setTarget(Vector3df(0, 0, 0));
+                camera->setPosition(Vector3df(0, 200, -0.1));
+                //camera->setRotation(Vector3df(90,0,0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -340,13 +302,11 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = false;
                 camera_05 = true;
                 camera_06 = false;
-
-                atualizaFatores();
                 break;
 
             case (Qt::Key_6):   //camera posionada na base
-                camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,-150,-0.1));
+                camera->setTarget(Vector3df(0, 0, 0));
+                camera->setPosition(Vector3df(0, -200, -0.1));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -354,8 +314,6 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 camera_04 = false;
                 camera_05 = false;
                 camera_06 = true;
-
-                atualizaFatores();
                 break;
 
             default:
@@ -406,8 +364,24 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
-                dx = fat_dz*dx ;
-                MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx , MoveSceneNode->getPosition().Y, MoveSceneNode->getPosition().Z ));
+                if(camera_01)
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
+                                                          MoveSceneNode->getPosition().Y,
+                                                          MoveSceneNode->getPosition().Z ));
+
+                else if(camera_04)
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),
+                                                          MoveSceneNode->getPosition().Y,
+                                                          MoveSceneNode->getPosition().Z ));
+                else if(camera_05)
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
+                                                          MoveSceneNode->getPosition().Y,
+                                                          MoveSceneNode->getPosition().Z ));
+
+                else if(camera_06)
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
+                                                          MoveSceneNode->getPosition().Y,
+                                                          MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);
@@ -419,8 +393,12 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                 gizmo_Z->setVisible(true);
                 drawIrrlichtScene();
             }
-            if(key_y_on)
+
+            else if(key_y_on)
             {
+                if(camera_05||camera_06){
+                    dy = 0;
+                }
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -433,10 +411,26 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                 gizmo_Z->setVisible(true);
                 drawIrrlichtScene();
             }
-            if(key_z_on)
+
+            else if(key_z_on)
             {
-                dx = (-fat_dx)*dx + fat_dy*dy;
-                MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, MoveSceneNode->getPosition().Y, zi + 0.1*(dx)));
+                if(camera_05)
+                    MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
+                                                          MoveSceneNode->getPosition().Y,
+                                                          zi + 0.1*(-dx)));
+                else if(camera_06)
+                    MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
+                                                          MoveSceneNode->getPosition().Y,
+                                                          zi + 0.1*(dx)));
+                else if(camera_02)
+                    MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
+                                                          MoveSceneNode->getPosition().Y,
+                                                          zi + 0.1*(dx)));
+
+                else if(camera_03)
+                    MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
+                                                          MoveSceneNode->getPosition().Y,
+                                                          zi + 0.1*(-dx)));
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);
@@ -499,7 +493,7 @@ void Cena::insertCubo(IrrNode* node)
         if(w->isOk()){
             Dim3df dim = w->getDimension();
             Pos3df p = w->getPosition();
-            node->criaCubo(smgr, p, dim, video_driver);
+            node->criaCubo(smgr, p, dim);
             drawIrrlichtScene();
         }
         delete w;
@@ -567,11 +561,17 @@ void Cena::duplicateSceneNode()
 {
     if(smgr){
         if(selectedSceneNode){
-            irr::scene::ISceneNode* node =  (irr::scene::ISceneNode*)selectedSceneNode->clone();
+            irr::scene::IMeshSceneNode* node = (irr::scene::IMeshSceneNode*)selectedSceneNode->clone();
+
             node->setPosition(mouse_release_position);
             node->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
             selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-            node->setID(S);
+
+            seletor = smgr->createOctreeTriangleSelector(node->getMesh(), node, 32);
+            node->setTriangleSelector(seletor);
+            seletor->drop();
+
+            selectedSceneNode = (irr::scene::ISceneNode*)node;
          }
     }
 }
@@ -591,52 +591,58 @@ void Cena::removeSceneNode()
 
 void Cena::aproximaObjetoSelecionado(){
     if(smgr && selectedSceneNode){
-        if((fat_dz==1) && (camera_01)){
+        if(camera_01){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z - 50));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));
         }
-        else if((fat_dz =(-1)) && (camera_04)){
+        else if(camera_04){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z + 50));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));
         }
 
-        if((fat_dy==1) && (camera_06)){
+        if(camera_06){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y - 50,
                                           selectedSceneNode->getPosition().Z ));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));
         }
-        else if((fat_dy =(-1)) && (camera_05)){
+        else if(camera_05){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y + 50,
                                           selectedSceneNode->getPosition().Z));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));
         }
 
-        if((fat_dx==1) && (camera_03)){
+        if(camera_03){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X - 50,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));
         }
-        else if(fat_dx =(-1) && (camera_02)){
+        else if(camera_02){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X + 50,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
+
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
                                         selectedSceneNode->getPosition().Z));

@@ -19,8 +19,7 @@ public:
 
     void criaCubo(IrrSmgr* const,
                   const Pos3df&,
-                  const Dim3df&,
-                  irr::video::IVideoDriver *video_driver);
+                  const Dim3df&);
 
     void criaCilindro(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim);
 
@@ -31,9 +30,12 @@ public:
     void criaGizmo( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **gizmo_X,
                     irr::scene::IMeshSceneNode **gizmo_Y,
-                    irr::scene::IMeshSceneNode **gizmo_Z,
-                    irr::video::IVideoDriver *video_driver);
+                    irr::scene::IMeshSceneNode **gizmo_Z);
 
+    void gizmosRegiaoAnalise( IrrSmgr* const,
+                    irr::scene::IMeshSceneNode **r_analise_gizmo_X,
+                    irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
+                    irr::scene::IMeshSceneNode **r_analise_gizmo_Z);
 };
 
 #endif // IRRNODE_H
