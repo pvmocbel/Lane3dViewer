@@ -1,9 +1,9 @@
 #include "cena.h"
-#include "getdimcube.h"
-#include "getdimcone.h"
-#include "getdimesfera.h"
-#include "getdimcilindro.h"
-#include <math.h>
+//#include "getdimcube.h"
+//#include "getdimcone.h"
+//#include "getdimesfera.h"
+//#include "getdimcilindro.h"
+//#include <math.h>
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
@@ -47,7 +47,7 @@ void Cena::cenaIrrlicht()
         collMan = smgr->getSceneCollisionManager();
         cenaCameras();
         cenaIluminacao();
-        criaRegiaoAnalise();
+//        criaRegiaoAnalise();
         gizmo();
         drawIrrlichtScene();
     }
@@ -75,7 +75,7 @@ void Cena::cenaIluminacao(){
 
 void Cena::cenaVisualizacoes(){}
 
-void Cena::criaRegiaoAnalise(){
+void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
@@ -85,16 +85,27 @@ void Cena::criaRegiaoAnalise(){
         mat.Lighting = false;
         video_driver->setMaterial( mat );
 
-        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, box );
-        box.MinEdge.set(Vector3df(-50,-50,-50));
-        box.MaxEdge.set(Vector3df(50, 50, 50));
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim );
+        box.MinEdge.set(-(irr::f32)(dim.X/2),
+                        -(irr::f32)(dim.Y/2),
+                        -(irr::f32)(dim.Z/2));
+        box.MaxEdge.set((irr::f32)(dim.X/2),
+                        (irr::f32)(dim.Y/2),
+                        (irr::f32)(dim.Z/2));
 
-        video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
+        qDebug()<<"Min x = "<<box.MinEdge.X<<" y ="<<box.MinEdge.Y<<" z ="<<box.MinEdge.Z;
+        qDebug()<<"Man x = "<<box.MaxEdge.X<<" y ="<<box.MaxEdge.Y<<" z ="<<box.MaxEdge.Z;
+
+        printRegiaoAnalise(box);
         delete node;
     }
 }
 
-void Cena::criaRegiaoLivre(){}
+void Cena::printRegiaoAnalise(irr::core::aabbox3df box){
+    if(video_driver)
+    video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
+}
+
 void Cena::gizmo(){
     if(smgr)
     {
@@ -296,7 +307,6 @@ void Cena::keyPressEvent(QKeyEvent *event){
             case (Qt::Key_5):   //camera posionada no topo
                 camera->setTarget(Vector3df(0, 0, 0));
                 camera->setPosition(Vector3df(0, 200, -0.1));
-                //camera->setRotation(Vector3df(90,0,0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -489,16 +499,16 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 void Cena::insertCubo(IrrNode* node)
 {
     if(smgr){
-        getDimCube* w = new getDimCube(0);
-        w->show();
-        w->exec();
-        if(w->isOk()){
-            Dim3df dim = w->getDimension();
-            Pos3df p = w->getPosition();
-            node->criaCubo(smgr, p, dim);
-            drawIrrlichtScene();
-        }
-        delete w;
+//        getDimCube* w = new getDimCube(0);
+//        w->show();
+//        w->exec();
+//        if(w->isOk()){
+//            Dim3df dim = w->getDimension();
+//            Pos3df p = w->getPosition();
+//            node->criaCubo(smgr, p, dim);
+//            drawIrrlichtScene();
+//        }
+//        delete w;
     }
 }
 
@@ -506,18 +516,18 @@ void Cena::insertCone(IrrNode* node)
 {
     if(smgr)
     {
-        getDimCone *w = new getDimCone();
+//        getDimCone *w = new getDimCone();
 
-        w->show();
-        w->exec();
+//        w->show();
+//        w->exec();
 
-        Dim3df dim = w->getDimension();
-        Pos3df p = w->getPosition();
+//        Dim3df dim = w->getDimension();
+//        Pos3df p = w->getPosition();
 
-        node->criaCone(smgr, p, dim);
+//        node->criaCone(smgr, p, dim);
 
-        drawIrrlichtScene();
-        delete w;
+//        drawIrrlichtScene();
+//        delete w;
     }
 }
 
@@ -525,18 +535,18 @@ void Cena::insertCilindro(IrrNode* node)
 {
     if(smgr)
     {
-        getDimCilindro*w = new getDimCilindro();
+//        getDimCilindro*w = new getDimCilindro();
 
-        w->show();
-        w->exec();
+//        w->show();
+//        w->exec();
 
-        Dim3df dim = w->getDimension();
-        Pos3df p = w->getPosition();
-        node->criaCilindro(smgr, p, dim);
+//        Dim3df dim = w->getDimension();
+//        Pos3df p = w->getPosition();
+//        node->criaCilindro(smgr, p, dim);
 
-        drawIrrlichtScene();
+//        drawIrrlichtScene();
 
-        delete w;
+//        delete w;
     }
 }
 
@@ -544,18 +554,18 @@ void Cena::insertEsfera(IrrNode* node)
 {
     if(smgr)
     {
-        getDimEsfera* w = new getDimEsfera(0);
+//        getDimEsfera* w = new getDimEsfera(0);
 
-        w->show();
-        w->exec();
+//        w->show();
+//        w->exec();
 
-        double raio = w->getDimension();
-        Pos3df p = w->getPosition();
-        node->criaEsfera(smgr, p, raio);
+//        double raio = w->getDimension();
+//        Pos3df p = w->getPosition();
+//        node->criaEsfera(smgr, p, raio);
 
-        drawIrrlichtScene();
+//        drawIrrlichtScene();
 
-        delete w;
+//        delete w;
     }
 }
 
@@ -711,7 +721,7 @@ void Cena::drawIrrlichtScene()
         video_driver->beginScene( true, true, irr::video::SColor( 255, 128, 128, 128 ));
         smgr->drawAll();
         env->drawAll();
-        criaRegiaoAnalise();
+        printRegiaoAnalise(box);
 
         video_driver->endScene();
     }
