@@ -71,6 +71,15 @@
          </item>
          <item>
           <widget class="QDoubleSpinBox" name="position_X">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="keyboardTracking">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string>m</string>
+           </property>
            <property name="decimals">
             <number>2</number>
            </property>
@@ -107,73 +116,6 @@
            </property>
            <property name="minimum">
             <double>-1000.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSlider" name="horizontalSlider_Porcent">
-           <property name="toolTip">
-            <string>View Escala</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="pageStep">
-            <number>0</number>
-           </property>
-           <property name="value">
-            <number>100</number>
-           </property>
-           <property name="sliderPosition">
-            <number>100</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_Porcent">
-           <property name="toolTip">
-            <string>View Escala</string>
-           </property>
-           <property name="suffix">
-            <string extracomment="%"/>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-           <property name="singleStep">
-            <number>10</number>
-           </property>
-           <property name="value">
-            <number>100</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_PorcentFactor">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>100</number>
            </property>
           </widget>
          </item>
@@ -345,7 +287,7 @@
                <x>0</x>
                <y>0</y>
                <width>140</width>
-               <height>195</height>
+               <height>167</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -621,7 +563,7 @@
                <x>0</x>
                <y>0</y>
                <width>150</width>
-               <height>749</height>
+               <height>628</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
@@ -1767,7 +1709,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

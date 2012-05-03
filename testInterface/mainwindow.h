@@ -7,6 +7,8 @@
 #include "cena.h"
 #include"irrnode.h"
 
+class Cena;
+
 namespace Ui {class MainWindow;}
 
 class MainWindow : public QMainWindow
@@ -17,6 +19,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
      void keyPressEvent( QKeyEvent * event);
+     double val;
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -28,6 +33,12 @@ public slots:
     void criaEsfera();
     void criaCone();
     void criaCilindro();
+    void receiver(float x);
+    void  atualiza_x_position();
+
+
+signals:
+    void change_value(float );   
 };
 
 #endif // MAINWINDOW_H

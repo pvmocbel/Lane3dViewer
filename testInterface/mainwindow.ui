@@ -15,40 +15,116 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="0" column="0" colspan="2">
      <widget class="QPushButton" name="start">
       <property name="text">
        <string>start</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="0" column="2" colspan="3">
      <widget class="QPushButton" name="cubo">
       <property name="text">
        <string>cubo</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
+    <item row="0" column="5" colspan="3">
      <widget class="QPushButton" name="esfera">
       <property name="text">
        <string>esfera</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
+    <item row="0" column="8">
      <widget class="QPushButton" name="cone">
       <property name="text">
        <string>cone</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="4">
+    <item row="0" column="9">
      <widget class="QPushButton" name="cilindro">
       <property name="text">
        <string>cilindro</string>
       </property>
      </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>x:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <widget class="QDoubleSpinBox" name="position_x">
+      <property name="maximumSize">
+       <size>
+        <width>74</width>
+        <height>19</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="maximumSize">
+       <size>
+        <width>29</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>y:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4" colspan="2">
+     <widget class="QDoubleSpinBox" name="position_y">
+      <property name="maximumSize">
+       <size>
+        <width>68</width>
+        <height>19</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="6">
+     <widget class="QLabel" name="label_3">
+      <property name="maximumSize">
+       <size>
+        <width>29</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>z:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="7">
+     <widget class="QDoubleSpinBox" name="position_z">
+      <property name="maximumSize">
+       <size>
+        <width>62</width>
+        <height>19</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="8">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>

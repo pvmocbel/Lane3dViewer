@@ -1,14 +1,15 @@
 #include "cena.h"
-//#include "getdimcube.h"
-//#include "getdimcone.h"
-//#include "getdimesfera.h"
-//#include "getdimcilindro.h"
-//#include <math.h>
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
     mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(1.0),afasta(1.0)
 {
+    init();
+}
+
+Cena::~Cena(){}
+
+void Cena::init(){
     camera = 0;
 
     camera_01 = false;
@@ -40,12 +41,9 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     gizmo_X = 0;
     gizmo_Y = 0;
     gizmo_Z = 0;
-    //init();
-}
 
-Cena::~Cena(){}
 
-void Cena::init(){
+//    connect(selectedSceneNode, SIGNAL(change_value(float)), this , SLOT(return_change_x_position(float)));
 
 }
 
@@ -129,6 +127,15 @@ void Cena::change_x_position(float x){
         selectedSceneNode->setPosition(Vector3df(x,
                                                  selectedSceneNode->getPosition().Y,
                                                  selectedSceneNode->getPosition().Z));
+        gizmo_X->setPosition(selectedSceneNode->getPosition());
+        gizmo_X->setVisible(true);
+
+        gizmo_Y->setPosition(selectedSceneNode->getPosition());
+        gizmo_Y->setVisible(true);
+
+        gizmo_Z->setPosition(selectedSceneNode->getPosition());
+        gizmo_Z->setVisible(true);
+
         qDebug()<<"change x position = "<< x;
     }
 }
@@ -138,6 +145,14 @@ void Cena::change_y_position(float y){
         selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                                  y,
                                                  selectedSceneNode->getPosition().Z));
+        gizmo_X->setPosition(selectedSceneNode->getPosition());
+        gizmo_X->setVisible(true);
+
+        gizmo_Y->setPosition(selectedSceneNode->getPosition());
+        gizmo_Y->setVisible(true);
+
+        gizmo_Z->setPosition(selectedSceneNode->getPosition());
+        gizmo_Z->setVisible(true);
         qDebug()<<"change y position = "<< y;
     }
 }
@@ -147,33 +162,44 @@ void Cena::change_z_position(float z){
         selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                                  selectedSceneNode->getPosition().Y,
                                                  z));
+        gizmo_X->setPosition(selectedSceneNode->getPosition());
+        gizmo_X->setVisible(true);
+
+        gizmo_Y->setPosition(selectedSceneNode->getPosition());
+        gizmo_Y->setVisible(true);
+
+        gizmo_Z->setPosition(selectedSceneNode->getPosition());
+        gizmo_Z->setVisible(true);
         qDebug()<<"change z position = "<< z;
     }
 }
 
-//void Cena::return_change_x_position(float x){
-//    if(smgr && selectedSceneNode){
-////        MainWindow* w = new MainWindow(0);
-////        w->return_x_changed(x);
-////        delete w;
-//    }
-//}
+void Cena::return_change_x_position(float x){
+    if(smgr && selectedSceneNode){
+        MainWindow* w = new MainWindow();
+        w->return_x_changed(x);
+        drawIrrlichtScene();
+        delete w;
+    }
+}
 
-//void Cena::return_change_y_position(float y){
-//    if(smgr && selectedSceneNode){
-////        MainWindow* w = new MainWindow(0);
-////        w->return_y_changed(y);
-////        delete w;
-//    }
-//}
+void Cena::return_change_y_position(float y){
+    if(smgr && selectedSceneNode){
+        MainWindow* w = new MainWindow();
+        w->return_y_changed(y);
+        drawIrrlichtScene();
+        delete w;
+    }
+}
 
-//void Cena::return_change_z_position(float z){
-//    if(smgr && selectedSceneNode){
-////        MainWindow* w = new MainWindow(0);
-////        w->return_z_changed(z);
-////        delete w;
-//    }
-//}
+void Cena::return_change_z_position(float z){
+    if(smgr && selectedSceneNode){
+        MainWindow* w = new MainWindow();
+        w->return_z_changed(z);
+        drawIrrlichtScene();
+        delete w;
+    }
+}
 
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
@@ -439,21 +465,27 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-//                    emit return_change_x_position(xi+0.1*dx);
+                    return_change_x_position(xi+0.1*dx);
                 }
-                else if(camera_04)
+                else if(camera_04){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-                else if(camera_05)
+                    return_change_x_position(xi+0.1*(-dx));
+                }
+                else if(camera_05){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
+                    return_change_x_position(xi + 0.1*(-dy));
+                }
 
-                else if(camera_06)
+                else if(camera_06){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
+                    return_change_x_position(xi + 0.1*(-dy));
+                }
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);
@@ -472,6 +504,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                     dy = 0;
                 }
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
+                return_change_y_position(yi - 0.1*dy);
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);
@@ -486,23 +519,31 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             else if(key_z_on)
             {
-                if(camera_05)
+                if(camera_05){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(-dx)));
-                else if(camera_06)
+                return_change_z_position(zi + 0.1*(-dx));
+                }
+                else if(camera_06){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(dx)));
-                else if(camera_02)
+                return_change_z_position(zi + 0.1*(dx));
+                }
+                else if(camera_02){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(dx)));
+                return_change_z_position(zi + 0.1*(-dx));
+                }
 
-                else if(camera_03)
+                else if(camera_03){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(-dx)));
+                return_change_z_position(zi + 0.1*(-dx));
+                }
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);

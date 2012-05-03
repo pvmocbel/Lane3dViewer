@@ -8,6 +8,7 @@
 #include "cena.h"
 
 class Dialog_CGerais;
+class  Cena;
 
 namespace Ui {
     class MainWindow;
@@ -23,17 +24,23 @@ public:
      void keyPressEvent( QKeyEvent * event);
      void init();
 
-     void return_x_changed(float x);
-     void return_y_changed(float y);
-     void return_z_changed(float z);
+     double va;
 
-private slots:
+     virtual void paintEvent( QPaintEvent *event );
+     virtual void resizeEvent( QResizeEvent *event );
+     virtual QPaintEngine * paintEngine() const;
+
+public slots:
     void new_triggered();
     void open_triggered();
     void save_triggered();
 
     void posicao_triggered();
     void rotacao_triggered();
+
+    void return_x_changed(float x);
+    void return_y_changed(float y);
+    void return_z_changed(float z);
 
     void change_x_position(double);
     void change_y_position(double);

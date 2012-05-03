@@ -3,6 +3,7 @@
 #define CENA_H
 
 #include <utility>
+#include <QObject>
 #include <mainwindow.h>
 #include <map>
 #include <vector>
@@ -15,6 +16,7 @@
 
 class Cena: public IrrViewer
 {
+//    Q_OBJECT
 private:
     irr::scene::ISceneNode *MoveSceneNode;
     irr::scene::ILightSceneNode *light;
@@ -77,6 +79,10 @@ public:
     void change_y_position(float y);
     void change_z_position(float z);
 
+    void return_change_x_position(float x);
+    void return_change_y_position(float y);
+    void return_change_z_position(float z);
+
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();
@@ -99,11 +105,6 @@ public:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
     void sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown);
-
-//public slots:
-//    void return_change_x_position(float x);
-//    void return_change_y_position(float y);
-//    void return_change_z_position(float z);
 
 //signals:
 //    void change_value(float);

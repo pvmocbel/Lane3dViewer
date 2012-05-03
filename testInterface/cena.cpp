@@ -53,6 +53,16 @@ void Cena::cenaIrrlicht()
     }
 }
 
+void Cena::send_x_changed(float x)
+{
+    if(smgr && selectedSceneNode)
+    {
+        MainWindow*w = new MainWindow();
+        w->receiver(x);
+        delete w;
+    }
+}
+
 void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
@@ -369,10 +379,12 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
-                if(camera_01)
+                if(camera_01){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
+                send_x_changed(xi + 0.1*dx);
+                }
 
                 else if(camera_04)
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),

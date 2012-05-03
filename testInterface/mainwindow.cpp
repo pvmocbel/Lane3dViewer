@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     cena(0)
 {
     ui->setupUi(this);
+    val = 0;
     connect( ui->start, SIGNAL(clicked()), this, SLOT(initIrrlichtWindow()));
     connect( ui->cubo, SIGNAL(clicked()), this, SLOT(criaCubo()));
     connect( ui->esfera, SIGNAL(clicked()), this, SLOT(criaEsfera()));
@@ -21,13 +22,25 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::receiver(float x){
+    val = (double)x;
+    qDebug()<<"val = "<<val;
+    atualiza_x_position();
+}
+
+void MainWindow::atualiza_x_position()
+{
+//    val = 2.694;
+    ui->position_x->setValue((double)(val));
+}
+
 void MainWindow::initIrrlichtWindow(){
     if (cena) return;
 
     cena = new Cena();
     cena->resize(2048, 2048);
 
-    ui->gridLayout->addWidget(cena, 1, 0, 5, 5);
+    ui->gridLayout->addWidget(cena, 2, 1, 5, 10 );
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
@@ -35,10 +48,12 @@ void MainWindow::initIrrlichtWindow(){
 
 void MainWindow::criaCubo(){
     cena->insertCubo(new IrrNode());
+//    ui->position_x->setValue(val);
 }
 
 void MainWindow::criaEsfera(){
-    cena->insertEsfera(new IrrNode());
+//    cena->insertEsfera(new IrrNode());
+    atualiza_x_position();
 }
 
 void MainWindow::criaCone(){

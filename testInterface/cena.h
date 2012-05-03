@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include "irrviewer.h"
 #include "irrnode.h"
+#include "mainwindow.h"
 
 #define PI 3,14159265
 
@@ -64,6 +65,8 @@ public:
 
     float dx;
     float dy;
+
+    void send_x_changed(float x);
 
     void insertCubo(IrrNode* node);
     void insertEsfera(IrrNode* node);

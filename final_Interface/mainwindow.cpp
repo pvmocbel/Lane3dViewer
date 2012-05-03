@@ -18,9 +18,30 @@ void MainWindow::init()
 {
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(new_triggered()));
     connect(ui->actionCubo, SIGNAL(triggered()), this, SLOT(cubo_triggered()));
+
     connect(ui->position_X, SIGNAL(valueChanged(double)), this, SLOT(change_x_position(double)));
     connect(ui->position_Y, SIGNAL(valueChanged(double)), this, SLOT(change_y_position(double)));
     connect(ui->position_Z, SIGNAL(valueChanged(double)), this, SLOT(change_z_position(double)));
+
+    va = 0;
+}
+
+void MainWindow::paintEvent( QPaintEvent *event )
+{
+    QWidget::paintEvent(event);
+//    ui->position_X->setValue(20);
+//    qDebug()<<"paint event";
+}
+
+void MainWindow::resizeEvent( QResizeEvent *event )
+{
+    QWidget::resizeEvent(event);
+}
+
+QPaintEngine* MainWindow::paintEngine() const
+{
+    QWidget::paintEngine();    
+    return 0;
 }
 
 void MainWindow::change_x_position(double x){
@@ -36,14 +57,23 @@ void MainWindow::change_z_position(double z){
 }
 
 void MainWindow::return_x_changed(float x){
-    ui->position_X->setValue(x);
+
+    va = x;
+    qDebug()<<"change x before = "<<va;
+    ui->position_X->setValue(va);
+    ui->cube_dim_X->setValue(20);
+//    ui->position_X->set
+    qDebug()<<"change x after = "<<ui->position_X->value();
+    repaint();
 }
 
 void MainWindow::return_y_changed(float y){
+    qDebug()<<"change y here = "<<y;
     ui->position_Y->setValue(y);
 }
 
 void MainWindow::return_z_changed(float z){
+    qDebug()<<"change z here = "<<z;
     ui->position_Z->setValue(z);
 }
 
@@ -184,3 +214,4 @@ void MainWindow::setPainelCilindro(){
 void MainWindow::keyPressEvent( QKeyEvent * event){
     cena->keyPressEvent(event);
 }
+
