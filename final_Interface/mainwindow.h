@@ -21,31 +21,43 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
      void keyPressEvent( QKeyEvent * event);
+     void init();
+
+     void return_x_changed(float x);
+     void return_y_changed(float y);
+     void return_z_changed(float z);
 
 private slots:
-    void New_triggered();
-    void Open_triggered();
-    void Save_triggered();
+    void new_triggered();
+    void open_triggered();
+    void save_triggered();
 
-    void Posicao_triggered();
-    void Rotacao_triggered();
+    void posicao_triggered();
+    void rotacao_triggered();
 
-    void Ponto_triggered();
-    void Linha_triggered();
-    void Retangulo_triggered();
-    void Circulo_triggered();
+    void change_x_position(double);
+    void change_y_position(double);
+    void change_z_position(double);
+
+    void ponto_triggered();
+    void linha_triggered();
+    void cubo_triggered();
+    void cone_triggered();
+    void cilindro_triggered();
+    void esfera_triggered();
 
     void setPainelPonto();
     void setPainelLinha();
     void setPainelCubo();
     void setPainelCone();
     void setPainelEsfera();
+    void setPainelCilindro();
 
 protected:
 
 private:
     Ui::MainWindow *ui;
     Cena* cena;
-    QVBoxLayout     layout;    
+    QVBoxLayout     layout;
 };
 #endif // MAINWINDOW_H

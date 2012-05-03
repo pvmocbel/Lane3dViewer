@@ -25,7 +25,7 @@ private slots:
 private:
     Ui::Dialog_CGerais *ui;
     Dim3df dimension;
-    double dimX_RL, dimY_RL, dimZ_RL, delta;
+    irr::f32 dimX_RL, dimY_RL, dimZ_RL, delta;
 };
 
 #endif // DIALOG_CGERAIS_H

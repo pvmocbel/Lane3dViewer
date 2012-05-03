@@ -85,9 +85,12 @@ void Cena::criaRegiaoAnalise(){
         mat.Lighting = false;
         video_driver->setMaterial( mat );
 
-        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, box );
         box.MinEdge.set(Vector3df(-50,-50,-50));
         box.MaxEdge.set(Vector3df(50, 50, 50));
+
+        Dim3df dim;
+        dim.set(100,100,100);
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim );
 
         video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
         delete node;

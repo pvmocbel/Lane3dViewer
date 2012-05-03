@@ -3,6 +3,7 @@
 #define CENA_H
 
 #include <utility>
+#include <mainwindow.h>
 #include <map>
 #include <vector>
 #include <set>
@@ -15,7 +16,6 @@
 class Cena: public IrrViewer
 {
 private:
-    irr::scene::ISceneNode *selectedSceneNode;
     irr::scene::ISceneNode *MoveSceneNode;
     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
@@ -53,8 +53,11 @@ private:
     Pos3df mouse_release_position;
 
 public:
+    irr::scene::ISceneNode *selectedSceneNode;
+
     Cena();
     ~Cena();
+    void init();
 
     bool mouse_key_test;
     irr::core::aabbox3df box;
@@ -65,10 +68,14 @@ public:
     float dx;
     float dy;
 
-    void insertCubo(IrrNode* node);
+    void insertCubo(IrrNode* node, const Dim3df& dim, const Pos3df& p);
     void insertEsfera(IrrNode* node);
     void insertCone(IrrNode* node);
     void insertCilindro(IrrNode* node);
+
+    void change_x_position(float x);
+    void change_y_position(float y);
+    void change_z_position(float z);
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
@@ -84,7 +91,6 @@ public:
     inline void cenaCameras();
     void criaRegiaoAnalise(const Dim3df& dim, double delta);
     inline void cenaIluminacao();
-    inline void cenaVisualizacoes();
 
     void drawIrrlichtScene();
 
@@ -93,6 +99,14 @@ public:
     void mousePressEvent( QMouseEvent* event );
     void mouseReleaseEvent( QMouseEvent* event );
     void sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown);
+
+//public slots:
+//    void return_change_x_position(float x);
+//    void return_change_y_position(float y);
+//    void return_change_z_position(float z);
+
+//signals:
+//    void change_value(float);
 
 };  //fim da classe Cena
 #endif // CENA_H

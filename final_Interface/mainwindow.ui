@@ -74,6 +74,9 @@
            <property name="decimals">
             <number>2</number>
            </property>
+           <property name="minimum">
+            <double>-1000.000000000000000</double>
+           </property>
           </widget>
          </item>
          <item>
@@ -84,7 +87,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="position_Y"/>
+          <widget class="QDoubleSpinBox" name="position_Y">
+           <property name="minimum">
+            <double>-1000.000000000000000</double>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_3">
@@ -97,6 +104,9 @@
           <widget class="QDoubleSpinBox" name="position_Z">
            <property name="acceptDrops">
             <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <double>-1000.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -260,8 +270,8 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>170</width>
-          <height>16777215</height>
+          <width>180</width>
+          <height>451</height>
          </size>
         </property>
         <property name="frameShape">
@@ -334,8 +344,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>144</width>
-               <height>336</height>
+               <width>140</width>
+               <height>195</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -611,7 +621,7 @@
                <x>0</x>
                <y>0</y>
                <width>150</width>
-               <height>628</height>
+               <height>749</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
@@ -736,7 +746,7 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <widget class="QWidget" name="page_Ponto">
                  <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -902,7 +912,7 @@
                   </item>
                  </layout>
                 </widget>
-                <widget class="QWidget" name="page_Rect">
+                <widget class="QWidget" name="page_Cubo">
                  <layout class="QVBoxLayout" name="verticalLayout_5">
                   <property name="margin">
                    <number>0</number>
@@ -943,7 +953,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>LargX:</string>
+                        <string>X:</string>
                        </property>
                        <property name="textFormat">
                         <enum>Qt::AutoText</enum>
@@ -957,7 +967,7 @@
                       </widget>
                      </item>
                      <item row="0" column="1">
-                      <widget class="QDoubleSpinBox" name="doubleSpinBox_DimX">
+                      <widget class="QDoubleSpinBox" name="cube_dim_X">
                        <property name="minimumSize">
                         <size>
                          <width>60</width>
@@ -973,6 +983,9 @@
                        <property name="maximum">
                         <double>100.000000000000000</double>
                        </property>
+                       <property name="value">
+                        <double>10.000000000000000</double>
+                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0">
@@ -984,7 +997,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>AltY:</string>
+                        <string>Y:</string>
                        </property>
                        <property name="textFormat">
                         <enum>Qt::AutoText</enum>
@@ -998,7 +1011,7 @@
                       </widget>
                      </item>
                      <item row="1" column="1">
-                      <widget class="QDoubleSpinBox" name="doubleSpinBox_DimY">
+                      <widget class="QDoubleSpinBox" name="cube_dim_Y">
                        <property name="suffix">
                         <string> m</string>
                        </property>
@@ -1007,11 +1020,14 @@
                        </property>
                        <property name="maximum">
                         <double>100.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>10.000000000000000</double>
                        </property>
                       </widget>
                      </item>
                      <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="doubleSpinBox_DimZ">
+                      <widget class="QDoubleSpinBox" name="cube_dim_Z">
                        <property name="suffix">
                         <string> m</string>
                        </property>
@@ -1020,6 +1036,9 @@
                        </property>
                        <property name="maximum">
                         <double>100.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>10.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -1032,7 +1051,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>CompZ:</string>
+                        <string>Z:</string>
                        </property>
                        <property name="textFormat">
                         <enum>Qt::AutoText</enum>
@@ -1050,7 +1069,7 @@
                   </item>
                  </layout>
                 </widget>
-                <widget class="QWidget" name="page_Helip">
+                <widget class="QWidget" name="page_Esfera">
                  <layout class="QVBoxLayout" name="verticalLayout">
                   <property name="margin">
                    <number>0</number>
@@ -1748,7 +1767,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>24</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
@@ -1789,7 +1808,7 @@
    </attribute>
    <addaction name="actionPonto"/>
    <addaction name="actionLinha"/>
-   <addaction name="actionRetangulo"/>
+   <addaction name="actionCubo"/>
    <addaction name="actionHelipse"/>
    <addaction name="actionGeom_Periodicas"/>
    <addaction name="actionCone"/>
@@ -1850,7 +1869,7 @@
     <string>Cria Linha</string>
    </property>
   </action>
-  <action name="actionRetangulo">
+  <action name="actionCubo">
    <property name="text">
     <string>Cubo</string>
    </property>

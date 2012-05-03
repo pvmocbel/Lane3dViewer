@@ -30,16 +30,24 @@ Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     yi = 0;
     zi = 0;
 
+    box.MinEdge.set(0,0,0);
+    box.MaxEdge.set(0,0,0);
+
     r_analise_gizmo_X = 0;
     r_analise_gizmo_Y = 0;
     r_analise_gizmo_Z = 0;
 
     gizmo_X = 0;
     gizmo_Y = 0;
-    gizmo_Z = 0;        
+    gizmo_Z = 0;
+    //init();
 }
 
 Cena::~Cena(){}
+
+void Cena::init(){
+
+}
 
 void Cena::cenaIrrlicht()
 {
@@ -47,7 +55,6 @@ void Cena::cenaIrrlicht()
         collMan = smgr->getSceneCollisionManager();
         cenaCameras();
         cenaIluminacao();
-//        criaRegiaoAnalise();
         gizmo();
         drawIrrlichtScene();
     }
@@ -73,37 +80,38 @@ void Cena::cenaIluminacao(){
     }
 }
 
-void Cena::cenaVisualizacoes(){}
-
 void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
-        video_driver->setTransform( irr::video::ETS_WORLD, irr::core::matrix4());
-        irr::video::SMaterial mat;
 
-        mat.Lighting = false;
-        video_driver->setMaterial( mat );
+        box.MinEdge.set(-(irr::f32)(dim.X*0.5),
+                        -(irr::f32)(dim.Y*0.5),
+                        -(irr::f32)(dim.Z*0.5));
 
-        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim );
-        box.MinEdge.set(-(irr::f32)(dim.X/2),
-                        -(irr::f32)(dim.Y/2),
-                        -(irr::f32)(dim.Z/2));
-        box.MaxEdge.set((irr::f32)(dim.X/2),
-                        (irr::f32)(dim.Y/2),
-                        (irr::f32)(dim.Z/2));
+        box.MaxEdge.set((irr::f32)(dim.X*0.5),
+                        (irr::f32)(dim.Y*0.5),
+                        (irr::f32)(dim.Z*0.5));
 
-        qDebug()<<"Min x = "<<box.MinEdge.X<<" y ="<<box.MinEdge.Y<<" z ="<<box.MinEdge.Z;
-        qDebug()<<"Man x = "<<box.MaxEdge.X<<" y ="<<box.MaxEdge.Y<<" z ="<<box.MaxEdge.Z;
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim);
 
-        printRegiaoAnalise(box);
+        drawIrrlichtScene();
         delete node;
     }
 }
 
 void Cena::printRegiaoAnalise(irr::core::aabbox3df box){
-    if(video_driver)
-    video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
+    if((video_driver) &&
+       (box.MinEdge.X !=0) && (box.MinEdge.Y !=0) &&(box.MinEdge.Z !=0) &&
+       (box.MaxEdge.X !=0) && (box.MaxEdge.Y !=0) &&(box.MaxEdge.Z !=0) )
+    {
+        video_driver->setTransform( irr::video::ETS_WORLD, irr::core::matrix4());
+        irr::video::SMaterial mat;
+        mat.Lighting = false;
+
+        video_driver->setMaterial( mat );
+        video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
+    }
 }
 
 void Cena::gizmo(){
@@ -115,6 +123,57 @@ void Cena::gizmo(){
         delete node;
     }
 }
+
+void Cena::change_x_position(float x){
+    if(smgr && selectedSceneNode){
+        selectedSceneNode->setPosition(Vector3df(x,
+                                                 selectedSceneNode->getPosition().Y,
+                                                 selectedSceneNode->getPosition().Z));
+        qDebug()<<"change x position = "<< x;
+    }
+}
+
+void Cena::change_y_position(float y){
+    if(smgr && selectedSceneNode){
+        selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
+                                                 y,
+                                                 selectedSceneNode->getPosition().Z));
+        qDebug()<<"change y position = "<< y;
+    }
+}
+
+void Cena::change_z_position(float z){
+    if(smgr && selectedSceneNode){
+        selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
+                                                 selectedSceneNode->getPosition().Y,
+                                                 z));
+        qDebug()<<"change z position = "<< z;
+    }
+}
+
+//void Cena::return_change_x_position(float x){
+//    if(smgr && selectedSceneNode){
+////        MainWindow* w = new MainWindow(0);
+////        w->return_x_changed(x);
+////        delete w;
+//    }
+//}
+
+//void Cena::return_change_y_position(float y){
+//    if(smgr && selectedSceneNode){
+////        MainWindow* w = new MainWindow(0);
+////        w->return_y_changed(y);
+////        delete w;
+//    }
+//}
+
+//void Cena::return_change_z_position(float z){
+//    if(smgr && selectedSceneNode){
+////        MainWindow* w = new MainWindow(0);
+////        w->return_z_changed(z);
+////        delete w;
+//    }
+//}
 
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
@@ -376,11 +435,12 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
 
             if(key_x_on)
             {
-                if(camera_01)
+                if(camera_01){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-
+//                    emit return_change_x_position(xi+0.1*dx);
+                }
                 else if(camera_04)
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),
                                                           MoveSceneNode->getPosition().Y,
@@ -496,19 +556,11 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 //-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 
 //-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
-void Cena::insertCubo(IrrNode* node)
+void Cena::insertCubo(IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
     if(smgr){
-//        getDimCube* w = new getDimCube(0);
-//        w->show();
-//        w->exec();
-//        if(w->isOk()){
-//            Dim3df dim = w->getDimension();
-//            Pos3df p = w->getPosition();
-//            node->criaCubo(smgr, p, dim);
-//            drawIrrlichtScene();
-//        }
-//        delete w;
+        node->criaCubo(smgr, p, dim);
+        drawIrrlichtScene();
     }
 }
 

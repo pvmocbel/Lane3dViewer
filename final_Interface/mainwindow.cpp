@@ -2,73 +2,125 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow) , cena(0)
+    QMainWindow(parent), ui(new Ui::MainWindow),cena(0)
 {
     ui->setupUi(this);
-    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(New_triggered()));
+    init();
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;    
+    delete ui;
+    delete cena;
 }
 
-void MainWindow::New_triggered()
+void MainWindow::init()
+{
+    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(new_triggered()));
+    connect(ui->actionCubo, SIGNAL(triggered()), this, SLOT(cubo_triggered()));
+    connect(ui->position_X, SIGNAL(valueChanged(double)), this, SLOT(change_x_position(double)));
+    connect(ui->position_Y, SIGNAL(valueChanged(double)), this, SLOT(change_y_position(double)));
+    connect(ui->position_Z, SIGNAL(valueChanged(double)), this, SLOT(change_z_position(double)));
+}
+
+void MainWindow::change_x_position(double x){
+    if(cena && cena->selectedSceneNode)    cena->change_x_position(x);
+}
+
+void MainWindow::change_y_position(double y){
+    if(cena && cena->selectedSceneNode)    cena->change_y_position(y);
+}
+
+void MainWindow::change_z_position(double z){
+    if(cena && cena->selectedSceneNode)    cena->change_z_position(z);
+}
+
+void MainWindow::return_x_changed(float x){
+    ui->position_X->setValue(x);
+}
+
+void MainWindow::return_y_changed(float y){
+    ui->position_Y->setValue(y);
+}
+
+void MainWindow::return_z_changed(float z){
+    ui->position_Z->setValue(z);
+}
+
+void MainWindow::new_triggered()
 {
     Dialog_CGerais* d = new Dialog_CGerais();
+
     d->show();
     d->exec();
+
     if (cena) return;
-       cena = new Cena();
-       cena->resize(2048, 2048);
+    cena = new Cena();
+    cena->resize(2048, 2048);
+    ui->gridLayout->addWidget(cena, 0, 0, 2, 1 );
 
-       ui->gridLayout->addWidget(cena, 0, 0, 2, 1 );
+    cena->createIrrichtDevice();
+    cena->cenaIrrlicht();
+    cena->criaRegiaoAnalise(d->getDimension(), d->getDelta());
 
-       cena->createIrrichtDevice();
-       cena->cenaIrrlicht();
-       cena->criaRegiaoAnalise(d->getDimension(), d->getDelta());
     delete d;
 }
 
-void MainWindow::Open_triggered()
+void MainWindow::open_triggered()
 {
    // ui->lineEdit_LinhaName->setText("Open");
 }
 
-void MainWindow::Save_triggered()
+void MainWindow::save_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Save");
 }
 
-void MainWindow::Posicao_triggered()
+void MainWindow::posicao_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Posição");
 }
 
-void MainWindow::Rotacao_triggered()
+void MainWindow::rotacao_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Rotação");
 }
 
-void MainWindow::Ponto_triggered()
+void MainWindow::ponto_triggered()
 {
     setPainelPonto();
 }
 
-void MainWindow::Linha_triggered()
+void MainWindow::linha_triggered()
 {
     setPainelLinha();
 }
 
-void MainWindow::Retangulo_triggered()
+void MainWindow::cubo_triggered()
 {
-    //ui->lineEdit_LinhaName->setText("Geom Retangulo");
+    setPainelCubo();
+    Dim3df dim;
+    Pos3df pos;
+    pos.set(0,0,0);
+    dim.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
+    cena->insertCubo(new IrrNode(), dim, pos);
 }
 
-void MainWindow::Circulo_triggered()
+void MainWindow::cilindro_triggered()
 {
-    //ui->lineEdit_LinhaName->setText("Geom Circulo");
+    setPainelCilindro();
 }
+
+void MainWindow::cone_triggered()
+{
+    setPainelCone();
+}
+
+void MainWindow::esfera_triggered()
+{
+    setPainelEsfera();
+}
+
 
 void MainWindow::setPainelPonto()
 {
@@ -111,8 +163,23 @@ void MainWindow::setPainelEsfera()
 }
 
 void MainWindow::setPainelCone(){
-
+    ui->label_PainelTitulo_1->setText("CONE");
+    ui->lineEdit_Name->setText("Cone");
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(4);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
+
+void MainWindow::setPainelCilindro(){
+    ui->label_PainelTitulo_1->setText("CILINDRO");
+    ui->lineEdit_Name->setText("Cilindro");
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(5);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
+}
+
 
 void MainWindow::keyPressEvent( QKeyEvent * event){
     cena->keyPressEvent(event);

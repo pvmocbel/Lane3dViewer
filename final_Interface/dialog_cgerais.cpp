@@ -21,6 +21,7 @@ void Dialog_CGerais::parser()
     dimX_RL = ui->dim_regiao_livre_x->value();
     dimY_RL = ui->dim_regiao_livre_y->value();
     dimZ_RL = ui->dim_regiao_livre_z->value();
+
     dimension.set(dimX_RL, dimY_RL, dimZ_RL);
 
     delta = ui->delta_regiao_livre->value();
