@@ -6,11 +6,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     val = 0;
+
     connect( ui->start, SIGNAL(clicked()), this, SLOT(initIrrlichtWindow()));
     connect( ui->cubo, SIGNAL(clicked()), this, SLOT(criaCubo()));
     connect( ui->esfera, SIGNAL(clicked()), this, SLOT(criaEsfera()));
     connect( ui->cone, SIGNAL(clicked()), this, SLOT(criaCone()));
     connect( ui->cilindro, SIGNAL(clicked()), this, SLOT(criaCilindro()));
+
+
 }
 
 MainWindow::~MainWindow()
@@ -19,19 +22,15 @@ MainWindow::~MainWindow()
     if (cena) {
         delete cena;
     }
-
-}
-
-void MainWindow::receiver(float x){
-    val = (double)x;
-    qDebug()<<"val = "<<val;
-    atualiza_x_position();
 }
 
 void MainWindow::atualiza_x_position()
 {
-//    val = 2.694;
-    ui->position_x->setValue((double)(val));
+    if(cena && cena->selectedSceneNode){
+        qDebug()<<"position x"<<cena->selectedSceneNode->getPosition().X;
+        ui->position_x->setValue(cena->selectedSceneNode->getPosition().X);
+    }
+
 }
 
 void MainWindow::initIrrlichtWindow(){
@@ -39,6 +38,7 @@ void MainWindow::initIrrlichtWindow(){
 
     cena = new Cena();
     cena->resize(2048, 2048);
+    connect(cena, SIGNAL(send_x_changed()),this, SLOT(atualiza_x_position()));
 
     ui->gridLayout->addWidget(cena, 2, 1, 5, 10 );
 
@@ -52,8 +52,8 @@ void MainWindow::criaCubo(){
 }
 
 void MainWindow::criaEsfera(){
-//    cena->insertEsfera(new IrrNode());
     atualiza_x_position();
+
 }
 
 void MainWindow::criaCone(){

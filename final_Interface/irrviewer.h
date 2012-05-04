@@ -40,6 +40,9 @@ public:
     virtual void resizeEvent( QResizeEvent *event );
     virtual QPaintEngine * paintEngine() const;
 
+ signals:
+    void send_position_change();
+
 };//fim da class irrViewer
 
 #endif // IRRVIEWER_H

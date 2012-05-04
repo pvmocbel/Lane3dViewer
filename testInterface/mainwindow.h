@@ -21,24 +21,17 @@ public:
      void keyPressEvent( QKeyEvent * event);
      double val;
 
-
-
-private:
-    Ui::MainWindow *ui;
-    Cena* cena;
-
 public slots:
     void initIrrlichtWindow();
     void criaCubo();
     void criaEsfera();
     void criaCone();
     void criaCilindro();
-    void receiver(float x);
-    void  atualiza_x_position();
+    void atualiza_x_position();
 
-
-signals:
-    void change_value(float );   
+private:
+    Ui::MainWindow *ui;
+    Cena* cena;
 };
 
 #endif // MAINWINDOW_H

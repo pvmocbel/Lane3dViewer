@@ -79,10 +79,6 @@ public:
     void change_y_position(float y);
     void change_z_position(float z);
 
-    void return_change_x_position(float x);
-    void return_change_y_position(float y);
-    void return_change_z_position(float z);
-
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();

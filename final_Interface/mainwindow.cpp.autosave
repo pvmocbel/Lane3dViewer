@@ -129,6 +129,7 @@ void MainWindow::cubo_triggered()
 void MainWindow::cilindro_triggered()
 {
     setPainelCilindro();
+
 }
 
 void MainWindow::cone_triggered()

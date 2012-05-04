@@ -174,33 +174,6 @@ void Cena::change_z_position(float z){
     }
 }
 
-void Cena::return_change_x_position(float x){
-    if(smgr && selectedSceneNode){
-        MainWindow* w = new MainWindow();
-        w->return_x_changed(x);
-        drawIrrlichtScene();
-        delete w;
-    }
-}
-
-void Cena::return_change_y_position(float y){
-    if(smgr && selectedSceneNode){
-        MainWindow* w = new MainWindow();
-        w->return_y_changed(y);
-        drawIrrlichtScene();
-        delete w;
-    }
-}
-
-void Cena::return_change_z_position(float z){
-    if(smgr && selectedSceneNode){
-        MainWindow* w = new MainWindow();
-        w->return_z_changed(z);
-        drawIrrlichtScene();
-        delete w;
-    }
-}
-
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
@@ -465,26 +438,26 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-                    return_change_x_position(xi+0.1*dx);
+                    emit send_position_change();
                 }
                 else if(camera_04){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-                    return_change_x_position(xi+0.1*(-dx));
+                    emit send_position_change();
                 }
                 else if(camera_05){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-                    return_change_x_position(xi + 0.1*(-dy));
+                    emit send_position_change();
                 }
 
                 else if(camera_06){
                     MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
-                    return_change_x_position(xi + 0.1*(-dy));
+                    emit send_position_change();
                 }
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -504,7 +477,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                     dy = 0;
                 }
                 MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
-                return_change_y_position(yi - 0.1*dy);
+                emit send_position_change();
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
                 gizmo_X->setVisible(true);
@@ -523,26 +496,26 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(-dx)));
-                return_change_z_position(zi + 0.1*(-dx));
+                    emit send_position_change();
                 }
                 else if(camera_06){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(dx)));
-                return_change_z_position(zi + 0.1*(dx));
+                    emit send_position_change();
                 }
                 else if(camera_02){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(dx)));
-                return_change_z_position(zi + 0.1*(-dx));
+                    emit send_position_change();
                 }
 
                 else if(camera_03){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
                                                           zi + 0.1*(-dx)));
-                return_change_z_position(zi + 0.1*(-dx));
+                    emit send_position_change();
                 }
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());

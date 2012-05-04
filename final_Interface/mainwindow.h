@@ -38,9 +38,7 @@ public slots:
     void posicao_triggered();
     void rotacao_triggered();
 
-    void return_x_changed(float x);
-    void return_y_changed(float y);
-    void return_z_changed(float z);
+    void return_position_changed();
 
     void change_x_position(double);
     void change_y_position(double);
