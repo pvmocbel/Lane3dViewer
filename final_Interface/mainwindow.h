@@ -24,12 +24,6 @@ public:
      void keyPressEvent( QKeyEvent * event);
      void init();
 
-     double va;
-
-     virtual void paintEvent( QPaintEvent *event );
-     virtual void resizeEvent( QResizeEvent *event );
-     virtual QPaintEngine * paintEngine() const;
-
 public slots:
     void new_triggered();
     void open_triggered();
@@ -43,6 +37,12 @@ public slots:
     void change_x_position(double);
     void change_y_position(double);
     void change_z_position(double);
+
+    void change_x_dimension(double);
+    void change_y_dimension(double);
+    void change_z_dimension(double);
+
+    void receiver_dimesion();
 
     void ponto_triggered();
     void linha_triggered();
@@ -58,11 +58,17 @@ public slots:
     void setPainelEsfera();
     void setPainelCilindro();
 
+
+
 protected:
 
 private:
     Ui::MainWindow *ui;
     Cena* cena;
     QVBoxLayout     layout;
+
+signals:
+    void send_to_cena_changed_position(const Pos3df& pos);
+    void send_to_cena_changed_dimension(const Dim3df& dim);
 };
 #endif // MAINWINDOW_H

@@ -14,6 +14,11 @@
 
 #define PI 3,14159265
 
+typedef std::map<int, Dim3df> DimMap;
+typedef DimMap::iterator It;
+
+//typedef std::map<int, irr::c8>
+
 class Cena: public IrrViewer
 {
 //    Q_OBJECT
@@ -51,33 +56,44 @@ private:
     double yi;
     double zi;
 
+    DimMap dimMap;
+
     Pos3df mouse_press_position;
     Pos3df mouse_release_position;
 
 public:
-    irr::scene::ISceneNode *selectedSceneNode;
-
     Cena();
     ~Cena();
     void init();
 
-    bool mouse_key_test;
+    int get_serialize_id(){
+       static int id = 0;
+       ++id;
+       return id;
+    }
+
+    irr::scene::ISceneNode *selectedSceneNode;
     irr::core::aabbox3df box;
 
+    bool mouse_key_test;
     float mouseXi;
     float mouseYi;
 
     float dx;
     float dy;
 
-    void insertCubo(IrrNode* node, const Dim3df& dim, const Pos3df& p);
-    void insertEsfera(IrrNode* node);
-    void insertCone(IrrNode* node);
-    void insertCilindro(IrrNode* node);
+    void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
+    void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
+    void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
+    void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
 
-    void change_x_position(float x);
-    void change_y_position(float y);
-    void change_z_position(float z);
+    const Dim3df& getDimensionFronId(int id){
+        return dimMap.find(id)->second;
+    }
+
+    void setDimension(int id, const Dim3df& dim){
+        dimMap[id] = dim;
+    }
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
@@ -102,8 +118,9 @@ public:
     void mouseReleaseEvent( QMouseEvent* event );
     void sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown);
 
-//signals:
-//    void change_value(float);
+public slots:
+    virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
+    virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos);
 
 };  //fim da classe Cena
 #endif // CENA_H

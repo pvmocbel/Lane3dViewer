@@ -40,8 +40,13 @@ public:
     virtual void resizeEvent( QResizeEvent *event );
     virtual QPaintEngine * paintEngine() const;
 
- signals:
+signals:
     void send_position_change();
+    void send_dimension();
+
+public slots:
+      virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
+      virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos);
 
 };//fim da class irrViewer
 

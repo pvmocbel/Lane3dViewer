@@ -41,10 +41,6 @@ void Cena::init(){
     gizmo_X = 0;
     gizmo_Y = 0;
     gizmo_Z = 0;
-
-
-//    connect(selectedSceneNode, SIGNAL(change_value(float)), this , SLOT(return_change_x_position(float)));
-
 }
 
 void Cena::cenaIrrlicht()
@@ -54,6 +50,7 @@ void Cena::cenaIrrlicht()
         cenaCameras();
         cenaIluminacao();
         gizmo();
+        emit send_dimension();
         drawIrrlichtScene();
     }
 }
@@ -122,11 +119,10 @@ void Cena::gizmo(){
     }
 }
 
-void Cena::change_x_position(float x){
+void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
+{
     if(smgr && selectedSceneNode){
-        selectedSceneNode->setPosition(Vector3df(x,
-                                                 selectedSceneNode->getPosition().Y,
-                                                 selectedSceneNode->getPosition().Z));
+        selectedSceneNode->setPosition(pos);
         gizmo_X->setPosition(selectedSceneNode->getPosition());
         gizmo_X->setVisible(true);
 
@@ -135,42 +131,16 @@ void Cena::change_x_position(float x){
 
         gizmo_Z->setPosition(selectedSceneNode->getPosition());
         gizmo_Z->setVisible(true);
-
-        qDebug()<<"change x position = "<< x;
+        drawIrrlichtScene();
     }
 }
 
-void Cena::change_y_position(float y){
+void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim)
+{
     if(smgr && selectedSceneNode){
-        selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                                 y,
-                                                 selectedSceneNode->getPosition().Z));
-        gizmo_X->setPosition(selectedSceneNode->getPosition());
-        gizmo_X->setVisible(true);
-
-        gizmo_Y->setPosition(selectedSceneNode->getPosition());
-        gizmo_Y->setVisible(true);
-
-        gizmo_Z->setPosition(selectedSceneNode->getPosition());
-        gizmo_Z->setVisible(true);
-        qDebug()<<"change y position = "<< y;
-    }
-}
-
-void Cena::change_z_position(float z){
-    if(smgr && selectedSceneNode){
-        selectedSceneNode->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                                 selectedSceneNode->getPosition().Y,
-                                                 z));
-        gizmo_X->setPosition(selectedSceneNode->getPosition());
-        gizmo_X->setVisible(true);
-
-        gizmo_Y->setPosition(selectedSceneNode->getPosition());
-        gizmo_Y->setVisible(true);
-
-        gizmo_Z->setPosition(selectedSceneNode->getPosition());
-        gizmo_Z->setVisible(true);
-        qDebug()<<"change z position = "<< z;
+//        const Dim3df = getDimensionFronId();
+        selectedSceneNode->setScale(Vector3df(dim));
+        drawIrrlichtScene();
     }
 }
 
@@ -570,68 +540,39 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 //-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 
 //-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
-void Cena::insertCubo(IrrNode* node, const Dim3df& dim, const Pos3df& p)
+void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
     if(smgr){
         node->criaCubo(smgr, p, dim);
+        dimMap[id] = dim;
         drawIrrlichtScene();
     }
 }
 
-void Cena::insertCone(IrrNode* node)
+void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr)
-    {
-//        getDimCone *w = new getDimCone();
-
-//        w->show();
-//        w->exec();
-
-//        Dim3df dim = w->getDimension();
-//        Pos3df p = w->getPosition();
-
-//        node->criaCone(smgr, p, dim);
-
-//        drawIrrlichtScene();
-//        delete w;
+    if(smgr){
+        node->criaCone(smgr, p, dim);
+        dimMap[id] = dim;
+        drawIrrlichtScene();
     }
 }
 
-void Cena::insertCilindro(IrrNode* node)
+void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr)
-    {
-//        getDimCilindro*w = new getDimCilindro();
-
-//        w->show();
-//        w->exec();
-
-//        Dim3df dim = w->getDimension();
-//        Pos3df p = w->getPosition();
-//        node->criaCilindro(smgr, p, dim);
-
-//        drawIrrlichtScene();
-
-//        delete w;
+    if(smgr){
+        node->criaCilindro(smgr, p, dim);
+        dimMap[id] = dim;
+        drawIrrlichtScene();
     }
 }
 
-void Cena::insertEsfera(IrrNode* node)
+void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr)
-    {
-//        getDimEsfera* w = new getDimEsfera(0);
-
-//        w->show();
-//        w->exec();
-
-//        double raio = w->getDimension();
-//        Pos3df p = w->getPosition();
-//        node->criaEsfera(smgr, p, raio);
-
-//        drawIrrlichtScene();
-
-//        delete w;
+    if(smgr){
+        node->criaEsfera(smgr, p, dim.X);
+        dimMap[id] = dim;
+        drawIrrlichtScene();
     }
 }
 

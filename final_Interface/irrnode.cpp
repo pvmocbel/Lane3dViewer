@@ -23,7 +23,7 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
           cube_node->setTriangleSelector(seletor);
           seletor->drop();
 
-          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;
+          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;          
      }
         this->position = pos;
         this->dimension = dim;
@@ -35,7 +35,7 @@ void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(dim.Y, dim.X, 30);
+        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(dim.Y, dim.X, 15);
         irr::scene::IMeshSceneNode *cone_node = smgr->addMeshSceneNode(mesh_cone_node);
 
         if (cone_node)
@@ -60,7 +60,7 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df 
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(dim.X,dim.Y,30);
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(dim.X, dim.Y, 15);
         irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
 
         if (cilindro_node)

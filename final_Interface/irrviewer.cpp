@@ -40,6 +40,14 @@ void IrrViewer::createIrrichtDevice()
     env = device->getGUIEnvironment();
 }
 
+void IrrViewer::receiver_changed_position_mainwindow(const Pos3df& pos){
+    receiver_changed_position_mainwindow(pos);
+}
+
+void IrrViewer::receiver_changed_dimension_mainwindow(const Dim3df& dim){
+    receiver_changed_dimension_mainwindow(dim);
+}
+
 void IrrViewer::paintEvent( QPaintEvent *event )
 {
     if (device) {
