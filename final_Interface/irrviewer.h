@@ -46,7 +46,7 @@ signals:
 
 public slots:
       virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
-      virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos);
+      virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos, int );
 
 };//fim da class irrViewer
 

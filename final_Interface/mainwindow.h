@@ -42,6 +42,14 @@ public slots:
     void change_y_dimension(double);
     void change_z_dimension(double);
 
+//    void changeLinhaInicialPosition_x(double);
+//    void changeLinhaInicialPosition_y(double);
+//    void changeLinhaInicialPosition_z(double);
+
+//    void changeLinhaFinalPosition_x(double);
+//    void changeLinhaFinalPosition_y(double);
+//    void changeLinhaFinalPosition_z(double);
+
     void receiver_dimesion();
 
     void ponto_triggered();
@@ -69,6 +77,6 @@ private:
 
 signals:
     void send_to_cena_changed_position(const Pos3df& pos);
-    void send_to_cena_changed_dimension(const Dim3df& dim);
+    void send_to_cena_changed_dimension(const Dim3df& dim, int eixo);
 };
 #endif // MAINWINDOW_H

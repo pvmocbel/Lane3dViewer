@@ -135,11 +135,69 @@ void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
     }
 }
 
-void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim)
+void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
 {
-    if(smgr && selectedSceneNode){
-//        const Dim3df = getDimensionFronId();
-        selectedSceneNode->setScale(Vector3df(dim));
+    if(smgr && selectedSceneNode)
+    {
+        const irr::c8* test = selectedSceneNode->getName();
+        int id = getIdFromNode(test);
+        const Dim3df& oldDim = getDimensionFronId(id);
+
+        switch((selectedSceneNode->getID()&MASK)){
+            case(ID_FLAG_CUBO):
+                qDebug()<<"cubo";
+                if(eixo == 1)//eixo x
+                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
+                                                          selectedSceneNode->getScale().Y,
+                                                          selectedSceneNode->getScale().Z));
+                if(eixo == 2)//eixo y
+                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
+                                                          (dim.Y/oldDim.Y),
+                                                          selectedSceneNode->getScale().Z));
+                else//eixo z
+                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
+                                                          selectedSceneNode->getScale().Y,
+                                                          (dim.Z/oldDim.Z)));
+                break;
+
+            case(ID_FLAG_ESFERA):
+                qDebug()<<"esfera";
+                selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
+                                                          (dim.Y/oldDim.Y),
+                                                          (dim.Z/oldDim.Z)));
+                break;
+
+            case(ID_FLAG_CILINDRO):
+                qDebug()<<"cilindro";
+                if(eixo == 1)//raio
+                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
+                                                          selectedSceneNode->getScale().Y,
+                                                          selectedSceneNode->getScale().Z));
+                if(eixo == 2)//altura
+                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
+                                                          (dim.Y/oldDim.Y),
+                                                          selectedSceneNode->getScale().Z));
+                break;
+
+            case(ID_FLAG_CONE):
+                qDebug()<<"cone";
+                if(eixo == 1)//raio
+                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
+                                                          selectedSceneNode->getScale().Y,
+                                                          selectedSceneNode->getScale().Z));
+                if(eixo == 2)//altura
+                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
+                                                          (dim.Y/oldDim.Y),
+                                                          selectedSceneNode->getScale().Z));
+                break;
+        }
+
+
+
+
+        qDebug()<<"scale x"<<selectedSceneNode->getScale().X<<" y "
+               <<selectedSceneNode->getScale().Y<<" z "
+                <<selectedSceneNode->getScale().Z;
         drawIrrlichtScene();
     }
 }
@@ -540,38 +598,98 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 //-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 
 //-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
+void Cena::insertLinha(int, IrrNode *node, const Pos3df& inicial, const Pos3df& final){
+    if(smgr){
+
+        double height = sqrt((final.X-inicial.X)*(final.X-inicial.X)
+                             +(final.Y-inicial.Y)*(final.Y-inicial.Y)
+                             +(final.Z-inicial.Z)*(final.Z-inicial.Z));
+        qDebug()<<"height linha "<< height;
+
+        float angX = 0;
+        float angY = 0;
+
+        angX = atan2((final.Y-inicial.Y), (final.X-inicial.X))*180/PI;
+        angY = acos((final.Z-inicial.Z)/(height))*180/PI;
+
+        qDebug()<<"angx "<<angX<<" angy "<<angY;
+
+        Pos3df p;
+        p.set(0,0,0);
+        Dim3df dim;
+        dim.set(0.5,height,0);
+        node->criaLinha(smgr, p, dim, angX, angY, "linha" );
+
+        drawIrrlichtScene();
+    }
+}
+
 void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr){
-        node->criaCubo(smgr, p, dim);
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+//        qDebug()<<"nodeName "<<nodeName;
+        node->criaCubo(smgr, p, dim, nodeName);
+
+        SalvaCube *cube = new SalvaCube;
+        cube->dim = dim;
+        cube->pos = p;
+//        cube->epr
+
         dimMap[id] = dim;
+        nodeId[nodeName] = id;
+        qDebug()<< "node named"<<nodeName;
+
         drawIrrlichtScene();
     }
 }
 
 void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr){
-        node->criaCone(smgr, p, dim);
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaCone(smgr, p, dim, nodeName);
+
         dimMap[id] = dim;
+        nodeId[nodeName] = id;
+
         drawIrrlichtScene();
     }
 }
 
 void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr){
-        node->criaCilindro(smgr, p, dim);
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaCilindro(smgr, p, dim, nodeName);
+
         dimMap[id] = dim;
+        nodeId[nodeName] = id;
+
         drawIrrlichtScene();
     }
 }
 
 void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 {
-    if(smgr){
-        node->criaEsfera(smgr, p, dim.X);
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaEsfera(smgr, p, dim.X, nodeName);
+
         dimMap[id] = dim;
+        nodeId[nodeName] = id;
+
         drawIrrlichtScene();
     }
 }
@@ -591,20 +709,6 @@ void Cena::duplicateSceneNode()
             seletor->drop();
 
             selectedSceneNode = (irr::scene::ISceneNode*)node;
-//            switch((node->getID()&MASK)){
-//                case(ID_FLAG_CUBO):
-//                    qDebug()<<"cubo";
-//                    break;
-//                case(ID_FLAG_ESFERA):
-//                    qDebug()<<"esfera";
-//                    break;
-//                case(ID_FLAG_CILINDRO):
-//                    qDebug()<<"cilindro";
-//                    break;
-//                case(ID_FLAG_CONE):
-//                    qDebug()<<"cone";
-//                    break;
-//            }
          }
     }
 }

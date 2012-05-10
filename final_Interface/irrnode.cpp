@@ -4,7 +4,7 @@ IrrNode::IrrNode():selectedSceneNode(0),first_cube(true)
 {
 }
 
-void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim)
+void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim, const irr::c8 *nodeName)
 {
     if(smgr)
     {
@@ -23,14 +23,16 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
           cube_node->setTriangleSelector(seletor);
           seletor->drop();
 
+          cube_node->setName(nodeName);
+
           selectedSceneNode = (irr::scene::ISceneNode*)cube_node;          
-     }
+        }
         this->position = pos;
         this->dimension = dim;
     }
 }
 
-void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim)
+void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim, const irr::c8 *nodeName)
 {
     if(smgr)
     {
@@ -48,6 +50,8 @@ void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
           cone_node->setTriangleSelector(seletor);
           seletor->drop();
 
+          cone_node->setName(nodeName);
+
           selectedSceneNode = (irr::scene::ISceneNode*)cone_node;
         }
         this->position = pos;
@@ -56,7 +60,34 @@ void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
 
 }
 
-void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &dim){
+
+void IrrNode::criaLinha(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &dim, double ang1, double ang2, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(dim.X, dim.Y, 15);
+        irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
+
+        if (cilindro_node)
+        {
+          cilindro_node->setPosition(pos);
+          cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cilindro_node->setID(ID_FLAG_CILINDRO|S);
+
+          cilindro_node->setRotation(Vector3df(ang1,ang2,0));
+
+          seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
+          cilindro_node->setTriangleSelector(seletor);
+          seletor->drop();
+
+          cilindro_node->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
+        }
+    }
+}
+
+void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &dim, const irr::c8* nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
@@ -73,12 +104,14 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df 
           cilindro_node->setTriangleSelector(seletor);
           seletor->drop();
 
+          cilindro_node->setName(nodeName);
+
           selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
         }
     }
 }
 
-void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double raio){
+void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double raio, const irr::c8* nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
@@ -94,6 +127,8 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double ra
           seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
           esfera_node->setTriangleSelector(seletor);
           seletor->drop();
+
+          esfera_node->setName(nodeName);
 
           selectedSceneNode = (irr::scene::ISceneNode*)esfera_node;
         }

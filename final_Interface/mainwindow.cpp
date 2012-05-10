@@ -19,6 +19,7 @@ void MainWindow::init()
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(new_triggered()));
     connect(ui->actionPonto, SIGNAL(triggered()), this, SLOT(ponto_triggered()));
     connect(ui->actionCubo, SIGNAL(triggered()), this, SLOT(cubo_triggered()));
+    connect(ui->actionLinha, SIGNAL(triggered()), this , SLOT(linha_triggered()));
     connect(ui->actionCone, SIGNAL(triggered()), this, SLOT(cone_triggered()));
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
@@ -31,6 +32,15 @@ void MainWindow::init()
     connect(ui->cube_dim_X, SIGNAL(valueChanged(double)), this , SLOT(change_x_dimension(double)));
     connect(ui->cube_dim_Y, SIGNAL(valueChanged(double)), this , SLOT(change_y_dimension(double)));
     connect(ui->cube_dim_Z, SIGNAL(valueChanged(double)), this , SLOT(change_z_dimension(double)));
+
+//    connect(ui->linha_inicial_x, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
+//    connect(ui->linha_inicial_y, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
+//    connect(ui->linha_inicial_z, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
+
+//    connect(ui->linha_final_x, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_x(double)));
+//    connect(ui->linha_final_y, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_y(double)));
+//    connect(ui->linha_final_z, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_z(double)));
+
 }
 
 void MainWindow::return_position_changed(){
@@ -70,7 +80,7 @@ void MainWindow::change_x_dimension(double x){
         Dim3df dim;
         dim.set(x,1,1);
         qDebug()<<"value change x "<<x;
-        emit send_to_cena_changed_dimension(dim);
+        emit send_to_cena_changed_dimension(dim,1);
     }
 }
 
@@ -79,7 +89,7 @@ void MainWindow::change_y_dimension(double y){
         qDebug()<<"value change y "<<y;
         Dim3df dim;
         dim.set(1,y,1);
-        emit send_to_cena_changed_dimension(dim);
+        emit send_to_cena_changed_dimension(dim,2);
     }
 }
 
@@ -88,7 +98,7 @@ void MainWindow::change_z_dimension(double z){
         qDebug()<<"value change z "<<z;
         Dim3df dim;
         dim.set(1,1,z);
-        emit send_to_cena_changed_dimension(dim);
+        emit send_to_cena_changed_dimension(dim,3);
     }
 }
 
@@ -113,10 +123,10 @@ void MainWindow::new_triggered()
     connect(cena, SIGNAL(send_position_change()),this, SLOT(return_position_changed()));
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
 
-    connect(this, SIGNAL(send_to_cena_changed_dimension(Dim3df)), cena, SLOT(receiver_changed_dimension_mainwindow(Dim3df)));
+    connect(this, SIGNAL(send_to_cena_changed_dimension(Dim3df,int)), cena, SLOT(receiver_changed_dimension_mainwindow(Dim3df,int)));
 
     cena->resize(2048, 2048);
-    ui->gridLayout->addWidget(cena, 0, 0, 2, 1 );
+    ui->gridLayout->addWidget(cena, 0, 0, 1, 1);
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
@@ -159,7 +169,12 @@ void MainWindow::ponto_triggered()
 void MainWindow::linha_triggered()
 {
     setPainelLinha();
-
+    int id = cena->get_serialize_id();
+    Pos3df inicial;
+    Pos3df final;
+    inicial.set(ui->linha_inicial_x->value(), ui->linha_inicial_y->value(), ui->linha_inicial_z->value());
+    final.set(ui->linha_final_x->value(), ui->linha_final_y->value(), ui->linha_final_z->value());
+    cena->insertLinha(id, new IrrNode(), inicial, final);
 }
 
 void MainWindow::cubo_triggered()

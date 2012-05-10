@@ -3,21 +3,27 @@
 #define CENA_H
 
 #include <utility>
+#include <iostream>
 #include <QObject>
 #include <mainwindow.h>
 #include <map>
-#include <vector>
-#include <set>
+#include <stdio.h>
 #include <QKeyEvent>
 #include "irrviewer.h"
 #include "irrnode.h"
 
 #define PI 3,14159265
 
-typedef std::map<int, Dim3df> DimMap;
+typedef std::map<std::string, int> NodeID;
+typedef NodeID::iterator No;
+typedef std::map<int,Dim3df> DimMap;
 typedef DimMap::iterator It;
 
-//typedef std::map<int, irr::c8>
+struct SalvaCube{
+    Vector3df pos;
+    Vector3df dim;
+    double mi, epr, sigm;
+};
 
 class Cena: public IrrViewer
 {
@@ -57,6 +63,9 @@ private:
     double zi;
 
     DimMap dimMap;
+    NodeID nodeId;
+    No no;
+    It it;
 
     Pos3df mouse_press_position;
     Pos3df mouse_release_position;
@@ -82,16 +91,37 @@ public:
     float dx;
     float dy;
 
+    void insertLinha(int, IrrNode* node, const Pos3df& inicial, const Pos3df& final);
     void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
     void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
     void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
     void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
 
     const Dim3df& getDimensionFronId(int id){
-        return dimMap.find(id)->second;
+        for(it = dimMap.begin(); it != dimMap.end(); it++){
+            if((it->first) ==  id){
+                return it->second;
+                break;
+            }
+        }
+        if(it == dimMap.end()){
+            Dim3df aux_dim;
+            aux_dim.set(1,1,1);
+            return aux_dim;
+        }
     }
 
-    void setDimension(int id, const Dim3df& dim){
+    int getIdFromNode(std::string nodeName){
+        for(no = nodeId.begin(); no != nodeId.end(); no++){
+            if((no->first) == nodeName){
+                return no->second;
+                break;
+            }
+        }
+        return 0;
+    }
+
+    void setDimension(int id, Dim3df dim){
         dimMap[id] = dim;
     }
 
@@ -120,7 +150,7 @@ public:
 
 public slots:
     virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
-    virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos);
+    virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos, int eixo);
 
 };  //fim da classe Cena
 #endif // CENA_H
