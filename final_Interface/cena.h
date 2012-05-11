@@ -1,29 +1,22 @@
-
 #ifndef CENA_H
 #define CENA_H
 
-#include <utility>
-#include <iostream>
-#include <QObject>
 #include <mainwindow.h>
-#include <map>
-#include <stdio.h>
-#include <QKeyEvent>
 #include "irrviewer.h"
 #include "irrnode.h"
 
 #define PI 3,14159265
 
+typedef struct NodeParameters{
+    Vector3df position;
+    Vector3df dimension;
+    double permissividade, permiabilidade, condutibilidade;
+} nodeParam;
+
 typedef std::map<std::string, int> NodeID;
 typedef NodeID::iterator No;
-typedef std::map<int,Dim3df> DimMap;
-typedef DimMap::iterator It;
-
-struct SalvaCube{
-    Vector3df pos;
-    Vector3df dim;
-    double mi, epr, sigm;
-};
+typedef std::map<int, nodeParam> MapNode;
+typedef MapNode::iterator It;
 
 class Cena: public IrrViewer
 {
@@ -62,7 +55,7 @@ private:
     double yi;
     double zi;
 
-    DimMap dimMap;
+    MapNode myMap;
     NodeID nodeId;
     No no;
     It it;
@@ -92,23 +85,70 @@ public:
     float dy;
 
     void insertLinha(int, IrrNode* node, const Pos3df& inicial, const Pos3df& final);
-    void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
-    void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p);
-    void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
-    void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p);
+    void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
+    void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
+    void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
+    void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
 
-    const Dim3df& getDimensionFronId(int id){
-        for(it = dimMap.begin(); it != dimMap.end(); it++){
+    Vector3df getDimensionFromId(int id){
+        for(it = myMap.begin(); it != myMap.end(); it++){
             if((it->first) ==  id){
-                return it->second;
+                return it->second.dimension;
                 break;
             }
         }
-        if(it == dimMap.end()){
-            Dim3df aux_dim;
+        if(it == myMap.end()){
+            Vector3df aux_dim;
             aux_dim.set(1,1,1);
             return aux_dim;
         }
+    }
+
+    Vector3df getPositionFromId(int id){
+        for(it = myMap.begin(); it != myMap.end(); it++){
+            if((it->first) ==  id){
+                return it->second.position;
+                break;
+            }
+        }
+        if(it == myMap.end()){
+            Vector3df aux_dim;
+            aux_dim.set(1,1,1);
+            return aux_dim;
+        }
+    }
+
+    double getCondutFromId(int id){
+        for(it = myMap.begin(); it != myMap.end(); it++){
+            if((it->first) ==  id){
+                return it->second.condutibilidade;
+                break;
+            }
+        }
+        if(it == myMap.end())
+           return 0;
+    }
+
+    double getPermiabFromId(int id){
+        for(it = myMap.begin(); it != myMap.end(); it++){
+            if((it->first) ==  id){
+                return it->second.permiabilidade;
+                break;
+            }
+        }
+        if(it == myMap.end())
+           return 0;
+    }
+
+    double getPermissiFromId(int id){
+        for(it = myMap.begin(); it != myMap.end(); it++){
+            if((it->first) ==  id){
+                return it->second.permissividade;
+                break;
+            }
+        }
+        if(it == myMap.end())
+           return 0;
     }
 
     int getIdFromNode(std::string nodeName){
@@ -122,12 +162,13 @@ public:
     }
 
     void setDimension(int id, Dim3df dim){
-        dimMap[id] = dim;
+//        dimMap[id] = dim;
     }
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();
+    void removeSceneNodeFromNode(irr::scene::ISceneNode*);
     inline void duplicateSceneNode();
 
     inline void gizmo();

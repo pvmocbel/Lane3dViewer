@@ -159,21 +159,29 @@ void MainWindow::ponto_triggered()
 {
     setPainelPonto();
     int id = cena->get_serialize_id();
+
     Dim3df dim;
     Pos3df pos;
+    Vector3df parameters;
+
     pos.set(0,0,0);
     dim.set(2, 0, 0);
-    cena->insertEsfera(id ,new IrrNode(), dim, pos);
+    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+    cena->insertEsfera(id ,new IrrNode(), dim, pos, parameters);
 }
 
 void MainWindow::linha_triggered()
 {
     setPainelLinha();
     int id = cena->get_serialize_id();
+
     Pos3df inicial;
     Pos3df final;
+
     inicial.set(ui->linha_inicial_x->value(), ui->linha_inicial_y->value(), ui->linha_inicial_z->value());
     final.set(ui->linha_final_x->value(), ui->linha_final_y->value(), ui->linha_final_z->value());
+
     cena->insertLinha(id, new IrrNode(), inicial, final);
 }
 
@@ -181,44 +189,64 @@ void MainWindow::cubo_triggered()
 {
     setPainelCubo();
     int id = cena->get_serialize_id();
+
     Dim3df dim;
     Pos3df pos;
+    Vector3df parameters;
+
     pos.set(0,0,0);
     dim.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
-    cena->insertCubo(id ,new IrrNode(), dim, pos);
+    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+    cena->insertCubo(id ,new IrrNode(), dim, pos, parameters);
 }
 
 void MainWindow::cilindro_triggered()
 {
     setPainelCilindro();
     int id = cena->get_serialize_id();
+
     Dim3df dim;
     Pos3df pos;
+    Vector3df parameters;
+
     pos.set(0,0,0);
     dim.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
-    cena->insertCilindro(id ,new IrrNode(), dim, pos);
+    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+    cena->insertCilindro(id ,new IrrNode(), dim, pos, parameters);
 }
 
 void MainWindow::cone_triggered()
 {
     setPainelCone();
     int id = cena->get_serialize_id();
+
     Dim3df dim;
     Pos3df pos;
+    Vector3df parameters;
+
     pos.set(0,0,0);
     dim.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
-    cena->insertCone(id ,new IrrNode(), dim, pos);
+    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+    cena->insertCone(id ,new IrrNode(), dim, pos, parameters);
 }
 
 void MainWindow::esfera_triggered()
 {
     setPainelEsfera();
     int id = cena->get_serialize_id();
+
     Dim3df dim;
     Pos3df pos;
+    Vector3df parameters;
+
     pos.set(0,0,0);
     dim.set(ui->raio_esfera->value(), 0, 0);
-    cena->insertEsfera(id ,new IrrNode(), dim, pos);
+    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+    cena->insertEsfera(id ,new IrrNode(), dim, pos, parameters);
 }
 
 void MainWindow::setPainelPonto()

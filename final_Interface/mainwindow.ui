@@ -246,7 +246,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_Ambiente">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -309,8 +309,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>145</width>
-             <height>408</height>
+             <width>140</width>
+             <height>195</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -584,7 +584,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-149</y>
              <width>150</width>
              <height>557</height>
             </rect>
@@ -711,7 +711,7 @@
                </size>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>2</number>
               </property>
               <widget class="QWidget" name="page_Ponto">
                <layout class="QVBoxLayout" name="verticalLayout_11">

@@ -141,63 +141,47 @@ void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
     {
         const irr::c8* test = selectedSceneNode->getName();
         int id = getIdFromNode(test);
-        const Dim3df& oldDim = getDimensionFronId(id);
 
-        switch((selectedSceneNode->getID()&MASK)){
+        Vector3df oldDim = getDimensionFromId(id);
+        Vector3df newDim;
+        Vector3df parameters;
+
+        int newId = get_serialize_id();
+
+        newDim.set(0,0,0);
+        parameters.set(getPermissiFromId(id), getPermiabFromId(id), getCondutFromId(id));
+
+       switch((selectedSceneNode->getID()&MASK)){
             case(ID_FLAG_CUBO):
                 qDebug()<<"cubo";
-                if(eixo == 1)//eixo x
-                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
-                                                          selectedSceneNode->getScale().Y,
-                                                          selectedSceneNode->getScale().Z));
-                if(eixo == 2)//eixo y
-                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
-                                                          (dim.Y/oldDim.Y),
-                                                          selectedSceneNode->getScale().Z));
-                else//eixo z
-                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
-                                                          selectedSceneNode->getScale().Y,
-                                                          (dim.Z/oldDim.Z)));
+                if(eixo == 1){
+                    newDim.set(dim.X, oldDim.Y, oldDim.Z);
+                    removeSceneNodeFromNode(smgr->getSceneNodeFromName(test));
+                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                }
+                if(eixo == 2){
+                    newDim.set(oldDim.X, dim.Y, oldDim.Z);
+                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                }
+                else{
+                    newDim.set(oldDim.X, oldDim.Y, dim.Z);
+                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                }
                 break;
 
             case(ID_FLAG_ESFERA):
                 qDebug()<<"esfera";
-                selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
-                                                          (dim.Y/oldDim.Y),
-                                                          (dim.Z/oldDim.Z)));
                 break;
 
             case(ID_FLAG_CILINDRO):
                 qDebug()<<"cilindro";
-                if(eixo == 1)//raio
-                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
-                                                          selectedSceneNode->getScale().Y,
-                                                          selectedSceneNode->getScale().Z));
-                if(eixo == 2)//altura
-                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
-                                                          (dim.Y/oldDim.Y),
-                                                          selectedSceneNode->getScale().Z));
                 break;
 
             case(ID_FLAG_CONE):
                 qDebug()<<"cone";
-                if(eixo == 1)//raio
-                    selectedSceneNode->setScale(Vector3df((dim.X/oldDim.X),
-                                                          selectedSceneNode->getScale().Y,
-                                                          selectedSceneNode->getScale().Z));
-                if(eixo == 2)//altura
-                    selectedSceneNode->setScale(Vector3df(selectedSceneNode->getScale().X,
-                                                          (dim.Y/oldDim.Y),
-                                                          selectedSceneNode->getScale().Z));
                 break;
         }
 
-
-
-
-        qDebug()<<"scale x"<<selectedSceneNode->getScale().X<<" y "
-               <<selectedSceneNode->getScale().Y<<" z "
-                <<selectedSceneNode->getScale().Z;
         drawIrrlichtScene();
     }
 }
@@ -624,29 +608,31 @@ void Cena::insertLinha(int, IrrNode *node, const Pos3df& inicial, const Pos3df& 
     }
 }
 
-void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
+void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
 {
     if(smgr)
     {
         irr::c8 nodeName[50];
         sprintf(nodeName, "%d", id);
-//        qDebug()<<"nodeName "<<nodeName;
+
         node->criaCubo(smgr, p, dim, nodeName);
 
-        SalvaCube *cube = new SalvaCube;
-        cube->dim = dim;
-        cube->pos = p;
-//        cube->epr
+        nodeParam *cube_parameters = new nodeParam;
+        cube_parameters->dimension.set(dim);
+        cube_parameters->position.set(p);
+        cube_parameters->permiabilidade = parameters.X;
+        cube_parameters->permissividade = parameters.Y;
+        cube_parameters->condutibilidade = parameters.Z;
 
-        dimMap[id] = dim;
+        myMap[id] = *cube_parameters;
         nodeId[nodeName] = id;
-        qDebug()<< "node named"<<nodeName;
 
+        delete cube_parameters;
         drawIrrlichtScene();
     }
 }
 
-void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
+void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
 {
     if(smgr)
     {
@@ -655,14 +641,22 @@ void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
 
         node->criaCone(smgr, p, dim, nodeName);
 
-        dimMap[id] = dim;
+        nodeParam *cone_parameters = new nodeParam;
+        cone_parameters->dimension.set(dim);
+        cone_parameters->position.set(p);
+        cone_parameters->permiabilidade = parameters.X;
+        cone_parameters->permissividade = parameters.Y;
+        cone_parameters->condutibilidade = parameters.Z;
+
+        myMap[id] = *cone_parameters;
         nodeId[nodeName] = id;
 
+        delete cone_parameters;
         drawIrrlichtScene();
     }
 }
 
-void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3df& p)
+void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
 {
     if(smgr)
     {
@@ -671,14 +665,22 @@ void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3d
 
         node->criaCilindro(smgr, p, dim, nodeName);
 
-        dimMap[id] = dim;
+        nodeParam *cilindro_parameters = new nodeParam;
+        cilindro_parameters->dimension.set(dim);
+        cilindro_parameters->position.set(p);
+        cilindro_parameters->permiabilidade = parameters.X;
+        cilindro_parameters->permissividade = parameters.Y;
+        cilindro_parameters->condutibilidade = parameters.Z;
+
+        myMap[id] = *cilindro_parameters;
         nodeId[nodeName] = id;
 
+        delete cilindro_parameters;
         drawIrrlichtScene();
     }
 }
 
-void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p)
+void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
 {
     if(smgr)
     {
@@ -687,9 +689,17 @@ void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& 
 
         node->criaEsfera(smgr, p, dim.X, nodeName);
 
-        dimMap[id] = dim;
+        nodeParam *esfera_parameters = new nodeParam;
+        esfera_parameters->dimension.set(dim);
+        esfera_parameters->position.set(p);
+        esfera_parameters->permiabilidade = parameters.X;
+        esfera_parameters->permissividade = parameters.Y;
+        esfera_parameters->condutibilidade = parameters.Z;
+
+        myMap[id] = *esfera_parameters;
         nodeId[nodeName] = id;
 
+        delete esfera_parameters;
         drawIrrlichtScene();
     }
 }
@@ -715,14 +725,22 @@ void Cena::duplicateSceneNode()
 
 void Cena::removeSceneNode()
 {
+    if(smgr && selectedSceneNode)
+    {
+        selectedSceneNode->remove();
+        selectedSceneNode = 0;
+        gizmo_X->setVisible(false);
+        gizmo_Y->setVisible(false);
+        gizmo_Z->setVisible(false);
+
+    }
+}
+
+void Cena::removeSceneNodeFromNode(irr::scene::ISceneNode* node){
     if(smgr){
-        if(selectedSceneNode){
-            selectedSceneNode->remove();
-            selectedSceneNode = 0;
-            gizmo_X->setVisible(false);
-            gizmo_Y->setVisible(false);
-            gizmo_Z->setVisible(false);
-        }
+        qDebug()<<"node name"<< node->getName();
+        node->setVisible(false);
+        qDebug()<<"node name"<< node->getName();
     }
 }
 

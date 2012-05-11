@@ -1,7 +1,15 @@
 #ifndef IRRVIEWER_H
 #define IRRVIEWER_H
-#include<irrlicht.h>
+
+#include <irrlicht.h>
+#include <utility>
+#include <iostream>
+#include <string>
 #include <QtGui>
+#include <QObject>
+#include <map>
+#include <stdio.h>
+#include <QKeyEvent>
 #include "myeventreceiver.h"
 
 typedef irr::core::vector3df Pos3df;
