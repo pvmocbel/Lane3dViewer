@@ -39,6 +39,12 @@ public:
                     const double raio,
                     const irr::c8* nodeName);
 
+    void criaPonto(IrrSmgr* const smgr,
+                    const Pos3df& pos,
+                    const double raio,
+                    const irr::c8* nodeName);
+
+
     void criaCone(IrrSmgr* const smgr,
                   const Pos3df& pos,
                   const Dim3df& dim,

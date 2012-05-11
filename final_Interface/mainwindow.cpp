@@ -128,6 +128,14 @@ void MainWindow::receiver_selection(){
              case(ID_FLAG_CONE):
                  setPainelCone();
                  break;
+
+             case(ID_FLAG_LINHA):
+                setPainelLinha();
+                break;
+
+             case(ID_FLAG_PONTO):
+                setPainelPonto();
+                break;
          }
     }
 }
@@ -149,7 +157,7 @@ void MainWindow::new_triggered()
     connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
 
     cena->resize(2048, 2048);
-    ui->gridLayout->addWidget(cena, 0, 0, 1, 1);
+    ui->gridLayout_interface->addWidget(cena, 0, 0);
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();

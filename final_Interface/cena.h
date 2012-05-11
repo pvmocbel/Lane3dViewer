@@ -86,70 +86,10 @@ public:
 
     void insertLinha(int, IrrNode* node, const Pos3df& inicial, const Pos3df& final);
     void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
+    void insertCuboChanged(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters, const irr::c8*);
     void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
     void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
     void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
-
-    Vector3df getDimensionFromId(int id){
-        for(it = myMap.begin(); it != myMap.end(); it++){
-            if((it->first) ==  id){
-                return it->second.dimension;
-                break;
-            }
-        }
-        if(it == myMap.end()){
-            Vector3df aux_dim;
-            aux_dim.set(1,1,1);
-            return aux_dim;
-        }
-    }
-
-    Vector3df getPositionFromId(int id){
-        for(it = myMap.begin(); it != myMap.end(); it++){
-            if((it->first) ==  id){
-                return it->second.position;
-                break;
-            }
-        }
-        if(it == myMap.end()){
-            Vector3df aux_dim;
-            aux_dim.set(1,1,1);
-            return aux_dim;
-        }
-    }
-
-    double getCondutFromId(int id){
-        for(it = myMap.begin(); it != myMap.end(); it++){
-            if((it->first) ==  id){
-                return it->second.condutibilidade;
-                break;
-            }
-        }
-        if(it == myMap.end())
-           return 0;
-    }
-
-    double getPermiabFromId(int id){
-        for(it = myMap.begin(); it != myMap.end(); it++){
-            if((it->first) ==  id){
-                return it->second.permiabilidade;
-                break;
-            }
-        }
-        if(it == myMap.end())
-           return 0;
-    }
-
-    double getPermissiFromId(int id){
-        for(it = myMap.begin(); it != myMap.end(); it++){
-            if((it->first) ==  id){
-                return it->second.permissividade;
-                break;
-            }
-        }
-        if(it == myMap.end())
-           return 0;
-    }
 
     int getIdFromNode(std::string nodeName){
         for(no = nodeId.begin(); no != nodeId.end(); no++){

@@ -72,7 +72,7 @@ void IrrNode::criaLinha(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &di
         {
           cilindro_node->setPosition(pos);
           cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cilindro_node->setID(ID_FLAG_CILINDRO|S);
+          cilindro_node->setID(ID_FLAG_LINHA|S);
 
           cilindro_node->setRotation(Vector3df(ang1,ang2,0));
 
@@ -123,6 +123,30 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double ra
           esfera_node->setPosition(pos);
           esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           esfera_node->setID(ID_FLAG_ESFERA|S);
+
+          seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
+          esfera_node->setTriangleSelector(seletor);
+          seletor->drop();
+
+          esfera_node->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)esfera_node;
+        }
+    }
+}
+
+void IrrNode::criaPonto(IrrSmgr *const smgr, const Pos3df &pos, const double raio, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(raio);
+        irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
+
+        if (esfera_node)
+        {
+          esfera_node->setPosition(pos);
+          esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          esfera_node->setID(ID_FLAG_PONTO|S);
 
           seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
           esfera_node->setTriangleSelector(seletor);

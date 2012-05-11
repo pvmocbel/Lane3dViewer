@@ -142,30 +142,26 @@ void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
         const irr::c8* test = selectedSceneNode->getName();
         int id = getIdFromNode(test);
 
-        Vector3df oldDim = getDimensionFromId(id);
-        Vector3df newDim;
+        nodeParam aux = myMap[id];
+        aux.dimension = dim;
+
         Vector3df parameters;
-
-        int newId = get_serialize_id();
-
-        newDim.set(0,0,0);
-        parameters.set(getPermissiFromId(id), getPermiabFromId(id), getCondutFromId(id));
+        parameters.set(aux.permiabilidade,aux.permissividade,aux.condutibilidade);
 
        switch((selectedSceneNode->getID()&MASK)){
             case(ID_FLAG_CUBO):
                 qDebug()<<"cubo";
                 if(eixo == 1){
-                    newDim.set(dim.X, oldDim.Y, oldDim.Z);
-                    removeSceneNodeFromNode(smgr->getSceneNodeFromName(test));
-                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                    removeSceneNode();
+                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
                 }
                 if(eixo == 2){
-                    newDim.set(oldDim.X, dim.Y, oldDim.Z);
-                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                    removeSceneNode();
+                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
                 }
                 else{
-                    newDim.set(oldDim.X, oldDim.Y, dim.Z);
-                    insertCubo(newId, new IrrNode(), newDim, getPositionFromId(id), parameters );
+                    removeSceneNode();
+                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
                 }
                 break;
 
@@ -180,6 +176,13 @@ void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
             case(ID_FLAG_CONE):
                 qDebug()<<"cone";
                 break;
+
+            case(ID_FLAG_LINHA):
+                break;
+
+            case(ID_FLAG_PONTO):
+                break;
+
         }
 
         drawIrrlichtScene();
@@ -628,6 +631,14 @@ void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p,
         nodeId[nodeName] = id;
 
         delete cube_parameters;
+        drawIrrlichtScene();
+    }
+}
+
+void Cena::insertCuboChanged(int id ,IrrNode *node, const Dim3df &dim, const Pos3df &p, const Vector3df &parameters, const irr::c8* nodeName){
+    if(smgr)
+    {
+        node->criaCubo(smgr, p, dim, nodeName);
         drawIrrlichtScene();
     }
 }
