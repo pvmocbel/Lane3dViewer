@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_cgerais.ui'
 **
-** Created: Fri May 4 10:21:33 2012
+** Created: Fri May 11 07:13:55 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -74,7 +74,7 @@ public:
         dim_regiao_livre_x->setObjectName(QString::fromUtf8("dim_regiao_livre_x"));
         dim_regiao_livre_x->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_x->setMaximum(1000);
-        dim_regiao_livre_x->setValue(3);
+        dim_regiao_livre_x->setValue(100);
 
         gridLayout->addWidget(dim_regiao_livre_x, 0, 1, 1, 1);
 
@@ -95,7 +95,7 @@ public:
         dim_regiao_livre_y->setObjectName(QString::fromUtf8("dim_regiao_livre_y"));
         dim_regiao_livre_y->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_y->setMaximum(1000);
-        dim_regiao_livre_y->setValue(3);
+        dim_regiao_livre_y->setValue(100);
 
         gridLayout->addWidget(dim_regiao_livre_y, 0, 4, 1, 1);
 
@@ -117,7 +117,7 @@ public:
         dim_regiao_livre_z->setObjectName(QString::fromUtf8("dim_regiao_livre_z"));
         dim_regiao_livre_z->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_z->setMaximum(1000);
-        dim_regiao_livre_z->setValue(3);
+        dim_regiao_livre_z->setValue(100);
 
         gridLayout->addWidget(dim_regiao_livre_z, 0, 7, 1, 1);
 

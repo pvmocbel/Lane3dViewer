@@ -840,6 +840,7 @@ void Cena::selection()
              key_y_on = false;
              key_z_on = false;
          }
+         emit send_selection_call();
     }
 }
 

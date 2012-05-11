@@ -110,6 +110,28 @@ void MainWindow::receiver_dimesion(){
     }
 }
 
+void MainWindow::receiver_selection(){
+    if(cena && cena->selectedSceneNode){
+        switch((cena->selectedSceneNode->getID()&MASK)){
+             case(ID_FLAG_CUBO):
+                 setPainelCubo();
+                 break;
+
+             case(ID_FLAG_ESFERA):
+                 setPainelEsfera();
+                 break;
+
+             case(ID_FLAG_CILINDRO):
+                 setPainelCilindro();
+                 break;
+
+             case(ID_FLAG_CONE):
+                 setPainelCone();
+                 break;
+         }
+    }
+}
+
 void MainWindow::new_triggered()
 {
     Dialog_CGerais* d = new Dialog_CGerais();
@@ -124,6 +146,7 @@ void MainWindow::new_triggered()
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
 
     connect(this, SIGNAL(send_to_cena_changed_dimension(Dim3df,int)), cena, SLOT(receiver_changed_dimension_mainwindow(Dim3df,int)));
+    connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
 
     cena->resize(2048, 2048);
     ui->gridLayout->addWidget(cena, 0, 0, 1, 1);

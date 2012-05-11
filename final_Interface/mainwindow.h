@@ -33,6 +33,7 @@ public slots:
     void rotacao_triggered();
 
     void return_position_changed();
+    void receiver_selection();
 
     void change_x_position(double);
     void change_y_position(double);
