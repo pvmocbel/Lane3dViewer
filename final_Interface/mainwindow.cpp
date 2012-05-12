@@ -24,7 +24,6 @@ void MainWindow::init()
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
 
-
     connect(ui->position_X, SIGNAL(valueChanged(double)), this, SLOT(change_x_position(double)));
     connect(ui->position_Y, SIGNAL(valueChanged(double)), this, SLOT(change_y_position(double)));
     connect(ui->position_Z, SIGNAL(valueChanged(double)), this, SLOT(change_z_position(double)));
@@ -32,15 +31,6 @@ void MainWindow::init()
     connect(ui->cube_dim_X, SIGNAL(valueChanged(double)), this , SLOT(change_x_dimension(double)));
     connect(ui->cube_dim_Y, SIGNAL(valueChanged(double)), this , SLOT(change_y_dimension(double)));
     connect(ui->cube_dim_Z, SIGNAL(valueChanged(double)), this , SLOT(change_z_dimension(double)));
-
-//    connect(ui->linha_inicial_x, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
-//    connect(ui->linha_inicial_y, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
-//    connect(ui->linha_inicial_z, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaInicialPosition_x(double)));
-
-//    connect(ui->linha_final_x, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_x(double)));
-//    connect(ui->linha_final_y, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_y(double)));
-//    connect(ui->linha_final_z, SIGNAL(valueChanged(double)), this , SLOT(changeLinhaFinalPosition_z(double)));
-
 }
 
 void MainWindow::return_position_changed(){
@@ -156,8 +146,10 @@ void MainWindow::new_triggered()
     connect(this, SIGNAL(send_to_cena_changed_dimension(Dim3df,int)), cena, SLOT(receiver_changed_dimension_mainwindow(Dim3df,int)));
     connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
 
+//    connect(this, SIGNAL())
+
     cena->resize(2048, 2048);
-    ui->gridLayout_interface->addWidget(cena, 0, 0);
+    ui->grid_Interface->addWidget(cena, 0, 0);
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
@@ -214,6 +206,10 @@ void MainWindow::linha_triggered()
     final.set(ui->linha_final_x->value(), ui->linha_final_y->value(), ui->linha_final_z->value());
 
     cena->insertLinha(id, new IrrNode(), inicial, final);
+}
+
+void MainWindow::linha_test(double){
+
 }
 
 void MainWindow::cubo_triggered()
@@ -288,6 +284,8 @@ void MainWindow::setPainelPonto()
     ui->stackedWidget_pnLateralObj->setCurrentIndex(0);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(0);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(0);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 
 void MainWindow::setPainelLinha()
@@ -296,8 +294,8 @@ void MainWindow::setPainelLinha()
     ui->lineEdit_Name->setText("Linha");
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(1);
-    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
-    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
+//    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+//    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 
 void MainWindow::setPainelCubo()

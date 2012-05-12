@@ -74,7 +74,7 @@ void IrrNode::criaLinha(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &di
           cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           cilindro_node->setID(ID_FLAG_LINHA|S);
 
-          cilindro_node->setRotation(Vector3df(ang1,ang2,0));
+          cilindro_node->setRotation(Vector3df(ang1,0,ang2));
 
           seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
           cilindro_node->setTriangleSelector(seletor);

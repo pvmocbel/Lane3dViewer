@@ -29,6 +29,8 @@ public slots:
     void open_triggered();
     void save_triggered();
 
+    void linha_test(double);
+
     void posicao_triggered();
     void rotacao_triggered();
 
@@ -66,8 +68,6 @@ public slots:
     void setPainelCone();
     void setPainelEsfera();
     void setPainelCilindro();
-
-
 
 protected:
 

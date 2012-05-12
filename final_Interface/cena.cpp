@@ -588,24 +588,24 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 void Cena::insertLinha(int, IrrNode *node, const Pos3df& inicial, const Pos3df& final){
     if(smgr){
 
+        float angX = 0;
+        float angZ = 0;
         double height = sqrt((final.X-inicial.X)*(final.X-inicial.X)
                              +(final.Y-inicial.Y)*(final.Y-inicial.Y)
                              +(final.Z-inicial.Z)*(final.Z-inicial.Z));
-        qDebug()<<"height linha "<< height;
 
-        float angX = 0;
-        float angY = 0;
-
-        angX = atan2((final.Y-inicial.Y), (final.X-inicial.X))*180/PI;
-        angY = acos((final.Z-inicial.Z)/(height))*180/PI;
-
-        qDebug()<<"angx "<<angX<<" angy "<<angY;
+        if(inicial.X != final.X)
+            angZ = 90;
+        if(inicial.Y != final.Y)
+            angX = 0;
+        if(inicial.Z != final.Z)
+            angX = 90;
 
         Pos3df p;
         p.set(0,0,0);
         Dim3df dim;
-        dim.set(0.5,height,0);
-        node->criaLinha(smgr, p, dim, angX, angY, "linha" );
+        dim.set(0.5, height, 0);
+        node->criaLinha(smgr, p, dim, angX, angZ, "linha" );
 
         drawIrrlichtScene();
     }
