@@ -34,6 +34,8 @@ public slots:
     void posicao_triggered();
     void rotacao_triggered();
 
+    void gerarMalha();
+
     void return_position_changed();
     void receiver_selection();
 

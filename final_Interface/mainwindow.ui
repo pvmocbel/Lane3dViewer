@@ -113,8 +113,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>145</width>
-               <height>408</height>
+               <width>140</width>
+               <height>195</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -372,7 +372,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-56</y>
+               <y>0</y>
                <width>150</width>
                <height>599</height>
               </rect>
@@ -1658,12 +1658,12 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>814</x>
-     <y>209</y>
+     <x>856</x>
+     <y>274</y>
     </hint>
     <hint type="destinationlabel">
-     <x>605</x>
-     <y>201</y>
+     <x>684</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -1674,12 +1674,12 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>817</x>
-     <y>233</y>
+     <x>856</x>
+     <y>308</y>
     </hint>
     <hint type="destinationlabel">
-     <x>599</x>
-     <y>245</y>
+     <x>685</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -1690,12 +1690,12 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>803</x>
-     <y>271</y>
+     <x>856</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>589</x>
-     <y>284</y>
+     <x>685</x>
+     <y>251</y>
     </hint>
    </hints>
   </connection>
@@ -1706,12 +1706,12 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>318</y>
+     <x>856</x>
+     <y>386</y>
     </hint>
     <hint type="destinationlabel">
-     <x>583</x>
-     <y>327</y>
+     <x>687</x>
+     <y>293</y>
     </hint>
    </hints>
   </connection>
@@ -1722,12 +1722,12 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>795</x>
-     <y>353</y>
+     <x>856</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
-     <x>583</x>
-     <y>358</y>
+     <x>687</x>
+     <y>332</y>
     </hint>
    </hints>
   </connection>
@@ -1738,12 +1738,28 @@
    <slot>Linha_test(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>804</x>
-     <y>390</y>
+     <x>856</x>
+     <y>454</y>
     </hint>
     <hint type="destinationlabel">
-     <x>648</x>
-     <y>382</y>
+     <x>687</x>
+     <y>373</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GerarMalha</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>gerarMalha()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>504</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>468</y>
     </hint>
    </hints>
   </connection>

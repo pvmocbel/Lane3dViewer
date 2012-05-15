@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat May 12 01:21:16 2012
+** Created: Sun May 13 00:42:19 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -258,7 +258,7 @@ public:
         scrollArea_0->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_0 = new QWidget();
         scrollAreaWidgetContents_pnLateral_0->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_0"));
-        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 145, 408));
+        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 195));
         verticalLayout_12 = new QVBoxLayout(scrollAreaWidgetContents_pnLateral_0);
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
@@ -382,7 +382,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_1 = new QWidget();
         scrollAreaWidgetContents_pnLateral_1->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_1"));
-        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, -56, 150, 599));
+        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 599));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_pnLateral_1);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);

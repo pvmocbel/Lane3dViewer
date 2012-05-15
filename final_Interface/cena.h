@@ -110,6 +110,7 @@ public:
     inline void removeSceneNode();
     void removeSceneNodeFromNode(irr::scene::ISceneNode*);
     inline void duplicateSceneNode();
+    void geraMalha();
 
     inline void gizmo();
     void cenaIrrlicht();

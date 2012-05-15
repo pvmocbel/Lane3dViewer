@@ -33,6 +33,11 @@ void MainWindow::init()
     connect(ui->cube_dim_Z, SIGNAL(valueChanged(double)), this , SLOT(change_z_dimension(double)));
 }
 
+void MainWindow::gerarMalha(){
+    if(cena)
+        cena
+}
+
 void MainWindow::return_position_changed(){
     if(cena&&cena->selectedSceneNode){
         ui->position_X->setValue(cena->selectedSceneNode->getPosition().X);

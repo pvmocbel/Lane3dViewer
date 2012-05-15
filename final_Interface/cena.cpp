@@ -189,6 +189,15 @@ void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
     }
 }
 
+
+void Cena::geraMalha(){
+    if(smgr){
+        Dialog_CGerais dia = new Dialog_CGerais();
+        float delta = dia.getDelta();
+        Dim3df dim = dia.dimension;
+        delete dia;
+    }
+}
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
