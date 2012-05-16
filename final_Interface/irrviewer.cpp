@@ -48,6 +48,10 @@ void IrrViewer::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eix
     receiver_changed_dimension_mainwindow(dim, eixo);
 }
 
+void IrrViewer::receiver_changed_dimension(nodeParam* param){
+    receiver_changed_dimension(param);
+}
+
 void IrrViewer::paintEvent( QPaintEvent *event )
 {
     if (device) {

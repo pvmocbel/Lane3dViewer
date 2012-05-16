@@ -5,16 +5,18 @@
 #include "irrviewer.h"
 #include "irrnode.h"
 
-#define PI 3,14159265
 
-typedef struct NodeParameters{
-    Vector3df position;
+typedef struct CELULA{
+    intVector position;
     Vector3df dimension;
     double permissividade, permiabilidade, condutibilidade;
-} nodeParam;
+}Celula;
+
+typedef std::vector<Celula> CelulaArray;
 
 typedef std::map<std::string, int> NodeID;
 typedef NodeID::iterator No;
+
 typedef std::map<int, nodeParam> MapNode;
 typedef MapNode::iterator It;
 
@@ -48,6 +50,9 @@ private:
     bool camera_04;
     bool camera_05;
     bool camera_06;
+
+    Vector3df dim;
+    double delta;
 
     float aproxima, afasta ;
 
@@ -84,12 +89,20 @@ public:
     float dx;
     float dy;
 
-    void insertLinha(int, IrrNode* node, const Pos3df& inicial, const Pos3df& final);
-    void insertCubo(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
-    void insertCuboChanged(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters, const irr::c8*);
-    void insertEsfera(int, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df& parameters);
-    void insertCone(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
-    void insertCilindro(int, IrrNode* node, const Dim3df &dim, const Pos3df &p, const Vector3df& parameters);
+    void insertHaste(int , IrrNode* node, nodeParam*);
+    void insertHasteChanged(IrrNode* node, nodeParam*, const irr::c8*);
+
+    void insertCubo(int, IrrNode* node, nodeParam *);
+    void insertCuboChanged(IrrNode* node, nodeParam*, const irr::c8*);
+
+    void insertEsfera(int, IrrNode* node, nodeParam*);
+    void insertEsferaChanged(IrrNode* node, nodeParam*, const irr::c8*);
+
+    void insertCone(int, IrrNode* node, nodeParam*);
+    void insertConeChanged(IrrNode* node, nodeParam*, const irr::c8*);
+
+    void insertCilindro(int, IrrNode* node, nodeParam*);
+    void insertCilindroChanged(IrrNode* node, nodeParam*, const irr::c8*);
 
     int getIdFromNode(std::string nodeName){
         for(no = nodeId.begin(); no != nodeId.end(); no++){
@@ -101,9 +114,7 @@ public:
         return 0;
     }
 
-    void setDimension(int id, Dim3df dim){
-//        dimMap[id] = dim;
-    }
+    int calcula_raio(const intVector& p1, const intVector& p2);
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
@@ -132,7 +143,7 @@ public:
 
 public slots:
     virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
-    virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos, int eixo);
+    virtual void receiver_changed_dimension(nodeParam*);
 
 };  //fim da classe Cena
 #endif // CENA_H

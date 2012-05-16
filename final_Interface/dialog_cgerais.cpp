@@ -14,7 +14,7 @@ Dialog_CGerais::~Dialog_CGerais()
 
 Dim3df Dialog_CGerais::getDimension() const{ return dimension;    }
 
-float Dialog_CGerais::getDelta()const {   return delta;   }
+float Dialog_CGerais::getDelta()const {return delta; }
 
 void Dialog_CGerais::parser()
 {

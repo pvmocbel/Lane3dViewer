@@ -22,7 +22,7 @@ private slots:
      void parser();
      void closer();
 
-private:
+public:
     Ui::Dialog_CGerais *ui;
     Dim3df dimension;
     irr::f32 dimX_RL, dimY_RL, dimZ_RL, delta;

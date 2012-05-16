@@ -19,6 +19,8 @@ void Cena::init(){
     camera_05 = false;
     camera_06 = false;
 
+    dim.set(0,0,0);
+
     mouse_press_position.set(0,0,0);
     mouse_release_position.set(0,0,0);
 
@@ -80,6 +82,9 @@ void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
     {
         IrrNode* node = new IrrNode();
 
+        this->dim = dim;
+        this->delta = delta;
+
         box.MinEdge.set(-(irr::f32)(dim.X*0.5),
                         -(irr::f32)(dim.Y*0.5),
                         -(irr::f32)(dim.Z*0.5));
@@ -135,69 +140,101 @@ void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
     }
 }
 
-void Cena::receiver_changed_dimension_mainwindow(const Dim3df& dim, int eixo)
-{
+void Cena::receiver_changed_dimension(nodeParam* param){
     if(smgr && selectedSceneNode)
     {
         const irr::c8* test = selectedSceneNode->getName();
         int id = getIdFromNode(test);
 
         nodeParam aux = myMap[id];
-        aux.dimension = dim;
+        aux = *param;
 
-        Vector3df parameters;
-        parameters.set(aux.permiabilidade,aux.permissividade,aux.condutibilidade);
+        switch((selectedSceneNode->getID()&MASK)){
+             case(ID_FLAG_CUBO):
+                 qDebug()<<"cubo";
+                 removeSceneNode();
+                 insertCuboChanged(new IrrNode(), param, test);
+                 break;
 
-       switch((selectedSceneNode->getID()&MASK)){
-            case(ID_FLAG_CUBO):
-                qDebug()<<"cubo";
-                if(eixo == 1){
-                    removeSceneNode();
-                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
-                }
-                if(eixo == 2){
-                    removeSceneNode();
-                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
-                }
-                else{
-                    removeSceneNode();
-                    insertCuboChanged(id, new IrrNode(), aux.dimension, aux.position, parameters, test);
-                }
-                break;
+             case(ID_FLAG_ESFERA):
+                 qDebug()<<"esfera";
+                 removeSceneNode();
+                 insertEsferaChanged(new IrrNode(), param, test);
+                 break;
 
-            case(ID_FLAG_ESFERA):
-                qDebug()<<"esfera";
-                break;
+             case(ID_FLAG_CILINDRO):
+                 qDebug()<<"cilindro";
+                 removeSceneNode();
+                 insertCilindroChanged(new IrrNode(), param, test);
+                 break;
 
-            case(ID_FLAG_CILINDRO):
-                qDebug()<<"cilindro";
-                break;
+             case(ID_FLAG_CONE):
+                 qDebug()<<"cone";
+                 removeSceneNode();
+                 insertConeChanged(new IrrNode(), param, test);
+                 break;
 
-            case(ID_FLAG_CONE):
-                qDebug()<<"cone";
-                break;
-
-            case(ID_FLAG_LINHA):
-                break;
-
-            case(ID_FLAG_PONTO):
-                break;
-
-        }
-
+             case(ID_FLAG_HASTE):
+                 qDebug()<<"haste";
+                 removeSceneNode();
+                 insertHasteChanged(new IrrNode(), param, test);
+                 break;
+         }//fim switch
         drawIrrlichtScene();
-    }
+    }//fim smgr
 }
-
 
 void Cena::geraMalha(){
     if(smgr){
-        Dialog_CGerais dia = new Dialog_CGerais();
-        float delta = dia.getDelta();
-        Dim3df dim = dia.dimension;
-        delete dia;
-    }
+        FILE *file = fopen("bm.in.txt","w+");
+        if(!file){
+            qDebug()<<"falha na leitura do arquivo";
+            return;
+        }
+//        fprintf(file,"testando");
+        CelulaArray array;
+
+        int count  = 0;
+//        for(it = myMap.begin(); it != myMap.end(); it++){
+
+            irr::core::aabbox3df box = myMap[1].box;
+            int raio = (int)((myMap[1].dimension.X)/delta);
+
+            intVector position;
+            position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta), (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta), (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+
+
+            for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
+            {
+                for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
+                {
+                    for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+                    {
+                        int novo_raio = calcula_raio(position, intVector(i,j,k));
+                        novo_raio = novo_raio*novo_raio;
+                        qDebug()<<"raio em celulas  "<<raio;
+                        if(novo_raio<=raio*raio){
+////                            Celula *celula = new Celula();
+////                            celula->position.set(i, j, k);
+//                            array[count] = *celula;
+                            fprintf(file,"%d %d %d %d %d %d \n",i, i, j, j, k, k);
+////                            delete celula;
+
+                        }
+                        qDebug()<<"contador..."<<++count;
+                    }//for k
+                }//for j
+            }//for i
+
+            fclose(file);
+    }//smgr
+}//fim funcao
+
+int Cena::calcula_raio(const intVector &p1, const intVector &p2){
+    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
+    return raio;
 }
+
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 void Cena::keyPressEvent(QKeyEvent *event){
     if (smgr) {
@@ -594,133 +631,182 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
 //-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
 
 //-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
-void Cena::insertLinha(int, IrrNode *node, const Pos3df& inicial, const Pos3df& final){
-    if(smgr){
+void Cena::insertHaste(int id, IrrNode *node, nodeParam* param){
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
 
-        float angX = 0;
-        float angZ = 0;
-        double height = sqrt((final.X-inicial.X)*(final.X-inicial.X)
-                             +(final.Y-inicial.Y)*(final.Y-inicial.Y)
-                             +(final.Z-inicial.Z)*(final.Z-inicial.Z));
+        node->criaHaste(smgr, param, nodeName);
 
-        if(inicial.X != final.X)
-            angZ = 90;
-        if(inicial.Y != final.Y)
-            angX = 0;
-        if(inicial.Z != final.Z)
-            angX = 90;
+        irr::scene::ISceneNode *aux = node->getNode();
 
-        Pos3df p;
-        p.set(0,0,0);
-        Dim3df dim;
-        dim.set(0.5, height, 0);
-        node->criaLinha(smgr, p, dim, angX, angZ, "linha" );
+        nodeParam *haste_parameters = new nodeParam;
+        haste_parameters->dimension.set(param->dimension);
+        haste_parameters->position.set(param->position);
+        haste_parameters->parametros.set(param->parametros);
+        haste_parameters->box = aux->getBoundingBox();
+        haste_parameters->type = param->type;
+
+        myMap[id] = *haste_parameters;
+        nodeId[nodeName] = id;
 
         drawIrrlichtScene();
+        delete haste_parameters;
+        delete node;
     }
 }
 
-void Cena::insertCubo(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
+void Cena::insertHasteChanged(IrrNode* node, nodeParam* param, const irr::c8*nodeName){
+    if(smgr)
+    {
+        node->criaHaste(smgr, param, nodeName);
+        drawIrrlichtScene();
+        delete node;
+    }
+}
+
+void Cena::insertCubo(int id, IrrNode* node, nodeParam* param)
 {
     if(smgr)
     {
         irr::c8 nodeName[50];
         sprintf(nodeName, "%d", id);
 
-        node->criaCubo(smgr, p, dim, nodeName);
+        node->criaCubo(smgr, param, nodeName);
+
+        irr::scene::ISceneNode *aux = node->getNode();
 
         nodeParam *cube_parameters = new nodeParam;
-        cube_parameters->dimension.set(dim);
-        cube_parameters->position.set(p);
-        cube_parameters->permiabilidade = parameters.X;
-        cube_parameters->permissividade = parameters.Y;
-        cube_parameters->condutibilidade = parameters.Z;
+        cube_parameters->dimension.set(param->dimension);
+        cube_parameters->position.set(param->position);
+        cube_parameters->parametros.set(param->parametros);
+        cube_parameters->box = aux->getBoundingBox();
+        cube_parameters->type = Cube;
 
         myMap[id] = *cube_parameters;
         nodeId[nodeName] = id;
 
+        drawIrrlichtScene();
         delete cube_parameters;
-        drawIrrlichtScene();
+        delete node;
     }
 }
 
-void Cena::insertCuboChanged(int id ,IrrNode *node, const Dim3df &dim, const Pos3df &p, const Vector3df &parameters, const irr::c8* nodeName){
+void Cena::insertCuboChanged(IrrNode *node, nodeParam* param, const irr::c8* nodeName){
     if(smgr)
     {
-        node->criaCubo(smgr, p, dim, nodeName);
+        node->criaCubo(smgr, param, nodeName);
         drawIrrlichtScene();
+        delete node;
     }
 }
 
-void Cena::insertCone(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
+void Cena::insertEsfera(int id, IrrNode* node, nodeParam* param)
 {
     if(smgr)
     {
         irr::c8 nodeName[50];
         sprintf(nodeName, "%d", id);
 
-        node->criaCone(smgr, p, dim, nodeName);
+        node->criaEsfera(smgr, param, nodeName);
 
-        nodeParam *cone_parameters = new nodeParam;
-        cone_parameters->dimension.set(dim);
-        cone_parameters->position.set(p);
-        cone_parameters->permiabilidade = parameters.X;
-        cone_parameters->permissividade = parameters.Y;
-        cone_parameters->condutibilidade = parameters.Z;
-
-        myMap[id] = *cone_parameters;
-        nodeId[nodeName] = id;
-
-        delete cone_parameters;
-        drawIrrlichtScene();
-    }
-}
-
-void Cena::insertCilindro(int id, IrrNode *node , const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
-{
-    if(smgr)
-    {
-        irr::c8 nodeName[50];
-        sprintf(nodeName, "%d", id);
-
-        node->criaCilindro(smgr, p, dim, nodeName);
-
-        nodeParam *cilindro_parameters = new nodeParam;
-        cilindro_parameters->dimension.set(dim);
-        cilindro_parameters->position.set(p);
-        cilindro_parameters->permiabilidade = parameters.X;
-        cilindro_parameters->permissividade = parameters.Y;
-        cilindro_parameters->condutibilidade = parameters.Z;
-
-        myMap[id] = *cilindro_parameters;
-        nodeId[nodeName] = id;
-
-        delete cilindro_parameters;
-        drawIrrlichtScene();
-    }
-}
-
-void Cena::insertEsfera(int id, IrrNode* node, const Dim3df& dim, const Pos3df& p, const Vector3df &parameters)
-{
-    if(smgr)
-    {
-        irr::c8 nodeName[50];
-        sprintf(nodeName, "%d", id);
-
-        node->criaEsfera(smgr, p, dim.X, nodeName);
+        irr::scene::ISceneNode *aux = node->getNode();
 
         nodeParam *esfera_parameters = new nodeParam;
-        esfera_parameters->dimension.set(dim);
-        esfera_parameters->position.set(p);
-        esfera_parameters->permiabilidade = parameters.X;
-        esfera_parameters->permissividade = parameters.Y;
-        esfera_parameters->condutibilidade = parameters.Z;
+        esfera_parameters->dimension.set(param->dimension);
+        esfera_parameters->position.set(param->position);
+        esfera_parameters->parametros.set(param->parametros);
+        esfera_parameters->type = Esphere;
+        esfera_parameters->box = aux->getBoundingBox();
 
         myMap[id] = *esfera_parameters;
         nodeId[nodeName] = id;
 
-        delete esfera_parameters;
         drawIrrlichtScene();
+        delete esfera_parameters;
+        delete node;
+    }
+}
+
+void Cena::insertEsferaChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        node->criaEsfera(smgr, param, nodeName);
+        drawIrrlichtScene();
+        delete node;
+    }
+}
+
+void Cena::insertCilindro(int id, IrrNode *node, nodeParam* param)
+{
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaCilindro(smgr, param, nodeName);
+
+        irr::scene::ISceneNode *aux = node->getNode();
+
+        nodeParam *cilindro_parameters = new nodeParam;
+        cilindro_parameters->dimension.set(param->dimension);
+        cilindro_parameters->position.set(param->position);
+        cilindro_parameters->parametros.set(param->parametros);
+        cilindro_parameters->box = aux->getBoundingBox();
+        cilindro_parameters->type = Cilindro;
+
+        myMap[id] = *cilindro_parameters;
+        nodeId[nodeName] = id;
+
+        drawIrrlichtScene();
+        delete cilindro_parameters;
+        delete node;
+    }
+}
+
+void Cena::insertCilindroChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        node->criaCilindro(smgr, param, nodeName);
+        drawIrrlichtScene();
+        delete node;
+    }
+}
+
+void Cena::insertCone(int id, IrrNode* node, nodeParam* param)
+{
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaCone(smgr, param, nodeName);
+
+        irr::scene::ISceneNode *aux = node->getNode();
+
+        nodeParam *cone_parameters = new nodeParam;
+        cone_parameters->dimension.set(param->dimension);
+        cone_parameters->position.set(param->position);
+        cone_parameters->parametros.set(param->parametros);
+        cone_parameters->box = aux->getBoundingBox();
+        cone_parameters->type = Cone;
+
+        myMap[id] = *cone_parameters;
+        nodeId[nodeName] = id;
+
+        drawIrrlichtScene();
+        delete cone_parameters;
+        delete node;
+    }
+}
+
+void Cena::insertConeChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        node->criaCone(smgr, param, nodeName);
+        drawIrrlichtScene();
+        delete node;
     }
 }
 

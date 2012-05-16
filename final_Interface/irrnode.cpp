@@ -1,20 +1,95 @@
 #include "irrnode.h"
 
+
 IrrNode::IrrNode():selectedSceneNode(0),first_cube(true)
 {
 }
 
-void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim, const irr::c8 *nodeName)
+void IrrNode::criaPonto(IrrSmgr *const smgr, nodeParam* param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(param->dimension.X);
+        irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
+
+        if (esfera_node)
+        {
+          esfera_node->setPosition(param->position);
+          esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          esfera_node->setID(ID_FLAG_PONTO|S);
+
+          seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
+          esfera_node->setTriangleSelector(seletor);
+          seletor->drop();
+
+          esfera_node->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)esfera_node;
+        }
+    }
+}
+
+void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        Vector3df angle;
+
+        double height = sqrt((param->dimension.X-param->position.X)*(param->dimension.X-param->position.X)
+                             +(param->dimension.Y-param->position.Y)*(param->dimension.Y-param->position.Y)
+                             +(param->dimension.Z-param->position.Z)*(param->dimension.Z-param->position.Z));
+
+        if(param->position.X != param->dimension.X){
+            angle.X = 0;
+            angle.Y = 0;
+            angle.Z = 90;
+        }
+        else if(param->position.Y != param->dimension.Y){
+            angle.X = 0;
+            angle.Y = 0;
+            angle.Z = 0;
+        }
+        else if(param->position.Z != param->dimension.Z){
+            angle.X = 90;
+            angle.Y = 0;
+            angle.Z = 0;
+        }
+
+        float raio = 0.5;
+
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(raio, height, 15);
+        irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
+
+        if (cilindro_node)
+        {
+          cilindro_node->setPosition(param->position);
+          cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cilindro_node->setID(ID_FLAG_HASTE|S);
+
+          cilindro_node->setRotation(Vector3df(angle.X, angle.Y, angle.Z));
+
+          seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
+          cilindro_node->setTriangleSelector(seletor);
+          seletor->drop();
+
+          cilindro_node->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
+        }
+    }
+}
+
+void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nodeName)
 {
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(dim);
+        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(param->dimension);
         irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
 
         if (cube_node)
         {
-          cube_node->setPosition(pos);
+          cube_node->setPosition(param->position);
           cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
           cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
           cube_node->setID(ID_FLAG_CUBO|S);
@@ -25,102 +100,21 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim
 
           cube_node->setName(nodeName);
 
-          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;          
-        }
-        this->position = pos;
-        this->dimension = dim;
-    }
-}
-
-void IrrNode::criaCone(IrrSmgr* const smgr, const Pos3df& pos, const Dim3df& dim, const irr::c8 *nodeName)
-{
-    if(smgr)
-    {
-        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(dim.Y, dim.X, 15);
-        irr::scene::IMeshSceneNode *cone_node = smgr->addMeshSceneNode(mesh_cone_node);
-
-        if (cone_node)
-        {
-          cone_node->setPosition(pos);
-          cone_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cone_node->setID(ID_FLAG_CONE|S);
-
-          seletor = smgr->createOctTreeTriangleSelector(cone_node->getMesh(), cone_node, 32);
-          cone_node->setTriangleSelector(seletor);
-          seletor->drop();
-
-          cone_node->setName(nodeName);
-
-          selectedSceneNode = (irr::scene::ISceneNode*)cone_node;
-        }
-        this->position = pos;
-        this->dimension = dim;
-    }
-
-}
-
-
-void IrrNode::criaLinha(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &dim, double ang1, double ang2, const irr::c8 *nodeName){
-    if(smgr)
-    {
-        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(dim.X, dim.Y, 15);
-        irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
-
-        if (cilindro_node)
-        {
-          cilindro_node->setPosition(pos);
-          cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cilindro_node->setID(ID_FLAG_LINHA|S);
-
-          cilindro_node->setRotation(Vector3df(ang1,0,ang2));
-
-          seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
-          cilindro_node->setTriangleSelector(seletor);
-          seletor->drop();
-
-          cilindro_node->setName(nodeName);
-
-          selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
+          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;
         }
     }
 }
 
-void IrrNode::criaCilindro(IrrSmgr *const smgr, const Pos3df &pos, const Dim3df &dim, const irr::c8* nodeName){
+void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(dim.X, dim.Y, 15);
-        irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
-
-        if (cilindro_node)
-        {
-          cilindro_node->setPosition(pos);
-          cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cilindro_node->setID(ID_FLAG_CILINDRO|S);
-
-          seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
-          cilindro_node->setTriangleSelector(seletor);
-          seletor->drop();
-
-          cilindro_node->setName(nodeName);
-
-          selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
-        }
-    }
-}
-
-void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double raio, const irr::c8* nodeName){
-    if(smgr)
-    {
-        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(raio);
+        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(param->dimension.X);
         irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
 
         if (esfera_node)
         {
-          esfera_node->setPosition(pos);
+          esfera_node->setPosition(param->position);
           esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           esfera_node->setID(ID_FLAG_ESFERA|S);
 
@@ -135,28 +129,55 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, const Pos3df& pos, const double ra
     }
 }
 
-void IrrNode::criaPonto(IrrSmgr *const smgr, const Pos3df &pos, const double raio, const irr::c8 *nodeName){
+void IrrNode::criaCilindro(IrrSmgr *const smgr, nodeParam* param, const irr::c8* nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(raio);
-        irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(param->dimension.X, param->dimension.Y, 15);
+        irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
 
-        if (esfera_node)
+        if (cilindro_node)
         {
-          esfera_node->setPosition(pos);
-          esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          esfera_node->setID(ID_FLAG_PONTO|S);
+          cilindro_node->setPosition(param->position);
+          cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cilindro_node->setID(ID_FLAG_CILINDRO|S);
 
-          seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
-          esfera_node->setTriangleSelector(seletor);
+          seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
+          cilindro_node->setTriangleSelector(seletor);
           seletor->drop();
 
-          esfera_node->setName(nodeName);
+          cilindro_node->setName(nodeName);
 
-          selectedSceneNode = (irr::scene::ISceneNode*)esfera_node;
+          selectedSceneNode = (irr::scene::ISceneNode*)cilindro_node;
         }
     }
+}
+
+void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nodeName)
+{
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y, 15);
+        irr::scene::IMeshSceneNode *cone_node = smgr->addMeshSceneNode(mesh_cone_node);
+
+        if (cone_node)
+        {
+          cone_node->setPosition(param->position);
+          cone_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cone_node->setID(ID_FLAG_CONE|S);
+
+          seletor = smgr->createOctTreeTriangleSelector(cone_node->getMesh(), cone_node, 32);
+          cone_node->setTriangleSelector(seletor);
+          seletor->drop();
+
+          cone_node->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)cone_node;
+        }
+
+    }
+
 }
 
 void IrrNode::criaGizmo(IrrSmgr* const smgr,

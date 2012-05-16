@@ -23,19 +23,12 @@ void MainWindow::init()
     connect(ui->actionCone, SIGNAL(triggered()), this, SLOT(cone_triggered()));
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
-
-    connect(ui->position_X, SIGNAL(valueChanged(double)), this, SLOT(change_x_position(double)));
-    connect(ui->position_Y, SIGNAL(valueChanged(double)), this, SLOT(change_y_position(double)));
-    connect(ui->position_Z, SIGNAL(valueChanged(double)), this, SLOT(change_z_position(double)));
-
-    connect(ui->cube_dim_X, SIGNAL(valueChanged(double)), this , SLOT(change_x_dimension(double)));
-    connect(ui->cube_dim_Y, SIGNAL(valueChanged(double)), this , SLOT(change_y_dimension(double)));
-    connect(ui->cube_dim_Z, SIGNAL(valueChanged(double)), this , SLOT(change_z_dimension(double)));
 }
 
 void MainWindow::gerarMalha(){
-    if(cena)
-        cena
+    if(cena){
+        cena->geraMalha();
+    }
 }
 
 void MainWindow::return_position_changed(){
@@ -46,54 +39,86 @@ void MainWindow::return_position_changed(){
     }
 }
 
-void MainWindow::change_x_position(double x){
-    if(cena && cena->selectedSceneNode) {
-        Pos3df pos;
-        pos.set(x,cena->selectedSceneNode->getPosition().Y, cena->selectedSceneNode->getPosition().Z);
+void MainWindow::change_position(){
+    if(cena && cena->selectedSceneNode){
+        Pos3df pos ;
+        pos.set(ui->position_X->value(),ui->position_Y->value(),ui->position_Z->value());
         emit send_to_cena_changed_position(pos);
     }
 }
 
-void MainWindow::change_y_position(double y){
-    if(cena && cena->selectedSceneNode){
-        Pos3df pos;
-        pos.set(cena->selectedSceneNode->getPosition().X, y, cena->selectedSceneNode->getPosition().Z);
-        emit send_to_cena_changed_position(pos);
+void MainWindow::set_haste(){
+    if(cena && (cena->selectedSceneNode)){
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
+        param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+        param->type = Haste;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
     }
 }
 
-void MainWindow::change_z_position(double z){
+void MainWindow::set_cube(){
     if(cena && cena->selectedSceneNode){
-        Pos3df pos;
-        pos.set(cena->selectedSceneNode->getPosition().X, cena->selectedSceneNode->getPosition().Y, z);
-        emit send_to_cena_changed_position(pos);
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+        param->dimension.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
+        param->type = Cube;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
     }
 }
 
-void MainWindow::change_x_dimension(double x){
+void MainWindow::set_esfera(){
     if(cena && cena->selectedSceneNode){
-        Dim3df dim;
-        dim.set(x,1,1);
-        qDebug()<<"value change x "<<x;
-        emit send_to_cena_changed_dimension(dim,1);
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+        param->dimension.set(ui->raio_esfera->value(), 0, 0);
+        param->type = Esphere;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
     }
 }
 
-void MainWindow::change_y_dimension(double y){
+void MainWindow::set_cilindro(){
     if(cena && cena->selectedSceneNode){
-        qDebug()<<"value change y "<<y;
-        Dim3df dim;
-        dim.set(1,y,1);
-        emit send_to_cena_changed_dimension(dim,2);
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+        param->dimension.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
+        param->type = Cilindro;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
     }
 }
 
-void MainWindow::change_z_dimension(double z){
+void MainWindow::set_cone(){
     if(cena && cena->selectedSceneNode){
-        qDebug()<<"value change z "<<z;
-        Dim3df dim;
-        dim.set(1,1,z);
-        emit send_to_cena_changed_dimension(dim,3);
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+        param->dimension.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
+        param->type = Cone;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
     }
 }
 
@@ -124,8 +149,8 @@ void MainWindow::receiver_selection(){
                  setPainelCone();
                  break;
 
-             case(ID_FLAG_LINHA):
-                setPainelLinha();
+             case(ID_FLAG_HASTE):
+                setPainelHaste();
                 break;
 
              case(ID_FLAG_PONTO):
@@ -148,10 +173,11 @@ void MainWindow::new_triggered()
     connect(cena, SIGNAL(send_position_change()),this, SLOT(return_position_changed()));
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
 
-    connect(this, SIGNAL(send_to_cena_changed_dimension(Dim3df,int)), cena, SLOT(receiver_changed_dimension_mainwindow(Dim3df,int)));
     connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
 
-//    connect(this, SIGNAL())
+    connect(ui->GerarMalha, SIGNAL(clicked()),this, SLOT(gerarMalha()));
+
+    connect(this, SIGNAL(send_changed_dimension(nodeParam*)), cena, SLOT(receiver_changed_dimension(nodeParam*)));
 
     cena->resize(2048, 2048);
     ui->grid_Interface->addWidget(cena, 0, 0);
@@ -186,99 +212,87 @@ void MainWindow::rotacao_triggered()
 void MainWindow::ponto_triggered()
 {
     setPainelPonto();
-    int id = cena->get_serialize_id();
+    /*int id = cena->get_serialize_id();
 
-    Dim3df dim;
-    Pos3df pos;
-    Vector3df parameters;
+    Vector3df p ;
+    p.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
 
-    pos.set(0,0,0);
-    dim.set(2, 0, 0);
-    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
-
-    cena->insertEsfera(id ,new IrrNode(), dim, pos, parameters);
+    cena->insert(id, new IrrNode(), p)*/;
 }
 
 void MainWindow::linha_triggered()
 {
-    setPainelLinha();
+    setPainelHaste();
     int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
 
-    Pos3df inicial;
-    Pos3df final;
+    param->position.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
+    param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = Haste;
 
-    inicial.set(ui->linha_inicial_x->value(), ui->linha_inicial_y->value(), ui->linha_inicial_z->value());
-    final.set(ui->linha_final_x->value(), ui->linha_final_y->value(), ui->linha_final_z->value());
-
-    cena->insertLinha(id, new IrrNode(), inicial, final);
-}
-
-void MainWindow::linha_test(double){
-
+    cena->insertHaste(id, new IrrNode(), param);
+    delete param;
 }
 
 void MainWindow::cubo_triggered()
 {
     setPainelCubo();
     int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
 
-    Dim3df dim;
-    Pos3df pos;
-    Vector3df parameters;
+    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+    param->dimension.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = Cube;
 
-    pos.set(0,0,0);
-    dim.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
-    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
-
-    cena->insertCubo(id ,new IrrNode(), dim, pos, parameters);
-}
-
-void MainWindow::cilindro_triggered()
-{
-    setPainelCilindro();
-    int id = cena->get_serialize_id();
-
-    Dim3df dim;
-    Pos3df pos;
-    Vector3df parameters;
-
-    pos.set(0,0,0);
-    dim.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
-    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
-
-    cena->insertCilindro(id ,new IrrNode(), dim, pos, parameters);
-}
-
-void MainWindow::cone_triggered()
-{
-    setPainelCone();
-    int id = cena->get_serialize_id();
-
-    Dim3df dim;
-    Pos3df pos;
-    Vector3df parameters;
-
-    pos.set(0,0,0);
-    dim.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
-    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
-
-    cena->insertCone(id ,new IrrNode(), dim, pos, parameters);
+    cena->insertCubo(id, new IrrNode(), param);
+    delete param;
 }
 
 void MainWindow::esfera_triggered()
 {
     setPainelEsfera();
     int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
 
-    Dim3df dim;
-    Pos3df pos;
-    Vector3df parameters;
+    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+    param->dimension.set(ui->raio_esfera->value(), 0, 0);
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = Esphere;
 
-    pos.set(0,0,0);
-    dim.set(ui->raio_esfera->value(), 0, 0);
-    parameters.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    cena->insertEsfera(id, new IrrNode(), param);
+    delete param;
+}
 
-    cena->insertEsfera(id ,new IrrNode(), dim, pos, parameters);
+void MainWindow::cilindro_triggered()
+{
+    setPainelCilindro();
+    int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
+
+    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+    param->dimension.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = Cilindro;
+
+    cena->insertCilindro(id ,new IrrNode(), param);
+    delete param;
+}
+
+void MainWindow::cone_triggered()
+{
+    setPainelCone();
+    int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
+
+    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+    param->dimension.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = Cone;
+
+    cena->insertCone(id, new IrrNode(), param);
+    delete param;
 }
 
 void MainWindow::setPainelPonto()
@@ -293,14 +307,21 @@ void MainWindow::setPainelPonto()
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 
-void MainWindow::setPainelLinha()
+void MainWindow::setPainelHaste()
 {
-    ui->label_PainelTitulo_1->setText("LINHA");
-    ui->lineEdit_Name->setText("Linha");
+    ui->label_PainelTitulo_1->setText("Haste");
+    ui->lineEdit_Name->setText("Haste");
+
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(1);
-//    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
-//    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
+
+    ui->haste_inicial_x->setMinimumWidth(62);
+    ui->haste_inicial_y->setMinimumWidth(62);
+    ui->haste_inicial_z->setMinimumWidth(62);
+
+    ui->haste_final_x->setMinimumWidth(62);
+    ui->haste_final_y->setMinimumWidth(62);
+    ui->haste_final_z->setMinimumWidth(62);
 }
 
 void MainWindow::setPainelCubo()

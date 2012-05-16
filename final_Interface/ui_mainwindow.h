@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun May 13 00:42:19 2012
-**      by: Qt User Interface Compiler version 4.6.3
+** Created: Wed May 16 19:51:33 2012
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -93,22 +93,24 @@ public:
     QVBoxLayout *verticalLayout_3;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_2;
+    QLabel *label_14;
+    QDoubleSpinBox *raio_haste;
     QFrame *line_2;
     QLabel *label_6;
     QLabel *label_7;
-    QDoubleSpinBox *linha_inicial_x;
+    QDoubleSpinBox *haste_inicial_x;
     QLabel *label_8;
-    QDoubleSpinBox *linha_inicial_y;
+    QDoubleSpinBox *haste_inicial_y;
     QLabel *label_9;
-    QDoubleSpinBox *linha_inicial_z;
+    QDoubleSpinBox *haste_inicial_z;
     QFrame *line_6;
     QLabel *label_13;
     QLabel *label_11;
-    QDoubleSpinBox *linha_final_x;
+    QDoubleSpinBox *haste_final_x;
     QLabel *label_12;
-    QDoubleSpinBox *linha_final_y;
+    QDoubleSpinBox *haste_final_y;
     QLabel *label_10;
-    QDoubleSpinBox *linha_final_z;
+    QDoubleSpinBox *haste_final_z;
     QWidget *page_Cubo;
     QVBoxLayout *verticalLayout_5;
     QGroupBox *groupBox_13;
@@ -258,7 +260,7 @@ public:
         scrollArea_0->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_0 = new QWidget();
         scrollAreaWidgetContents_pnLateral_0->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_0"));
-        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 195));
+        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 144, 411));
         verticalLayout_12 = new QVBoxLayout(scrollAreaWidgetContents_pnLateral_0);
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
@@ -382,7 +384,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_1 = new QWidget();
         scrollAreaWidgetContents_pnLateral_1->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_1"));
-        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 599));
+        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 549));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_pnLateral_1);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -465,97 +467,108 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        label_14 = new QLabel(groupBox);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
+
+        gridLayout_2->addWidget(label_14, 0, 1, 1, 2);
+
+        raio_haste = new QDoubleSpinBox(groupBox);
+        raio_haste->setObjectName(QString::fromUtf8("raio_haste"));
+        raio_haste->setMinimum(-100);
+
+        gridLayout_2->addWidget(raio_haste, 0, 3, 1, 1);
+
         line_2 = new QFrame(groupBox);
         line_2->setObjectName(QString::fromUtf8("line_2"));
         line_2->setFrameShape(QFrame::HLine);
         line_2->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line_2, 0, 0, 1, 3);
+        gridLayout_2->addWidget(line_2, 1, 0, 1, 4);
 
         label_6 = new QLabel(groupBox);
         label_6->setObjectName(QString::fromUtf8("label_6"));
 
-        gridLayout_2->addWidget(label_6, 1, 0, 1, 1);
+        gridLayout_2->addWidget(label_6, 2, 0, 1, 1);
 
         label_7 = new QLabel(groupBox);
         label_7->setObjectName(QString::fromUtf8("label_7"));
 
-        gridLayout_2->addWidget(label_7, 1, 1, 1, 1);
+        gridLayout_2->addWidget(label_7, 2, 2, 1, 1);
 
-        linha_inicial_x = new QDoubleSpinBox(groupBox);
-        linha_inicial_x->setObjectName(QString::fromUtf8("linha_inicial_x"));
-        linha_inicial_x->setMinimum(-100);
+        haste_inicial_x = new QDoubleSpinBox(groupBox);
+        haste_inicial_x->setObjectName(QString::fromUtf8("haste_inicial_x"));
+        haste_inicial_x->setMinimum(-100);
 
-        gridLayout_2->addWidget(linha_inicial_x, 1, 2, 1, 1);
+        gridLayout_2->addWidget(haste_inicial_x, 2, 3, 1, 1);
 
         label_8 = new QLabel(groupBox);
         label_8->setObjectName(QString::fromUtf8("label_8"));
 
-        gridLayout_2->addWidget(label_8, 2, 1, 1, 1);
+        gridLayout_2->addWidget(label_8, 3, 2, 1, 1);
 
-        linha_inicial_y = new QDoubleSpinBox(groupBox);
-        linha_inicial_y->setObjectName(QString::fromUtf8("linha_inicial_y"));
-        linha_inicial_y->setMinimum(-100);
+        haste_inicial_y = new QDoubleSpinBox(groupBox);
+        haste_inicial_y->setObjectName(QString::fromUtf8("haste_inicial_y"));
+        haste_inicial_y->setMinimum(-100);
 
-        gridLayout_2->addWidget(linha_inicial_y, 2, 2, 1, 1);
+        gridLayout_2->addWidget(haste_inicial_y, 3, 3, 1, 1);
 
         label_9 = new QLabel(groupBox);
         label_9->setObjectName(QString::fromUtf8("label_9"));
 
-        gridLayout_2->addWidget(label_9, 3, 1, 1, 1);
+        gridLayout_2->addWidget(label_9, 4, 2, 1, 1);
 
-        linha_inicial_z = new QDoubleSpinBox(groupBox);
-        linha_inicial_z->setObjectName(QString::fromUtf8("linha_inicial_z"));
-        linha_inicial_z->setMinimum(-100);
+        haste_inicial_z = new QDoubleSpinBox(groupBox);
+        haste_inicial_z->setObjectName(QString::fromUtf8("haste_inicial_z"));
+        haste_inicial_z->setMinimum(-100);
 
-        gridLayout_2->addWidget(linha_inicial_z, 3, 2, 1, 1);
+        gridLayout_2->addWidget(haste_inicial_z, 4, 3, 1, 1);
 
         line_6 = new QFrame(groupBox);
         line_6->setObjectName(QString::fromUtf8("line_6"));
         line_6->setFrameShape(QFrame::HLine);
         line_6->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line_6, 4, 0, 1, 3);
+        gridLayout_2->addWidget(line_6, 5, 0, 1, 4);
 
         label_13 = new QLabel(groupBox);
         label_13->setObjectName(QString::fromUtf8("label_13"));
 
-        gridLayout_2->addWidget(label_13, 5, 0, 1, 1);
+        gridLayout_2->addWidget(label_13, 6, 0, 1, 1);
 
         label_11 = new QLabel(groupBox);
         label_11->setObjectName(QString::fromUtf8("label_11"));
 
-        gridLayout_2->addWidget(label_11, 5, 1, 1, 1);
+        gridLayout_2->addWidget(label_11, 6, 2, 1, 1);
 
-        linha_final_x = new QDoubleSpinBox(groupBox);
-        linha_final_x->setObjectName(QString::fromUtf8("linha_final_x"));
-        linha_final_x->setMinimum(-100);
-        linha_final_x->setValue(20);
+        haste_final_x = new QDoubleSpinBox(groupBox);
+        haste_final_x->setObjectName(QString::fromUtf8("haste_final_x"));
+        haste_final_x->setMinimum(-100);
+        haste_final_x->setValue(10);
 
-        gridLayout_2->addWidget(linha_final_x, 5, 2, 1, 1);
+        gridLayout_2->addWidget(haste_final_x, 6, 3, 1, 1);
 
         label_12 = new QLabel(groupBox);
         label_12->setObjectName(QString::fromUtf8("label_12"));
 
-        gridLayout_2->addWidget(label_12, 6, 1, 1, 1);
+        gridLayout_2->addWidget(label_12, 7, 2, 1, 1);
 
-        linha_final_y = new QDoubleSpinBox(groupBox);
-        linha_final_y->setObjectName(QString::fromUtf8("linha_final_y"));
-        linha_final_y->setMinimum(-100);
-        linha_final_y->setValue(0);
+        haste_final_y = new QDoubleSpinBox(groupBox);
+        haste_final_y->setObjectName(QString::fromUtf8("haste_final_y"));
+        haste_final_y->setMinimum(-100);
+        haste_final_y->setValue(0);
 
-        gridLayout_2->addWidget(linha_final_y, 6, 2, 1, 1);
+        gridLayout_2->addWidget(haste_final_y, 7, 3, 1, 1);
 
         label_10 = new QLabel(groupBox);
         label_10->setObjectName(QString::fromUtf8("label_10"));
 
-        gridLayout_2->addWidget(label_10, 7, 1, 1, 1);
+        gridLayout_2->addWidget(label_10, 8, 2, 1, 1);
 
-        linha_final_z = new QDoubleSpinBox(groupBox);
-        linha_final_z->setObjectName(QString::fromUtf8("linha_final_z"));
-        linha_final_z->setMinimum(-100);
+        haste_final_z = new QDoubleSpinBox(groupBox);
+        haste_final_z->setObjectName(QString::fromUtf8("haste_final_z"));
+        haste_final_z->setMinimum(-100);
 
-        gridLayout_2->addWidget(linha_final_z, 7, 2, 1, 1);
+        gridLayout_2->addWidget(haste_final_z, 8, 3, 1, 1);
 
 
         verticalLayout_3->addWidget(groupBox);
@@ -667,7 +680,7 @@ public:
         raio_esfera->setObjectName(QString::fromUtf8("raio_esfera"));
         raio_esfera->setMinimumSize(QSize(60, 0));
         raio_esfera->setMaximum(100);
-        raio_esfera->setValue(10);
+        raio_esfera->setValue(0.5);
 
         formLayout_15->setWidget(0, QFormLayout::FieldRole, raio_esfera);
 
@@ -988,7 +1001,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 900, 25));
+        menuBar->setGeometry(QRect(0, 0, 900, 24));
         MainWindow->setMenuBar(menuBar);
         ToolBar_File = new QToolBar(MainWindow);
         ToolBar_File->setObjectName(QString::fromUtf8("ToolBar_File"));
@@ -1016,15 +1029,28 @@ public:
         toolBar_GeometBasicas->addAction(actionCone);
 
         retranslateUi(MainWindow);
-        QObject::connect(linha_inicial_x, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
-        QObject::connect(linha_inicial_y, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
-        QObject::connect(linha_inicial_z, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
-        QObject::connect(linha_final_x, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
-        QObject::connect(linha_final_y, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
-        QObject::connect(linha_final_z, SIGNAL(valueChanged(double)), MainWindow, SLOT(Linha_test(double)));
+        QObject::connect(GerarMalha, SIGNAL(clicked()), MainWindow, SLOT(gerarMalha()));
+        QObject::connect(position_Y, SIGNAL(valueChanged(double)), MainWindow, SLOT(change_position()));
+        QObject::connect(position_Z, SIGNAL(valueChanged(double)), MainWindow, SLOT(change_position()));
+        QObject::connect(position_X, SIGNAL(valueChanged(double)), MainWindow, SLOT(change_position()));
+        QObject::connect(raio_haste, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_inicial_x, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_inicial_y, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_inicial_z, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_final_x, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_final_y, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(haste_final_z, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_haste()));
+        QObject::connect(cube_dim_X, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cube()));
+        QObject::connect(cube_dim_Y, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cube()));
+        QObject::connect(cube_dim_Z, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cube()));
+        QObject::connect(raio_esfera, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_esfera()));
+        QObject::connect(raio_cilindro, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cilindro()));
+        QObject::connect(comprimento_cilindro, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cilindro()));
+        QObject::connect(raio_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
+        QObject::connect(comprimento_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
 
         stackedWidget_Lateral->setCurrentIndex(1);
-        stackedWidget_pnLateralObj->setCurrentIndex(1);
+        stackedWidget_pnLateralObj->setCurrentIndex(5);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -1057,9 +1083,9 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionPonto->setToolTip(QApplication::translate("MainWindow", "Cria Ponto", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        actionLinha->setText(QApplication::translate("MainWindow", "Linha", 0, QApplication::UnicodeUTF8));
+        actionLinha->setText(QApplication::translate("MainWindow", "Haste", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        actionLinha->setToolTip(QApplication::translate("MainWindow", "Cria Linha", 0, QApplication::UnicodeUTF8));
+        actionLinha->setToolTip(QApplication::translate("MainWindow", "Cria Haste", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         actionCubo->setText(QApplication::translate("MainWindow", "Cubo", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
@@ -1091,6 +1117,7 @@ public:
         label_40->setText(QApplication::translate("MainWindow", "Nome:", 0, QApplication::UnicodeUTF8));
         label_41->setText(QApplication::translate("MainWindow", "n\302\272:", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("MainWindow", "Dimension", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("MainWindow", "raio:", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Inicial", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "X:", 0, QApplication::UnicodeUTF8));
         label_8->setText(QApplication::translate("MainWindow", "Y:", 0, QApplication::UnicodeUTF8));

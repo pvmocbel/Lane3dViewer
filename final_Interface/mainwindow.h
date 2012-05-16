@@ -28,35 +28,8 @@ public slots:
     void new_triggered();
     void open_triggered();
     void save_triggered();
-
-    void linha_test(double);
-
     void posicao_triggered();
     void rotacao_triggered();
-
-    void gerarMalha();
-
-    void return_position_changed();
-    void receiver_selection();
-
-    void change_x_position(double);
-    void change_y_position(double);
-    void change_z_position(double);
-
-    void change_x_dimension(double);
-    void change_y_dimension(double);
-    void change_z_dimension(double);
-
-//    void changeLinhaInicialPosition_x(double);
-//    void changeLinhaInicialPosition_y(double);
-//    void changeLinhaInicialPosition_z(double);
-
-//    void changeLinhaFinalPosition_x(double);
-//    void changeLinhaFinalPosition_y(double);
-//    void changeLinhaFinalPosition_z(double);
-
-    void receiver_dimesion();
-
     void ponto_triggered();
     void linha_triggered();
     void cubo_triggered();
@@ -64,8 +37,23 @@ public slots:
     void cilindro_triggered();
     void esfera_triggered();
 
+    void set_haste();
+    void set_esfera();
+    void set_cube();
+    void set_cilindro();
+    void set_cone();
+
+    void gerarMalha();
+
+    void return_position_changed();
+    void receiver_selection();
+
+    void change_position();
+
+    void receiver_dimesion();
+
     void setPainelPonto();
-    void setPainelLinha();
+    void setPainelHaste();
     void setPainelCubo();
     void setPainelCone();
     void setPainelEsfera();
@@ -81,5 +69,6 @@ private:
 signals:
     void send_to_cena_changed_position(const Pos3df& pos);
     void send_to_cena_changed_dimension(const Dim3df& dim, int eixo);
+    void send_changed_dimension(nodeParam*);
 };
 #endif // MAINWINDOW_H

@@ -2,6 +2,7 @@
 #define IRRNODE_H
 
 #include"irrviewer.h"
+
 class IrrNode
 {
 private:
@@ -18,36 +19,28 @@ public:
     irr::scene::ISceneNode* getNode()const {return selectedSceneNode;}
 
     void criaCubo(IrrSmgr* const,
-                  const Pos3df&,
-                  const Dim3df&,
-                 const irr::c8* nodeName);
+                  nodeParam* param,
+                  const irr::c8* nodeName);
 
-    void criaLinha(IrrSmgr* const smgr,
-                   const Pos3df& pos,
-                   const Dim3df& dim,
-                   double ang1,
-                   double ang2,
+    void criaHaste(IrrSmgr* const smgr,
+                   nodeParam *param,
                    const irr::c8* nodeName);
 
     void criaCilindro(IrrSmgr* const smgr,
-                      const Pos3df& pos,
-                      const Dim3df& dim,
+                      nodeParam *param,
                       const irr::c8* nodeName);
 
     void criaEsfera(IrrSmgr* const smgr,
-                    const Pos3df& pos,
-                    const double raio,
+                    nodeParam *param,
                     const irr::c8* nodeName);
 
     void criaPonto(IrrSmgr* const smgr,
-                    const Pos3df& pos,
-                    const double raio,
+                    nodeParam *param,
                     const irr::c8* nodeName);
 
 
     void criaCone(IrrSmgr* const smgr,
-                  const Pos3df& pos,
-                  const Dim3df& dim,
+                  nodeParam *param,
                   const irr::c8* nodeName);
 
     void criaGizmo( IrrSmgr* const,
