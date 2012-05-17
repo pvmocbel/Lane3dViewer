@@ -43,6 +43,15 @@ void MainWindow::change_position(){
     if(cena && cena->selectedSceneNode){
         Pos3df pos ;
         pos.set(ui->position_X->value(),ui->position_Y->value(),ui->position_Z->value());
+
+        irr::core::aabbox3df box = cena->selectedSceneNode->getBoundingBox();
+//        qDebug()<<"box min x"<<cena->selectedSceneNode->getPosition().X + box.MinEdge.X
+//                <<" y "<<cena->selectedSceneNode->getPosition().Y + box.MinEdge.Y
+//                <<" z "<<cena->selectedSceneNode->getPosition().Z + box.MinEdge.Z;
+//        qDebug()<<"box max x"<<cena->selectedSceneNode->getPosition().X + box.MaxEdge.X
+//                <<" y "<<cena->selectedSceneNode->getPosition().Y + box.MaxEdge.Y
+//                <<" z "<<cena->selectedSceneNode->getPosition().Z + box.MaxEdge.Z;
+
         emit send_to_cena_changed_position(pos);
     }
 }
@@ -314,6 +323,8 @@ void MainWindow::setPainelHaste()
 
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(230);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(230);
 
     ui->haste_inicial_x->setMinimumWidth(62);
     ui->haste_inicial_y->setMinimumWidth(62);

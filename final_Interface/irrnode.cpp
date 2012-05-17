@@ -183,13 +183,14 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
 void IrrNode::criaGizmo(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode** gizmo_X,
                         irr::scene::IMeshSceneNode** gizmo_Y,
-                        irr::scene::IMeshSceneNode** gizmo_Z)
+                        irr::scene::IMeshSceneNode** gizmo_Z,
+                        const Vector3df& height, const Vector3df& width)
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
-    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4, 8, 13.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,0,0,255), irr::video::SColor(255,0,0,255) );
-    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4, 8, 13.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,0,255,0), irr::video::SColor(255,0,255,0) );
-    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4, 8, 13.0f, 10.0f, 0.08f, 0.3f, irr::video::SColor(255,255,0,0), irr::video::SColor(255,255,0,0) );
+    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,0,0,255), irr::video::SColor(255,0,0,255) );
+    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,0,255,0), irr::video::SColor(255,0,255,0) );
+    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,255,0,0), irr::video::SColor(255,255,0,0) );
 
     (*gizmo_X) = smgr->addMeshSceneNode(mesh_gizmo_X);
     (*gizmo_Y) = smgr->addMeshSceneNode(mesh_gizmo_Y);
@@ -214,6 +215,9 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
         (*gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_Z)->setVisible(false);
     }
+    mesh_gizmo_X->drop();
+    mesh_gizmo_Y->drop();
+    mesh_gizmo_Z->drop();
 }
 
 void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,

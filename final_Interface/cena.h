@@ -90,28 +90,25 @@ public:
     float dy;
 
     void insertHaste(int , IrrNode* node, nodeParam*);
-    void insertHasteChanged(IrrNode* node, nodeParam*, const irr::c8*);
+    void insertHasteChanged(IrrNode* node, nodeParam*, int);
 
     void insertCubo(int, IrrNode* node, nodeParam *);
-    void insertCuboChanged(IrrNode* node, nodeParam*, const irr::c8*);
+    void insertCuboChanged(IrrNode* node, nodeParam*, int);
 
     void insertEsfera(int, IrrNode* node, nodeParam*);
-    void insertEsferaChanged(IrrNode* node, nodeParam*, const irr::c8*);
+    void insertEsferaChanged(IrrNode* node, nodeParam*, int);
 
     void insertCone(int, IrrNode* node, nodeParam*);
-    void insertConeChanged(IrrNode* node, nodeParam*, const irr::c8*);
+    void insertConeChanged(IrrNode* node, nodeParam*, int);
 
     void insertCilindro(int, IrrNode* node, nodeParam*);
-    void insertCilindroChanged(IrrNode* node, nodeParam*, const irr::c8*);
+    void insertCilindroChanged(IrrNode* node, nodeParam*, int);
 
     int getIdFromNode(std::string nodeName){
-        for(no = nodeId.begin(); no != nodeId.end(); no++){
-            if((no->first) == nodeName){
-                return no->second;
-                break;
-            }
+        if(nodeId.find(nodeName)==nodeId.end()){
+            return 0;
         }
-        return 0;
+        return nodeId[nodeName];
     }
 
     int calcula_raio(const intVector& p1, const intVector& p2);

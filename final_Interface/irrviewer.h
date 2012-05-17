@@ -39,6 +39,7 @@ typedef struct NodeParameters{
     NodeType type;
 } nodeParam;
 
+
 class IrrViewer : public QWidget
 {
     Q_OBJECT

@@ -118,7 +118,13 @@ void Cena::gizmo(){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
-        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z);
+        Vector3df height;
+        Vector3df width;
+
+        height.set(13,10,0);//height objet, height cilindro
+        width.set(0.08,0.3,0);//width cilindro, width cone
+
+        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, height, width);
         drawIrrlichtScene();
         delete node;
     }
@@ -128,6 +134,12 @@ void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 {
     if(smgr && selectedSceneNode){
         selectedSceneNode->setPosition(pos);
+        const irr::c8* test = selectedSceneNode->getName();
+        int id = getIdFromNode(test);
+
+        nodeParam aux = myMap[id];
+        aux.position = pos;
+
         gizmo_X->setPosition(selectedSceneNode->getPosition());
         gizmo_X->setVisible(true);
 
@@ -146,38 +158,53 @@ void Cena::receiver_changed_dimension(nodeParam* param){
         const irr::c8* test = selectedSceneNode->getName();
         int id = getIdFromNode(test);
 
+        irr::c8 name[50];
+
         nodeParam aux = myMap[id];
         aux = *param;
+        myMap[id] = aux;
+
+        qDebug()<<"dimension x x "<<aux.dimension.X;
 
         switch((selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
-                 qDebug()<<"cubo";
+//                 qDebug()<<"cubo";
                  removeSceneNode();
-                 insertCuboChanged(new IrrNode(), param, test);
+                 insertCuboChanged(new IrrNode(), param, id);
+                 sprintf(name, "%d", id);
+                 selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  break;
 
              case(ID_FLAG_ESFERA):
-                 qDebug()<<"esfera";
+//                 qDebug()<<"esfera";
                  removeSceneNode();
-                 insertEsferaChanged(new IrrNode(), param, test);
+                 insertEsferaChanged(new IrrNode(), param, id);
+                 sprintf(name, "%d", id);
+                 selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  break;
 
              case(ID_FLAG_CILINDRO):
-                 qDebug()<<"cilindro";
+//                 qDebug()<<"cilindro";
                  removeSceneNode();
-                 insertCilindroChanged(new IrrNode(), param, test);
+                 insertCilindroChanged(new IrrNode(), param, id);
+                 sprintf(name, "%d", id);
+                 selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  break;
 
              case(ID_FLAG_CONE):
-                 qDebug()<<"cone";
+//                 qDebug()<<"cone";
                  removeSceneNode();
-                 insertConeChanged(new IrrNode(), param, test);
+                 insertConeChanged(new IrrNode(), param, id);
+                 sprintf(name, "%d", id);
+                 selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  break;
 
              case(ID_FLAG_HASTE):
-                 qDebug()<<"haste";
+//                 qDebug()<<"haste";
                  removeSceneNode();
-                 insertHasteChanged(new IrrNode(), param, test);
+                 insertHasteChanged(new IrrNode(), param, id);
+                 sprintf(name, "%d", id);
+                 selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  break;
          }//fim switch
         drawIrrlichtScene();
@@ -657,9 +684,11 @@ void Cena::insertHaste(int id, IrrNode *node, nodeParam* param){
     }
 }
 
-void Cena::insertHasteChanged(IrrNode* node, nodeParam* param, const irr::c8*nodeName){
+void Cena::insertHasteChanged(IrrNode* node, nodeParam* param, int id){
     if(smgr)
     {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
         node->criaHaste(smgr, param, nodeName);
         drawIrrlichtScene();
         delete node;
@@ -693,9 +722,11 @@ void Cena::insertCubo(int id, IrrNode* node, nodeParam* param)
     }
 }
 
-void Cena::insertCuboChanged(IrrNode *node, nodeParam* param, const irr::c8* nodeName){
+void Cena::insertCuboChanged(IrrNode *node, nodeParam* param, int id){
     if(smgr)
     {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
         node->criaCubo(smgr, param, nodeName);
         drawIrrlichtScene();
         delete node;
@@ -729,9 +760,11 @@ void Cena::insertEsfera(int id, IrrNode* node, nodeParam* param)
     }
 }
 
-void Cena::insertEsferaChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+void Cena::insertEsferaChanged(IrrNode *node, nodeParam *param, int id){
     if(smgr)
     {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
         node->criaEsfera(smgr, param, nodeName);
         drawIrrlichtScene();
         delete node;
@@ -765,9 +798,12 @@ void Cena::insertCilindro(int id, IrrNode *node, nodeParam* param)
     }
 }
 
-void Cena::insertCilindroChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+void Cena::insertCilindroChanged(IrrNode *node, nodeParam *param, int id){
     if(smgr)
     {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+        qDebug()<<"change cilindro, id "<< nodeName;
         node->criaCilindro(smgr, param, nodeName);
         drawIrrlichtScene();
         delete node;
@@ -801,9 +837,11 @@ void Cena::insertCone(int id, IrrNode* node, nodeParam* param)
     }
 }
 
-void Cena::insertConeChanged(IrrNode *node, nodeParam *param, const irr::c8 *nodeName){
+void Cena::insertConeChanged(IrrNode *node, nodeParam *param, int id){
     if(smgr)
     {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
         node->criaCone(smgr, param, nodeName);
         drawIrrlichtScene();
         delete node;
@@ -913,7 +951,7 @@ void Cena::aproximaObjetoSelecionado(){
 
 //--------------------------------FIM-MODIFICADORES-DE-OBEJTOS--------------------------------------//
 
-//-----------------------------------------SELECAO-E-PINTURA---------------------------------------------//
+//-----------------------------------------SELECAO-E-PINTURA----------z-----------------------------------//
 void Cena::selection()
 {
     if(smgr)
@@ -933,6 +971,72 @@ void Cena::selection()
          if (selectedSceneNode){
              MoveSceneNode = selectedSceneNode;
              selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, true);
+
+
+             IrrNode* node = new IrrNode();
+
+             const irr::c8* test = selectedSceneNode->getName();
+             int id = getIdFromNode(test);
+
+             qDebug()<<"id int"<< id;
+             qDebug()<<"id string"<< test;
+
+             nodeParam aux = myMap[id];
+             Vector3df height, width;
+
+             switch((selectedSceneNode->getID()&MASK)){
+                  case(ID_FLAG_CUBO):
+//                      irr::f32 x = 0;
+
+//                      if(aux.dimension.X >= aux.dimension.Y) x = aux.dimension.X;
+//                      else  x = aux.dimension.Y;
+
+//                      if(x >= aux.dimension.Z) x = x;
+//                      else x = aux.dimension.Z;
+
+//                      height.set(x+3,x,0);
+//                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+
+                  case(ID_FLAG_ESFERA):
+                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
+                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+
+                  case(ID_FLAG_CILINDRO):
+                      qDebug()<<"changing gizmo cilindro";
+                      qDebug()<<"aux.dimension.x "<< aux.dimension.X;
+                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
+                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+
+                  case(ID_FLAG_CONE):
+                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
+                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+
+                  case(ID_FLAG_HASTE):
+                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
+                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+
+                  case(ID_FLAG_PONTO):
+                      height.set(10*delta+3, 10*delta, 0);
+                      width.set(0.08,0.3,0);//width cilindro, width cone
+                      break;
+              }//fim switch
+
+             gizmo_X->remove();
+             gizmo_X = 0;
+
+             gizmo_Y->remove();
+             gizmo_Y = 0;
+
+             gizmo_Z->remove();
+             gizmo_Z = 0;
+
+             node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, height, width);
+             delete node;
          }
          else
          {

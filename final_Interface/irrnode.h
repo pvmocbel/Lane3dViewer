@@ -46,7 +46,9 @@ public:
     void criaGizmo( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **gizmo_X,
                     irr::scene::IMeshSceneNode **gizmo_Y,
-                    irr::scene::IMeshSceneNode **gizmo_Z);
+                    irr::scene::IMeshSceneNode **gizmo_Z,
+                    const Vector3df&,
+                    const Vector3df&);
 
     void gizmosRegiaoAnalise( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_X,
