@@ -44,7 +44,6 @@ void Cena::init(){
     gizmo_Y = 0;
     gizmo_Z = 0;
 }
-
 void Cena::cenaIrrlicht()
 {
     if (smgr) {
@@ -56,7 +55,6 @@ void Cena::cenaIrrlicht()
         drawIrrlichtScene();
     }
 }
-
 void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
@@ -66,7 +64,6 @@ void Cena::cenaCameras(){
         smgr->setActiveCamera(camera);
     }
 }
-
 void Cena::cenaIluminacao(){
     if (smgr) {
         light = smgr->addLightSceneNode();
@@ -76,7 +73,6 @@ void Cena::cenaIluminacao(){
         light->getLightData().DiffuseColor = irr::video::SColorf( 0.8f, 0.8f, 0.8f, 1.0f );
     }
 }
-
 void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
     if(smgr)
     {
@@ -99,7 +95,6 @@ void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
         delete node;
     }
 }
-
 void Cena::printRegiaoAnalise(irr::core::aabbox3df box){
     if((video_driver) &&
        (box.MinEdge.X !=0) && (box.MinEdge.Y !=0) &&(box.MinEdge.Z !=0) &&
@@ -113,7 +108,6 @@ void Cena::printRegiaoAnalise(irr::core::aabbox3df box){
         video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
     }
 }
-
 void Cena::gizmo(){
     if(smgr)
     {
@@ -129,7 +123,6 @@ void Cena::gizmo(){
         delete node;
     }
 }
-
 void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 {
     if(smgr && selectedSceneNode){
@@ -151,7 +144,6 @@ void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
         drawIrrlichtScene();
     }
 }
-
 void Cena::receiver_changed_dimension(nodeParam* param){
     if(smgr && selectedSceneNode)
     {
@@ -164,96 +156,153 @@ void Cena::receiver_changed_dimension(nodeParam* param){
         aux = *param;
         myMap[id] = aux;
 
-        qDebug()<<"dimension x x "<<aux.dimension.X;
-
         switch((selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
 //                 qDebug()<<"cubo";
-                 removeSceneNode();
+                 removeChangedSceneNode();
                  insertCuboChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                 selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
 
              case(ID_FLAG_ESFERA):
 //                 qDebug()<<"esfera";
-                 removeSceneNode();
+                 removeChangedSceneNode();
                  insertEsferaChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                 selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
 
              case(ID_FLAG_CILINDRO):
 //                 qDebug()<<"cilindro";
-                 removeSceneNode();
+                 removeChangedSceneNode();
                  insertCilindroChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                 selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
 
              case(ID_FLAG_CONE):
 //                 qDebug()<<"cone";
-                 removeSceneNode();
+                 removeChangedSceneNode();
                  insertConeChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                 selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
 
              case(ID_FLAG_HASTE):
 //                 qDebug()<<"haste";
-                 removeSceneNode();
+                 removeChangedSceneNode();
                  insertHasteChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                 selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
          }//fim switch
         drawIrrlichtScene();
     }//fim smgr
 }
-
 void Cena::geraMalha(){
     if(smgr){
-        FILE *file = fopen("bm.in.txt","w+");
+        FILE *file = fopen("bm.in","w+");
         if(!file){
             qDebug()<<"falha na leitura do arquivo";
             return;
         }
-//        fprintf(file,"testando");
-        CelulaArray array;
 
         int count  = 0;
 //        for(it = myMap.begin(); it != myMap.end(); it++){
 
-            irr::core::aabbox3df box = myMap[1].box;
-            int raio = (int)((myMap[1].dimension.X)/delta);
+        NodeType type = myMap[1].type;
+        irr::core::aabbox3df box = myMap[1].box;
+        intVector position;
+        int raio;
+        int cone_count=0;
 
-            intVector position;
-            position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta), (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta), (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+        switch(type)
+        {
+            case (Cube):
+                qDebug()<<"cube gera malha";
+                break;
 
+            case(Cone):
+                qDebug()<<"cone gera malha";
 
-            for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
-            {
+                position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
+                             (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
+                             (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+
+                qDebug()<<"box min x"<<box.MinEdge.X/delta
+                       <<" y "<<(int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta)
+                       <<" z "<<(int)(box.MinEdge.Z/delta);
+                qDebug()<<"box max x"<<box.MaxEdge.X/delta
+                        <<" y "<<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta)
+                        <<" z "<<(int)(box.MaxEdge.Z/delta);
+
                 for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
                 {
-                    for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+                    raio = (int)((myMap[1].dimension.X)/delta) - 2*cone_count;
+                    qDebug()<<"raio em celulas  "<<raio;
+                    cone_count++;
+                    for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
                     {
-                        int novo_raio = calcula_raio(position, intVector(i,j,k));
-                        novo_raio = novo_raio*novo_raio;
-                        qDebug()<<"raio em celulas  "<<raio;
-                        if(novo_raio<=raio*raio){
-////                            Celula *celula = new Celula();
-////                            celula->position.set(i, j, k);
-//                            array[count] = *celula;
-                            fprintf(file,"%d %d %d %d %d %d \n",i, i, j, j, k, k);
-////                            delete celula;
+                        for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+                        {
+                            int novo_raio = calcula_raio(position, intVector(i,j,k));
+                            novo_raio = novo_raio*novo_raio;
 
-                        }
-                        qDebug()<<"contador..."<<++count;
-                    }//for k
-                }//for j
-            }//for i
+                            if(novo_raio<=raio*raio)  fprintf(file,"%d %d %d %d %d %d \n",i, i, k, k, j, j);
+                            qDebug()<<"contador..."<<++count;
+                        }//for k
+                    }//for j
+                }//for i
+                break;
 
-            fclose(file);
+            case(Cilindro):
+                qDebug()<<"cilindro gera malha";
+                break;
+
+            case(Esphere):
+                qDebug()<<"esphere gera malha";
+                raio = (int)((myMap[1].dimension.X)/delta);
+
+                position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
+                             (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
+                             (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+
+                for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
+                {
+                    for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
+                    {
+                        for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+                        {
+                            int novo_raio = calcula_raio(position, intVector(i,j,k));
+                            novo_raio = novo_raio*novo_raio;
+
+                            qDebug()<<"raio em celulas  "<<raio;
+
+                            if(novo_raio<=raio*raio)
+                                fprintf(file,"%d %d %d %d %d %d \n",i, i, j, j, k, k);
+
+                            qDebug()<<"contador..."<<++count;
+                        }//for k
+                    }//for j
+                }//for i
+                break;
+
+            case(Haste):
+                qDebug()<<"haste gera malha";
+                break;
+
+             default:
+                break;
+         }
+         fprintf(file,"%d \n",-1);
+         fclose(file);
+
     }//smgr
 }//fim funcao
 
@@ -871,6 +920,11 @@ void Cena::removeSceneNode()
 {
     if(smgr && selectedSceneNode)
     {
+        const irr::c8* test = selectedSceneNode->getName();
+        int id = getIdFromNode(test);
+        it = myMap.find(id);
+        myMap.erase(it);
+
         selectedSceneNode->remove();
         selectedSceneNode = 0;
         gizmo_X->setVisible(false);
@@ -880,11 +934,17 @@ void Cena::removeSceneNode()
     }
 }
 
-void Cena::removeSceneNodeFromNode(irr::scene::ISceneNode* node){
+void Cena::removeChangedSceneNode(){
     if(smgr){
-        qDebug()<<"node name"<< node->getName();
-        node->setVisible(false);
-        qDebug()<<"node name"<< node->getName();
+        if(smgr && selectedSceneNode)
+        {
+            selectedSceneNode->remove();
+            selectedSceneNode = 0;
+            gizmo_X->setVisible(false);
+            gizmo_Y->setVisible(false);
+            gizmo_Z->setVisible(false);
+
+        }
     }
 }
 
@@ -978,9 +1038,6 @@ void Cena::selection()
              const irr::c8* test = selectedSceneNode->getName();
              int id = getIdFromNode(test);
 
-             qDebug()<<"id int"<< id;
-             qDebug()<<"id string"<< test;
-
              nodeParam aux = myMap[id];
              Vector3df height, width;
 
@@ -1004,8 +1061,6 @@ void Cena::selection()
                       break;
 
                   case(ID_FLAG_CILINDRO):
-                      qDebug()<<"changing gizmo cilindro";
-                      qDebug()<<"aux.dimension.x "<< aux.dimension.X;
                       height.set(aux.dimension.X+3, aux.dimension.X, 0);
                       width.set(0.08,0.3,0);//width cilindro, width cone
                       break;

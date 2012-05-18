@@ -116,7 +116,7 @@ public:
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();
-    void removeSceneNodeFromNode(irr::scene::ISceneNode*);
+    void removeChangedSceneNode();
     inline void duplicateSceneNode();
     void geraMalha();
 

@@ -25,6 +25,14 @@ void MainWindow::init()
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
 }
 
+QPaintEngine* MainWindow::paintEngine() const
+{
+    if (cena) {
+        QWidget::paintEngine();
+        qDebug()<<"paint egine";
+        return 0;
+    }
+}
 void MainWindow::gerarMalha(){
     if(cena){
         cena->geraMalha();
@@ -181,11 +189,7 @@ void MainWindow::new_triggered()
 
     connect(cena, SIGNAL(send_position_change()),this, SLOT(return_position_changed()));
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
-
     connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
-
-    connect(ui->GerarMalha, SIGNAL(clicked()),this, SLOT(gerarMalha()));
-
     connect(this, SIGNAL(send_changed_dimension(nodeParam*)), cena, SLOT(receiver_changed_dimension(nodeParam*)));
 
     cena->resize(2048, 2048);

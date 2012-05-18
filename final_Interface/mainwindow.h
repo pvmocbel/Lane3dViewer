@@ -43,6 +43,8 @@ public slots:
     void set_cilindro();
     void set_cone();
 
+    virtual QPaintEngine * paintEngine() const;
+
     void gerarMalha();
 
     void return_position_changed();
