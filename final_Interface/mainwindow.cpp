@@ -38,7 +38,6 @@ void MainWindow::gerarMalha(){
         cena->geraMalha();
     }
 }
-
 void MainWindow::return_position_changed(){
     if(cena&&cena->selectedSceneNode){
         ui->position_X->setValue(cena->selectedSceneNode->getPosition().X);
@@ -46,7 +45,6 @@ void MainWindow::return_position_changed(){
         ui->position_Z->setValue(cena->selectedSceneNode->getPosition().Z);
     }
 }
-
 void MainWindow::change_position(){
     if(cena && cena->selectedSceneNode){
         Pos3df pos ;
@@ -63,7 +61,6 @@ void MainWindow::change_position(){
         emit send_to_cena_changed_position(pos);
     }
 }
-
 void MainWindow::set_haste(){
     if(cena && (cena->selectedSceneNode)){
         nodeParam *param = new nodeParam();
@@ -78,7 +75,6 @@ void MainWindow::set_haste(){
         delete param;
     }
 }
-
 void MainWindow::set_cube(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
@@ -93,7 +89,6 @@ void MainWindow::set_cube(){
         delete param;
     }
 }
-
 void MainWindow::set_esfera(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
@@ -108,7 +103,6 @@ void MainWindow::set_esfera(){
         delete param;
     }
 }
-
 void MainWindow::set_cilindro(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
@@ -123,7 +117,6 @@ void MainWindow::set_cilindro(){
         delete param;
     }
 }
-
 void MainWindow::set_cone(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
@@ -138,7 +131,6 @@ void MainWindow::set_cone(){
         delete param;
     }
 }
-
 void MainWindow::receiver_dimesion(){
     if(cena && cena->selectedSceneNode){
         ui->cube_dim_X->setValue(cena->selectedSceneNode->getScale().X);
@@ -146,7 +138,6 @@ void MainWindow::receiver_dimesion(){
         ui->cube_dim_Z->setValue(cena->selectedSceneNode->getScale().Z);
     }
 }
-
 void MainWindow::receiver_selection(){
     if(cena && cena->selectedSceneNode){
         switch((cena->selectedSceneNode->getID()&MASK)){
@@ -176,7 +167,6 @@ void MainWindow::receiver_selection(){
          }
     }
 }
-
 void MainWindow::new_triggered()
 {
     Dialog_CGerais* d = new Dialog_CGerais();
@@ -201,27 +191,22 @@ void MainWindow::new_triggered()
 
     delete d;
 }
-
 void MainWindow::open_triggered()
 {
    // ui->lineEdit_LinhaName->setText("Open");
 }
-
 void MainWindow::save_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Save");
 }
-
 void MainWindow::posicao_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Posio");
 }
-
 void MainWindow::rotacao_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Rotao");
 }
-
 void MainWindow::ponto_triggered()
 {
     setPainelPonto();
@@ -232,7 +217,6 @@ void MainWindow::ponto_triggered()
 
     cena->insert(id, new IrrNode(), p)*/;
 }
-
 void MainWindow::linha_triggered()
 {
     setPainelHaste();
@@ -247,7 +231,6 @@ void MainWindow::linha_triggered()
     cena->insertHaste(id, new IrrNode(), param);
     delete param;
 }
-
 void MainWindow::cubo_triggered()
 {
     setPainelCubo();
@@ -262,7 +245,6 @@ void MainWindow::cubo_triggered()
     cena->insertCubo(id, new IrrNode(), param);
     delete param;
 }
-
 void MainWindow::esfera_triggered()
 {
     setPainelEsfera();
@@ -277,7 +259,6 @@ void MainWindow::esfera_triggered()
     cena->insertEsfera(id, new IrrNode(), param);
     delete param;
 }
-
 void MainWindow::cilindro_triggered()
 {
     setPainelCilindro();
@@ -292,7 +273,6 @@ void MainWindow::cilindro_triggered()
     cena->insertCilindro(id ,new IrrNode(), param);
     delete param;
 }
-
 void MainWindow::cone_triggered()
 {
     setPainelCone();
@@ -307,7 +287,6 @@ void MainWindow::cone_triggered()
     cena->insertCone(id, new IrrNode(), param);
     delete param;
 }
-
 void MainWindow::setPainelPonto()
 {
     ui->label_PainelTitulo_1->setText("PONTO");
@@ -319,7 +298,6 @@ void MainWindow::setPainelPonto()
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-
 void MainWindow::setPainelHaste()
 {
     ui->label_PainelTitulo_1->setText("Haste");
@@ -338,7 +316,6 @@ void MainWindow::setPainelHaste()
     ui->haste_final_y->setMinimumWidth(62);
     ui->haste_final_z->setMinimumWidth(62);
 }
-
 void MainWindow::setPainelCubo()
 {
     ui->label_PainelTitulo_1->setText("CUBO");
@@ -348,7 +325,6 @@ void MainWindow::setPainelCubo()
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-
 void MainWindow::setPainelEsfera()
 {
     ui->label_PainelTitulo_1->setText("ESFERA");
@@ -358,7 +334,6 @@ void MainWindow::setPainelEsfera()
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-
 void MainWindow::setPainelCone(){
     ui->label_PainelTitulo_1->setText("CONE");
     ui->lineEdit_Name->setText("Cone");
@@ -367,7 +342,6 @@ void MainWindow::setPainelCone(){
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-
 void MainWindow::setPainelCilindro(){
     ui->label_PainelTitulo_1->setText("CILINDRO");
     ui->lineEdit_Name->setText("Cilindro");
@@ -376,7 +350,6 @@ void MainWindow::setPainelCilindro(){
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-
 void MainWindow::keyPressEvent( QKeyEvent * event){
     cena->keyPressEvent(event);
 }

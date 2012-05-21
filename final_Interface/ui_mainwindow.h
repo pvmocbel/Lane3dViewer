@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri May 18 22:22:45 2012
-**      by: Qt User Interface Compiler version 4.6.3
+** Created: Mon May 21 11:46:58 2012
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -260,7 +260,7 @@ public:
         scrollArea_0->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_0 = new QWidget();
         scrollAreaWidgetContents_pnLateral_0->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_0"));
-        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 195));
+        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 167));
         verticalLayout_12 = new QVBoxLayout(scrollAreaWidgetContents_pnLateral_0);
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
@@ -384,7 +384,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_1 = new QWidget();
         scrollAreaWidgetContents_pnLateral_1->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_1"));
-        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 619));
+        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, -6, 150, 549));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_pnLateral_1);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -475,6 +475,7 @@ public:
         raio_haste = new QDoubleSpinBox(groupBox);
         raio_haste->setObjectName(QString::fromUtf8("raio_haste"));
         raio_haste->setMinimum(-100);
+        raio_haste->setSingleStep(0.01);
 
         gridLayout_2->addWidget(raio_haste, 0, 3, 1, 1);
 
@@ -497,7 +498,9 @@ public:
 
         haste_inicial_x = new QDoubleSpinBox(groupBox);
         haste_inicial_x->setObjectName(QString::fromUtf8("haste_inicial_x"));
+        haste_inicial_x->setDecimals(3);
         haste_inicial_x->setMinimum(-100);
+        haste_inicial_x->setSingleStep(0.01);
 
         gridLayout_2->addWidget(haste_inicial_x, 2, 3, 1, 1);
 
@@ -508,7 +511,9 @@ public:
 
         haste_inicial_y = new QDoubleSpinBox(groupBox);
         haste_inicial_y->setObjectName(QString::fromUtf8("haste_inicial_y"));
+        haste_inicial_y->setDecimals(3);
         haste_inicial_y->setMinimum(-100);
+        haste_inicial_y->setSingleStep(0.01);
 
         gridLayout_2->addWidget(haste_inicial_y, 3, 3, 1, 1);
 
@@ -519,7 +524,9 @@ public:
 
         haste_inicial_z = new QDoubleSpinBox(groupBox);
         haste_inicial_z->setObjectName(QString::fromUtf8("haste_inicial_z"));
+        haste_inicial_z->setDecimals(3);
         haste_inicial_z->setMinimum(-100);
+        haste_inicial_z->setSingleStep(0.01);
 
         gridLayout_2->addWidget(haste_inicial_z, 4, 3, 1, 1);
 
@@ -542,8 +549,10 @@ public:
 
         haste_final_x = new QDoubleSpinBox(groupBox);
         haste_final_x->setObjectName(QString::fromUtf8("haste_final_x"));
+        haste_final_x->setDecimals(3);
         haste_final_x->setMinimum(-100);
-        haste_final_x->setValue(10);
+        haste_final_x->setSingleStep(0.01);
+        haste_final_x->setValue(1);
 
         gridLayout_2->addWidget(haste_final_x, 6, 3, 1, 1);
 
@@ -554,7 +563,9 @@ public:
 
         haste_final_y = new QDoubleSpinBox(groupBox);
         haste_final_y->setObjectName(QString::fromUtf8("haste_final_y"));
+        haste_final_y->setDecimals(3);
         haste_final_y->setMinimum(-100);
+        haste_final_y->setSingleStep(0.01);
         haste_final_y->setValue(0);
 
         gridLayout_2->addWidget(haste_final_y, 7, 3, 1, 1);
@@ -567,6 +578,7 @@ public:
         haste_final_z = new QDoubleSpinBox(groupBox);
         haste_final_z->setObjectName(QString::fromUtf8("haste_final_z"));
         haste_final_z->setMinimum(-100);
+        haste_final_z->setSingleStep(0.01);
 
         gridLayout_2->addWidget(haste_final_z, 8, 3, 1, 1);
 
@@ -602,9 +614,11 @@ public:
         cube_dim_X = new QDoubleSpinBox(groupBox_13);
         cube_dim_X->setObjectName(QString::fromUtf8("cube_dim_X"));
         cube_dim_X->setMinimumSize(QSize(60, 0));
+        cube_dim_X->setDecimals(3);
         cube_dim_X->setMinimum(0);
         cube_dim_X->setMaximum(100);
-        cube_dim_X->setValue(5);
+        cube_dim_X->setSingleStep(0.01);
+        cube_dim_X->setValue(0.1);
 
         gridLayout_4->addWidget(cube_dim_X, 0, 1, 1, 1);
 
@@ -619,9 +633,11 @@ public:
 
         cube_dim_Y = new QDoubleSpinBox(groupBox_13);
         cube_dim_Y->setObjectName(QString::fromUtf8("cube_dim_Y"));
+        cube_dim_Y->setDecimals(3);
         cube_dim_Y->setMinimum(0);
         cube_dim_Y->setMaximum(100);
-        cube_dim_Y->setValue(5);
+        cube_dim_Y->setSingleStep(0.01);
+        cube_dim_Y->setValue(0.1);
 
         gridLayout_4->addWidget(cube_dim_Y, 1, 1, 1, 1);
 
@@ -636,9 +652,11 @@ public:
 
         cube_dim_Z = new QDoubleSpinBox(groupBox_13);
         cube_dim_Z->setObjectName(QString::fromUtf8("cube_dim_Z"));
+        cube_dim_Z->setDecimals(3);
         cube_dim_Z->setMinimum(0);
         cube_dim_Z->setMaximum(100);
-        cube_dim_Z->setValue(5);
+        cube_dim_Z->setSingleStep(0.01);
+        cube_dim_Z->setValue(0.1);
 
         gridLayout_4->addWidget(cube_dim_Z, 2, 1, 1, 1);
 
@@ -680,7 +698,8 @@ public:
         raio_esfera->setObjectName(QString::fromUtf8("raio_esfera"));
         raio_esfera->setMinimumSize(QSize(60, 0));
         raio_esfera->setMaximum(100);
-        raio_esfera->setValue(0.5);
+        raio_esfera->setSingleStep(0.01);
+        raio_esfera->setValue(0.05);
 
         formLayout_15->setWidget(0, QFormLayout::FieldRole, raio_esfera);
 
@@ -721,7 +740,9 @@ public:
         raio_cilindro = new QDoubleSpinBox(groupBox_20);
         raio_cilindro->setObjectName(QString::fromUtf8("raio_cilindro"));
         raio_cilindro->setMinimumSize(QSize(60, 0));
-        raio_cilindro->setValue(5);
+        raio_cilindro->setDecimals(3);
+        raio_cilindro->setSingleStep(0.01);
+        raio_cilindro->setValue(0.05);
 
         formLayout_19->setWidget(0, QFormLayout::FieldRole, raio_cilindro);
 
@@ -736,7 +757,9 @@ public:
 
         comprimento_cilindro = new QDoubleSpinBox(groupBox_20);
         comprimento_cilindro->setObjectName(QString::fromUtf8("comprimento_cilindro"));
-        comprimento_cilindro->setValue(20);
+        comprimento_cilindro->setDecimals(3);
+        comprimento_cilindro->setSingleStep(0.01);
+        comprimento_cilindro->setValue(0.1);
 
         formLayout_19->setWidget(1, QFormLayout::FieldRole, comprimento_cilindro);
 
@@ -773,9 +796,10 @@ public:
         raio_cone = new QDoubleSpinBox(groupBox_21);
         raio_cone->setObjectName(QString::fromUtf8("raio_cone"));
         raio_cone->setMinimumSize(QSize(60, 0));
-        raio_cone->setDecimals(4);
-        raio_cone->setMinimum(0.0001);
-        raio_cone->setValue(0.1);
+        raio_cone->setDecimals(3);
+        raio_cone->setMinimum(0);
+        raio_cone->setSingleStep(0.01);
+        raio_cone->setValue(0.05);
 
         gridLayout_5->addWidget(raio_cone, 0, 1, 1, 1);
 
@@ -790,6 +814,8 @@ public:
 
         comprimento_cone = new QDoubleSpinBox(groupBox_21);
         comprimento_cone->setObjectName(QString::fromUtf8("comprimento_cone"));
+        comprimento_cone->setDecimals(3);
+        comprimento_cone->setSingleStep(0.01);
         comprimento_cone->setValue(0.1);
 
         gridLayout_5->addWidget(comprimento_cone, 1, 1, 1, 1);
@@ -1003,7 +1029,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 900, 25));
+        menuBar->setGeometry(QRect(0, 0, 900, 24));
         MainWindow->setMenuBar(menuBar);
         ToolBar_File = new QToolBar(MainWindow);
         ToolBar_File->setObjectName(QString::fromUtf8("ToolBar_File"));

@@ -114,7 +114,7 @@
                <x>0</x>
                <y>0</y>
                <width>140</width>
-               <height>195</height>
+               <height>167</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -372,9 +372,9 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-6</y>
                <width>150</width>
-               <height>619</height>
+               <height>549</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
@@ -543,6 +543,9 @@
                        <property name="minimum">
                         <double>-100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0" colspan="4">
@@ -568,8 +571,14 @@
                      </item>
                      <item row="2" column="3">
                       <widget class="QDoubleSpinBox" name="haste_inicial_x">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -582,8 +591,14 @@
                      </item>
                      <item row="3" column="3">
                       <widget class="QDoubleSpinBox" name="haste_inicial_y">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -596,8 +611,14 @@
                      </item>
                      <item row="4" column="3">
                       <widget class="QDoubleSpinBox" name="haste_inicial_z">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -624,11 +645,17 @@
                      </item>
                      <item row="6" column="3">
                       <widget class="QDoubleSpinBox" name="haste_final_x">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>10.000000000000000</double>
+                        <double>1.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -641,8 +668,14 @@
                      </item>
                      <item row="7" column="3">
                       <widget class="QDoubleSpinBox" name="haste_final_y">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
                        </property>
                        <property name="value">
                         <double>0.000000000000000</double>
@@ -660,6 +693,9 @@
                       <widget class="QDoubleSpinBox" name="haste_final_z">
                        <property name="minimum">
                         <double>-100.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -730,14 +766,20 @@
                        <property name="suffix">
                         <string> m</string>
                        </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>0.000000000000000</double>
                        </property>
                        <property name="maximum">
                         <double>100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>5.000000000000000</double>
+                        <double>0.100000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -768,14 +810,20 @@
                        <property name="suffix">
                         <string> m</string>
                        </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>0.000000000000000</double>
                        </property>
                        <property name="maximum">
                         <double>100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>5.000000000000000</double>
+                        <double>0.100000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -806,14 +854,20 @@
                        <property name="suffix">
                         <string> m</string>
                        </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
                        <property name="minimum">
                         <double>0.000000000000000</double>
                        </property>
                        <property name="maximum">
                         <double>100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>5.000000000000000</double>
+                        <double>0.100000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -903,8 +957,11 @@
                        <property name="maximum">
                         <double>100.000000000000000</double>
                        </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>0.500000000000000</double>
+                        <double>0.050000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -991,8 +1048,14 @@
                        <property name="suffix">
                         <string> m</string>
                        </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>5.000000000000000</double>
+                        <double>0.050000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -1023,8 +1086,14 @@
                        <property name="suffix">
                         <string> m</string>
                        </property>
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
                        <property name="value">
-                        <double>20.000000000000000</double>
+                        <double>0.100000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -1112,13 +1181,16 @@
                       <string> m</string>
                      </property>
                      <property name="decimals">
-                      <number>4</number>
+                      <number>3</number>
                      </property>
                      <property name="minimum">
-                      <double>0.000100000000000</double>
+                      <double>0.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
                      </property>
                      <property name="value">
-                      <double>0.100000000000000</double>
+                      <double>0.050000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1148,6 +1220,12 @@
                     <widget class="QDoubleSpinBox" name="comprimento_cone">
                      <property name="suffix">
                       <string> m</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
                      </property>
                      <property name="value">
                       <double>0.100000000000000</double>
@@ -1533,7 +1611,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

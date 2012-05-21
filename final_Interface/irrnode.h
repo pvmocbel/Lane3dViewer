@@ -47,15 +47,13 @@ public:
                     irr::scene::IMeshSceneNode **gizmo_X,
                     irr::scene::IMeshSceneNode **gizmo_Y,
                     irr::scene::IMeshSceneNode **gizmo_Z,
-                    const Vector3df&,
-                    const Vector3df&);
+                    const irr::core::aabbox3df& box) ;
 
     void gizmosRegiaoAnalise( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_X,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Z,
-                              const Vector3df&,
-                              const Vector3df&, const irr::core::aabbox3df& box);
+                    const Dim3df&);
 };
 
 #endif // IRRNODE_H

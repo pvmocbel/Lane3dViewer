@@ -2,7 +2,7 @@
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(1.0),afasta(1.0)
+    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(0.1),afasta(0.1)
 {
     init();
 }
@@ -58,7 +58,7 @@ void Cena::cenaIrrlicht()
 void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
-        camera->setPosition(Vector3df(0,0,(box.MinEdge.Z-2)));
+        camera->setPosition(Vector3df(0,0,(box.MinEdge.Z-0.9)));
         camera->setTarget(Vector3df(0,0,0));
         camera_01 = true;
         smgr->setActiveCamera(camera);
@@ -89,13 +89,7 @@ void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
                         (irr::f32)(dim.Y*0.5),
                         (irr::f32)(dim.Z*0.5));
 
-        Vector3df height;
-        Vector3df width;
-
-        height.set(box.MaxEdge.Y+0.3, box.MaxEdge.Y, 0);    //height objet, height cilindro
-        width.set(box.MaxEdge.X/80, box.MaxEdge.X/100, 0);  //width cilindro, width cone
-
-        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, height, width, box);
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim);
 
         drawIrrlichtScene();
         delete node;
@@ -118,13 +112,7 @@ void Cena::gizmo(){
     if(smgr)
     {
         IrrNode* node = new IrrNode();
-        Vector3df height;
-        Vector3df width;
-
-        height.set(box.MaxEdge.Y+0.1, box.MaxEdge.Y, 0);    //height objet, height cilindro
-        width.set(0.08, 0.03, 0);  //width cilindro, width cone
-
-        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, height, width);
+        node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, box);
         drawIrrlichtScene();
         delete node;
     }
@@ -384,12 +372,12 @@ void Cena::keyPressEvent(QKeyEvent *event){
                                               camera->getPosition().Z - aproxima*2));
             }
 
-            else if(camera_06 && (camera->getPosition().Y < (box.MinEdge.Y) - 20)){
+            else if(camera_06 && (camera->getPosition().Y < (box.MinEdge.Y) - 1)){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y + aproxima*2,
                                               camera->getPosition().Z ));
             }
-            else if(camera_05 && (camera->getPosition().Y > (box.MaxEdge.Y) + 20)){
+            else if(camera_05 && (camera->getPosition().Y > (box.MaxEdge.Y) + 1)){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y - aproxima*2,
                                               camera->getPosition().Z));
@@ -481,7 +469,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 break;
 
             case (Qt::Key_1): //camera na posicao padrão
-                camera->setPosition(Vector3df(0, 0, -200));
+                camera->setPosition(Vector3df(0, 0, this->box.MinEdge.Z-0.9));
                 camera->setTarget(Vector3df(0, 0, 0));
 
                 camera_01 = true;
@@ -494,7 +482,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_2):  //camera posionada na direita
                 camera->setTarget(Vector3df(0, 0, 0));
-                camera->setPosition(Vector3df(200, 0, 0));
+                camera->setPosition(Vector3df(this->box.MaxEdge.X+0.9, 0, 0));
 
                 camera_01 = false;
                 camera_02 = true;
@@ -506,7 +494,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_3):   //camera posicionada na esquerda
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(-200,0,0));
+                camera->setPosition(Vector3df(this->box.MinEdge.X-0.9,0,0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -518,7 +506,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_4):   //camera posionada na parte de tras
                 camera->setTarget(Vector3df(0,0,0));
-                camera->setPosition(Vector3df(0,0,200));
+                camera->setPosition(Vector3df(0,0,this->box.MaxEdge.Z+0.9));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -530,7 +518,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_5):   //camera posionada no topo
                 camera->setTarget(Vector3df(0, 0, 0));
-                camera->setPosition(Vector3df(0, 200, -0.1));
+                camera->setPosition(Vector3df(0, this->box.MaxEdge.Y+0.9, 0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -542,7 +530,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_6):   //camera posionada na base
                 camera->setTarget(Vector3df(0, 0, 0));
-                camera->setPosition(Vector3df(0, -200, -0.1));
+                camera->setPosition(Vector3df(0, this->box.MinEdge.Y-0.9, 0));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -601,26 +589,26 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
             if(key_x_on)
             {
                 if(camera_01){
-                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*dx,
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.01*dx,
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
                     emit send_position_change();
                 }
                 else if(camera_04){
-                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dx),
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.01*(-dx),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
                     emit send_position_change();
                 }
                 else if(camera_05){
-                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.01*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
                     emit send_position_change();
                 }
 
                 else if(camera_06){
-                    MoveSceneNode->setPosition(Vector3df( xi + 0.1*(-dy),
+                    MoveSceneNode->setPosition(Vector3df( xi + 0.01*(-dy),
                                                           MoveSceneNode->getPosition().Y,
                                                           MoveSceneNode->getPosition().Z ));
                     emit send_position_change();
@@ -642,7 +630,7 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                 if(camera_05||camera_06){
                     dy = 0;
                 }
-                MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.1*dy, MoveSceneNode->getPosition().Z ));
+                MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X, yi - 0.01*dy, MoveSceneNode->getPosition().Z ));
                 emit send_position_change();
 
                 gizmo_X->setPosition(MoveSceneNode->getPosition());
@@ -661,26 +649,26 @@ void Cena::mouseMoveEvent(QMouseEvent *event)
                 if(camera_05){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
-                                                          zi + 0.1*(-dx)));
+                                                          zi + 0.01*(-dx)));
                     emit send_position_change();
                 }
                 else if(camera_06){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
-                                                          zi + 0.1*(dx)));
+                                                          zi + 0.01*(dx)));
                     emit send_position_change();
                 }
                 else if(camera_02){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
-                                                          zi + 0.1*(dx)));
+                                                          zi + 0.01*(dx)));
                     emit send_position_change();
                 }
 
                 else if(camera_03){
                     MoveSceneNode->setPosition(Vector3df( MoveSceneNode->getPosition().X,
                                                           MoveSceneNode->getPosition().Y,
-                                                          zi + 0.1*(-dx)));
+                                                          zi + 0.01*(-dx)));
                     emit send_position_change();
                 }
 
@@ -982,7 +970,7 @@ void Cena::aproximaObjetoSelecionado(){
         if(camera_01){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
-                                          selectedSceneNode->getPosition().Z - 50));
+                                          selectedSceneNode->getPosition().Z - 1));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
@@ -991,7 +979,7 @@ void Cena::aproximaObjetoSelecionado(){
         else if(camera_04){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
-                                          selectedSceneNode->getPosition().Z + 50));
+                                          selectedSceneNode->getPosition().Z + 1));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
@@ -1000,7 +988,7 @@ void Cena::aproximaObjetoSelecionado(){
 
         if(camera_06){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                          selectedSceneNode->getPosition().Y - 50,
+                                          selectedSceneNode->getPosition().Y - 1,
                                           selectedSceneNode->getPosition().Z ));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
@@ -1009,7 +997,7 @@ void Cena::aproximaObjetoSelecionado(){
         }
         else if(camera_05){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                          selectedSceneNode->getPosition().Y + 50,
+                                          selectedSceneNode->getPosition().Y + 1,
                                           selectedSceneNode->getPosition().Z));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
@@ -1018,7 +1006,7 @@ void Cena::aproximaObjetoSelecionado(){
         }
 
         if(camera_03){
-            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X - 50,
+            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X - 1,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
 
@@ -1027,7 +1015,7 @@ void Cena::aproximaObjetoSelecionado(){
                                         selectedSceneNode->getPosition().Z));
         }
         else if(camera_02){
-            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X + 50,
+            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X + 1,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
 
@@ -1067,48 +1055,7 @@ void Cena::selection()
              const irr::c8* test = selectedSceneNode->getName();
              int id = getIdFromNode(test);
 
-             nodeParam aux = myMap[id];
-             Vector3df height, width;
-
-             switch((selectedSceneNode->getID()&MASK)){
-                  case(ID_FLAG_CUBO):
-//                      irr::f32 x = 0;
-
-//                      if(aux.dimension.X >= aux.dimension.Y) x = aux.dimension.X;
-//                      else  x = aux.dimension.Y;
-
-//                      if(x >= aux.dimension.Z) x = x;
-//                      else x = aux.dimension.Z;
-
-//                      height.set(x+3,x,0);
-//                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-
-                  case(ID_FLAG_ESFERA):
-                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
-                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-
-                  case(ID_FLAG_CILINDRO):
-                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
-                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-
-                  case(ID_FLAG_CONE):
-                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
-                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-
-                  case(ID_FLAG_HASTE):
-                      height.set(aux.dimension.X+3, aux.dimension.X, 0);
-                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-
-                  case(ID_FLAG_PONTO):
-                      height.set(10*delta+3, 10*delta, 0);
-                      width.set(0.08,0.3,0);//width cilindro, width cone
-                      break;
-              }//fim switch
+             irr::core::aabbox3df box = selectedSceneNode->getBoundingBox();
 
              gizmo_X->remove();
              gizmo_X = 0;
@@ -1119,7 +1066,7 @@ void Cena::selection()
              gizmo_Z->remove();
              gizmo_Z = 0;
 
-             node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, height, width);
+             node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, box);
              delete node;
          }
          else

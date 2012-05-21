@@ -109,7 +109,7 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* n
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(param->dimension.X);
+        irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(param->dimension.X, 8, 8);
         irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
 
         if (esfera_node)
@@ -133,7 +133,7 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, nodeParam* param, const irr::c8*
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(param->dimension.X, param->dimension.Y, 15);
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(param->dimension.X, param->dimension.Y, 8);
         irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
 
         if (cilindro_node)
@@ -158,7 +158,7 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y, 15);
+        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y, 8);
         irr::scene::IMeshSceneNode *cone_node = smgr->addMeshSceneNode(mesh_cone_node);
 
         if (cone_node)
@@ -184,32 +184,32 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode** gizmo_X,
                         irr::scene::IMeshSceneNode** gizmo_Y,
                         irr::scene::IMeshSceneNode** gizmo_Z,
-                        const Vector3df& height, const Vector3df& width)
+                        const irr::core::aabbox3df& box)
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
-    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4,
-                                                            8,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2,
+                                                            4,
+                                                            box.MaxEdge.X+0.01,
+                                                            box.MaxEdge.X,
+                                                            0.001f,
+                                                            0.01f,
                                                             irr::video::SColor(255,0,0,255),
                                                             irr::video::SColor(255,0,0,255) );
-    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4,
-                                                            8,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2,
+                                                            4,
+                                                            box.MaxEdge.Y+0.01,
+                                                            box.MaxEdge.Y,
+                                                            0.001f,
+                                                            0.01f,
                                                             irr::video::SColor(255,0,255,0),
                                                             irr::video::SColor(255,0,255,0) );
-    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4,
-                                                            8,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2,
+                                                            4,
+                                                            box.MaxEdge.Z+0.01,
+                                                            box.MaxEdge.Z,
+                                                            0.001f,
+                                                            0.01f,
                                                             irr::video::SColor(255,255,0,0),
                                                             irr::video::SColor(255,255,0,0) );
 
@@ -245,34 +245,33 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_X,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_Z,
-                                  const Vector3df& height,
-                                  const Vector3df& width, const irr::core::aabbox3df &box)
+                        const Dim3df& dim)
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
 
     irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2,
                                                             4,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+                                                            dim.X+0.1,
+                                                            dim.X,
+                                                            0.005,
+                                                            0.03,
                                                             irr::video::SColor(255,0,0,255),
                                                             irr::video::SColor(255,0,0,255) );
     irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2,
                                                             4,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+                                                            dim.X+0.1,
+                                                            dim.X,
+                                                            0.005,
+                                                            0.03,
                                                             irr::video::SColor(255,0,255,0),
                                                             irr::video::SColor(255,0,255,0) );
     irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2,
                                                             4,
-                                                            height.X,
-                                                            height.Y,
-                                                            width.X,
-                                                            width.Y,
+                                                            dim.X+0.1,
+                                                            dim.X,
+                                                            0.005,
+                                                            0.03,
                                                             irr::video::SColor(255,255,0,0),
                                                             irr::video::SColor(255,255,0,0) );
 
@@ -282,22 +281,22 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
 
     if((*r_analise_gizmo_X)&& (*r_analise_gizmo_Y) && (*r_analise_gizmo_Z))
     {
-        (*r_analise_gizmo_X)->setPosition(Vector3df(box.MinEdge.X,
-                                                    box.MinEdge.Y,
-                                                    box.MaxEdge.Z));
+        (*r_analise_gizmo_X)->setPosition(Vector3df(-dim.X*0.5,
+                                                    -dim.Y*0.5,
+                                                    dim.Z*0.5));
         (*r_analise_gizmo_X)->setRotation(Vector3df(0,0,-90));
         (*r_analise_gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_X)->setVisible(true);
 
-        (*r_analise_gizmo_Y)->setPosition(Vector3df(box.MinEdge.X,
-                                                    box.MinEdge.Y,
-                                                    box.MaxEdge.Z));
+        (*r_analise_gizmo_Y)->setPosition(Vector3df(-dim.X*0.5,
+                                                    -dim.Y*0.5,
+                                                    dim.Z*0.5));
         (*r_analise_gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Y)->setVisible(true);
 
-        (*r_analise_gizmo_Z)->setPosition(Vector3df(box.MinEdge.X,
-                                                    box.MinEdge.Y,
-                                                    box.MaxEdge.Z));
+        (*r_analise_gizmo_Z)->setPosition(Vector3df(-dim.X*0.5,
+                                                    -dim.Y*0.5,
+                                                    dim.Z*0.5));
         (*r_analise_gizmo_Z)->setRotation(Vector3df(-90,0,0));
         (*r_analise_gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Z)->setVisible(true);
