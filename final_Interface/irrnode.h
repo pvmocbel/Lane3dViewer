@@ -54,7 +54,8 @@ public:
                     irr::scene::IMeshSceneNode **r_analise_gizmo_X,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Z,
-                    const Dim3df& dim);
+                              const Vector3df&,
+                              const Vector3df&, const irr::core::aabbox3df& box);
 };
 
 #endif // IRRNODE_H

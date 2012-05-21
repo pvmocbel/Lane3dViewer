@@ -58,7 +58,7 @@ void Cena::cenaIrrlicht()
 void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
-        camera->setPosition(Vector3df(0,0,-100));
+        camera->setPosition(Vector3df(0,0,(box.MinEdge.Z-2)));
         camera->setTarget(Vector3df(0,0,0));
         camera_01 = true;
         smgr->setActiveCamera(camera);
@@ -89,7 +89,13 @@ void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
                         (irr::f32)(dim.Y*0.5),
                         (irr::f32)(dim.Z*0.5));
 
-        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim);
+        Vector3df height;
+        Vector3df width;
+
+        height.set(box.MaxEdge.Y+0.3, box.MaxEdge.Y, 0);    //height objet, height cilindro
+        width.set(box.MaxEdge.X/80, box.MaxEdge.X/100, 0);  //width cilindro, width cone
+
+        node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, height, width, box);
 
         drawIrrlichtScene();
         delete node;
@@ -115,8 +121,8 @@ void Cena::gizmo(){
         Vector3df height;
         Vector3df width;
 
-        height.set(13,10,0);//height objet, height cilindro
-        width.set(0.08,0.3,0);//width cilindro, width cone
+        height.set(box.MaxEdge.Y+0.1, box.MaxEdge.Y, 0);    //height objet, height cilindro
+        width.set(0.08, 0.03, 0);  //width cilindro, width cone
 
         node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, height, width);
         drawIrrlichtScene();
@@ -132,6 +138,7 @@ void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 
         nodeParam aux = myMap[id];
         aux.position = pos;
+        myMap[id] = aux;
 
         gizmo_X->setPosition(selectedSceneNode->getPosition());
         gizmo_X->setVisible(true);
@@ -206,21 +213,31 @@ void Cena::receiver_changed_dimension(nodeParam* param){
     }//fim smgr
 }
 void Cena::geraMalha(){
-    if(smgr){
+    if(smgr)
+    {
         FILE *file = fopen("bm.in","w+");
         if(!file){
             qDebug()<<"falha na leitura do arquivo";
             return;
         }
-
         int count  = 0;
 //        for(it = myMap.begin(); it != myMap.end(); it++){
 
         NodeType type = myMap[1].type;
         irr::core::aabbox3df box = myMap[1].box;
         intVector position;
-        int raio;
-        int cone_count=0;
+
+        int raio = 0;
+        float tetha = 0;
+        int raio2 = 0;
+        int height = 0;
+        int cone_count=1;
+        int variacao_y = 0;
+        int variacao_x = 0;
+        int variacao_z = 0;
+        int variacao_y2 = 0;
+        int variacao_x2 = 0;
+        int variacao_z2 = 0;
 
         switch(type)
         {
@@ -231,34 +248,41 @@ void Cena::geraMalha(){
             case(Cone):
                 qDebug()<<"cone gera malha";
 
+                raio = (int)(myMap[1].dimension.X/delta);
+                height = (int)(myMap[1].dimension.Y/delta);
+                tetha  =  atan(height/raio);
+
+                qDebug()<<"i "<<(int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
+
                 position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                             (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
+                             0,
                              (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
 
-                qDebug()<<"box min x"<<box.MinEdge.X/delta
-                       <<" y "<<(int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta)
-                       <<" z "<<(int)(box.MinEdge.Z/delta);
-                qDebug()<<"box max x"<<box.MaxEdge.X/delta
-                        <<" y "<<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta)
-                        <<" z "<<(int)(box.MaxEdge.Z/delta);
+                variacao_x = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
+                variacao_y = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta);
+                variacao_z = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta);
 
-                for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
-                {
-                    raio = (int)((myMap[1].dimension.X)/delta) - 2*cone_count;
-                    qDebug()<<"raio em celulas  "<<raio;
-                    cone_count++;
-                    for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
-                    {
-                        for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
-                        {
+                variacao_x2 = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
+                variacao_y2 = (int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta);
+                variacao_z2 = (int)((box.MaxEdge.Z-this->box.MinEdge.Z)/delta);
+
+
+                for(int j=variacao_y2+1; j>variacao_y; j--){
+                    raio2 = (int)(j*tan(tetha));
+                    for(int i= 0; i< raio2; i++){
+                        for(int k= 0; k< raio2; k++){
+                            position.set(position.X,j,position.Z);
                             int novo_raio = calcula_raio(position, intVector(i,j,k));
                             novo_raio = novo_raio*novo_raio;
-
-                            if(novo_raio<=raio*raio)  fprintf(file,"%d %d %d %d %d %d \n",i, i, k, k, j, j);
+                            qDebug()<<"j "<< j;
+                            qDebug()<<"raio2 "<< (raio2*raio2);
+                            qDebug()<<"novo raio "<< novo_raio;
+                            if(novo_raio>raio2*raio2){}
+                            else    fprintf(file,"%d %d %d %d %d %d \n",i, i, k, k, j, j);
                             qDebug()<<"contador..."<<++count;
-                        }//for k
-                    }//for j
-                }//for i
+                        }
+                    }
+                }
                 break;
 
             case(Cilindro):
@@ -270,7 +294,7 @@ void Cena::geraMalha(){
                 raio = (int)((myMap[1].dimension.X)/delta);
 
                 position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                             (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
+                             0,
                              (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
 
                 for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
@@ -286,8 +310,8 @@ void Cena::geraMalha(){
 
                             if(novo_raio<=raio*raio)
                                 fprintf(file,"%d %d %d %d %d %d \n",i, i, j, j, k, k);
+//                            qDebug()<<"contador..."<<++count;
 
-                            qDebug()<<"contador..."<<++count;
                         }//for k
                     }//for j
                 }//for i
@@ -308,6 +332,11 @@ void Cena::geraMalha(){
 
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
+    return raio;
+}
+
+int Cena::calcula_raio2(const intVector &p1, const intVector &p2){
+    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
     return raio;
 }
 

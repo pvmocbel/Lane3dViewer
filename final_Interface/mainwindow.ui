@@ -113,8 +113,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>145</width>
-               <height>408</height>
+               <width>140</width>
+               <height>195</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1111,8 +1111,14 @@
                      <property name="suffix">
                       <string> m</string>
                      </property>
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="minimum">
+                      <double>0.000100000000000</double>
+                     </property>
                      <property name="value">
-                      <double>0.250000000000000</double>
+                      <double>0.100000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1144,7 +1150,7 @@
                       <string> m</string>
                      </property>
                      <property name="value">
-                      <double>0.500000000000000</double>
+                      <double>0.100000000000000</double>
                      </property>
                     </widget>
                    </item>

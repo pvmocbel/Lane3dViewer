@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_cgerais.ui'
 **
-** Created: Fri May 11 07:13:55 2012
+** Created: Fri May 18 08:10:35 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -74,7 +74,7 @@ public:
         dim_regiao_livre_x->setObjectName(QString::fromUtf8("dim_regiao_livre_x"));
         dim_regiao_livre_x->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_x->setMaximum(1000);
-        dim_regiao_livre_x->setValue(100);
+        dim_regiao_livre_x->setValue(0.5);
 
         gridLayout->addWidget(dim_regiao_livre_x, 0, 1, 1, 1);
 
@@ -95,7 +95,7 @@ public:
         dim_regiao_livre_y->setObjectName(QString::fromUtf8("dim_regiao_livre_y"));
         dim_regiao_livre_y->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_y->setMaximum(1000);
-        dim_regiao_livre_y->setValue(100);
+        dim_regiao_livre_y->setValue(0.5);
 
         gridLayout->addWidget(dim_regiao_livre_y, 0, 4, 1, 1);
 
@@ -117,7 +117,7 @@ public:
         dim_regiao_livre_z->setObjectName(QString::fromUtf8("dim_regiao_livre_z"));
         dim_regiao_livre_z->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_z->setMaximum(1000);
-        dim_regiao_livre_z->setValue(100);
+        dim_regiao_livre_z->setValue(0.5);
 
         gridLayout->addWidget(dim_regiao_livre_z, 0, 7, 1, 1);
 
@@ -137,7 +137,7 @@ public:
         delta_regiao_livre = new QDoubleSpinBox(groupBox);
         delta_regiao_livre->setObjectName(QString::fromUtf8("delta_regiao_livre"));
         delta_regiao_livre->setDecimals(4);
-        delta_regiao_livre->setValue(0.02);
+        delta_regiao_livre->setValue(0.005);
 
         gridLayout->addWidget(delta_regiao_livre, 2, 1, 1, 1);
 

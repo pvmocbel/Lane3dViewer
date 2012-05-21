@@ -112,6 +112,7 @@ public:
     }
 
     int calcula_raio(const intVector& p1, const intVector& p2);
+    int calcula_raio2(const intVector& p1, const intVector& p2);
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 

@@ -188,9 +188,30 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
-    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,0,0,255), irr::video::SColor(255,0,0,255) );
-    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,0,255,0), irr::video::SColor(255,0,255,0) );
-    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4, 8, height.X, height.Y, width.X, width.Y, irr::video::SColor(255,255,0,0), irr::video::SColor(255,255,0,0) );
+    irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 4,
+                                                            8,
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,0,0,255),
+                                                            irr::video::SColor(255,0,0,255) );
+    irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 4,
+                                                            8,
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,0,255,0),
+                                                            irr::video::SColor(255,0,255,0) );
+    irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 4,
+                                                            8,
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,255,0,0),
+                                                            irr::video::SColor(255,255,0,0) );
 
     (*gizmo_X) = smgr->addMeshSceneNode(mesh_gizmo_X);
     (*gizmo_Y) = smgr->addMeshSceneNode(mesh_gizmo_Y);
@@ -224,37 +245,36 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_X,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
                         irr::scene::IMeshSceneNode **r_analise_gizmo_Z,
-                        const Dim3df& dim)
+                                  const Vector3df& height,
+                                  const Vector3df& width, const irr::core::aabbox3df &box)
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 
 
     irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.X+8.0f,
-                                                            dim.X+1.0f,
-                                                            0.5f,
-                                                            1.2f,
-                                                            irr::video::SColor(150,0,0,150),
-                                                            irr::video::SColor(150,0,0,150));
-
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,0,0,255),
+                                                            irr::video::SColor(255,0,0,255) );
     irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.Y + 8.0f,
-                                                            dim.Y + 1.0f,
-                                                            0.5f,
-                                                            1.2f,
-                                                            irr::video::SColor(150,0,150,0),
-                                                            irr::video::SColor(150,0,150,0) );
-
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,0,255,0),
+                                                            irr::video::SColor(255,0,255,0) );
     irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.Z + 8.0f,
-                                                            dim.Z + 1.0f,
-                                                            0.5f,
-                                                            1.2f,
-                                                            irr::video::SColor(150,150,0,0),
-                                                            irr::video::SColor(150,150,0,0) );
+                                                            height.X,
+                                                            height.Y,
+                                                            width.X,
+                                                            width.Y,
+                                                            irr::video::SColor(255,255,0,0),
+                                                            irr::video::SColor(255,255,0,0) );
 
     (*r_analise_gizmo_X) = smgr->addMeshSceneNode(mesh_gizmo_X);
     (*r_analise_gizmo_Y) = smgr->addMeshSceneNode(mesh_gizmo_Y);
@@ -262,22 +282,22 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
 
     if((*r_analise_gizmo_X)&& (*r_analise_gizmo_Y) && (*r_analise_gizmo_Z))
     {
-        (*r_analise_gizmo_X)->setPosition(Vector3df(-(dim.X*0.5),
-                                                    -(dim.Y*0.5),
-                                                    (dim.Z*0.5)));
+        (*r_analise_gizmo_X)->setPosition(Vector3df(box.MinEdge.X,
+                                                    box.MinEdge.Y,
+                                                    box.MaxEdge.Z));
         (*r_analise_gizmo_X)->setRotation(Vector3df(0,0,-90));
         (*r_analise_gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_X)->setVisible(true);
 
-        (*r_analise_gizmo_Y)->setPosition(Vector3df(-(dim.X*0.5),
-                                                    -(dim.Y*0.5),
-                                                    (dim.Z*0.5)));
+        (*r_analise_gizmo_Y)->setPosition(Vector3df(box.MinEdge.X,
+                                                    box.MinEdge.Y,
+                                                    box.MaxEdge.Z));
         (*r_analise_gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Y)->setVisible(true);
 
-        (*r_analise_gizmo_Z)->setPosition(Vector3df(-(dim.X*0.5),
-                                                    -(dim.Y*0.5),
-                                                    (dim.Z*0.5)));
+        (*r_analise_gizmo_Z)->setPosition(Vector3df(box.MinEdge.X,
+                                                    box.MinEdge.Y,
+                                                    box.MaxEdge.Z));
         (*r_analise_gizmo_Z)->setRotation(Vector3df(-90,0,0));
         (*r_analise_gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Z)->setVisible(true);
