@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon May 21 11:46:58 2012
+** Created: Mon May 21 13:15:55 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -816,7 +816,7 @@ public:
         comprimento_cone->setObjectName(QString::fromUtf8("comprimento_cone"));
         comprimento_cone->setDecimals(3);
         comprimento_cone->setSingleStep(0.01);
-        comprimento_cone->setValue(0.1);
+        comprimento_cone->setValue(0.2);
 
         gridLayout_5->addWidget(comprimento_cone, 1, 1, 1, 1);
 

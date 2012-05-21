@@ -153,7 +153,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 
         switch((selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
-//                 qDebug()<<"cubo";
+                 qDebug()<<"cubo";
                  removeChangedSceneNode();
                  insertCuboChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
@@ -162,7 +162,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
                  break;
 
              case(ID_FLAG_ESFERA):
-//                 qDebug()<<"esfera";
+                 qDebug()<<"esfera";
                  removeChangedSceneNode();
                  insertEsferaChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
@@ -171,7 +171,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
                  break;
 
              case(ID_FLAG_CILINDRO):
-//                 qDebug()<<"cilindro";
+                 qDebug()<<"cilindro";
                  removeChangedSceneNode();
                  insertCilindroChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
@@ -180,7 +180,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
                  break;
 
              case(ID_FLAG_CONE):
-//                 qDebug()<<"cone";
+                 qDebug()<<"cone";
                  removeChangedSceneNode();
                  insertConeChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
@@ -189,7 +189,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
                  break;
 
              case(ID_FLAG_HASTE):
-//                 qDebug()<<"haste";
+                 qDebug()<<"haste";
                  removeChangedSceneNode();
                  insertHasteChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
@@ -211,21 +211,19 @@ void Cena::geraMalha(){
         int count  = 0;
 //        for(it = myMap.begin(); it != myMap.end(); it++){
 
+
         NodeType type = myMap[1].type;
         irr::core::aabbox3df box = myMap[1].box;
         intVector position;
-
-        int raio = 0;
-        float tetha = 0;
-        int raio2 = 0;
-        int height = 0;
-        int cone_count=1;
-        int variacao_y = 0;
-        int variacao_x = 0;
-        int variacao_z = 0;
-        int variacao_y2 = 0;
-        int variacao_x2 = 0;
-        int variacao_z2 = 0;
+        int raio;
+        int raio_cone_x = 0;
+        int raio_cone_z = 0;
+        double ta = 0;
+        double ang_cone = 0;
+        double perda_cone = 0;
+        double altura;
+        double raio_cone=0;
+        double raio_cone2=0;
 
         switch(type)
         {
@@ -236,41 +234,27 @@ void Cena::geraMalha(){
             case(Cone):
                 qDebug()<<"cone gera malha";
 
-                raio = (int)(myMap[1].dimension.X/delta);
-                height = (int)(myMap[1].dimension.Y/delta);
-                tetha  =  atan(height/raio);
+                altura = myMap[1].dimension.Y/delta;
+                raio_cone = myMap[1].dimension.X;
+                ta = tan(myMap[1].dimension.Y/raio_cone);
+                perda_cone = delta/ta;
+                qDebug()<<"ang"<<ta;
+                qDebug()<<"perda"<<perda_cone;
+                qDebug()<<"altura"<<altura;
+                qDebug()<<"raio "<<raio_cone;
 
-                qDebug()<<"i "<<(int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
+                for(double j = 0; j<myMap[1].dimension.Y;  j= j+delta){
+                    raio_cone2 = raio_cone -count*perda_cone;
+                    if(raio_cone2<=delta)
+                        return;
+                    qDebug()<< "raio cone2 "<<raio_cone2<<" "<<++count;
+                    raio_cone_x = (int)((raio_cone2-this->box.MinEdge.X)/delta);
+                    raio_cone_z = (int)((raio_cone2-this->box.MinEdge.Z)/delta);
+                    qDebug()<< "raio cone_x "<<raio_cone_x;
 
-                position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                             0,
-                             (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
-
-                variacao_x = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
-                variacao_y = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta);
-                variacao_z = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta);
-
-                variacao_x2 = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
-                variacao_y2 = (int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta);
-                variacao_z2 = (int)((box.MaxEdge.Z-this->box.MinEdge.Z)/delta);
-
-
-                for(int j=variacao_y2+1; j>variacao_y; j--){
-                    raio2 = (int)(j*tan(tetha));
-                    for(int i= 0; i< raio2; i++){
-                        for(int k= 0; k< raio2; k++){
-                            position.set(position.X,j,position.Z);
-                            int novo_raio = calcula_raio(position, intVector(i,j,k));
-                            novo_raio = novo_raio*novo_raio;
-                            qDebug()<<"j "<< j;
-                            qDebug()<<"raio2 "<< (raio2*raio2);
-                            qDebug()<<"novo raio "<< novo_raio;
-                            if(novo_raio>raio2*raio2){}
-                            else    fprintf(file,"%d %d %d %d %d %d \n",i, i, k, k, j, j);
-                            qDebug()<<"contador..."<<++count;
-                        }
-                    }
+                    fprintf(file,"%d %d %d %d %d %d \n",raio_cone_x, raio_cone_x+(int)altura, j, j,raio_cone_z ,raio_cone_z+(int)altura);
                 }
+
                 break;
 
             case(Cilindro):
