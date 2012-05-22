@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon May 21 13:15:55 2012
-**      by: Qt User Interface Compiler version 4.7.0
+** Created: Tue May 22 14:09:03 2012
+**      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -260,7 +260,7 @@ public:
         scrollArea_0->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_0 = new QWidget();
         scrollAreaWidgetContents_pnLateral_0->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_0"));
-        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 167));
+        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 140, 195));
         verticalLayout_12 = new QVBoxLayout(scrollAreaWidgetContents_pnLateral_0);
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
@@ -384,7 +384,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_1 = new QWidget();
         scrollAreaWidgetContents_pnLateral_1->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_1"));
-        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, -6, 150, 549));
+        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 619));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_pnLateral_1);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -799,7 +799,7 @@ public:
         raio_cone->setDecimals(3);
         raio_cone->setMinimum(0);
         raio_cone->setSingleStep(0.01);
-        raio_cone->setValue(0.05);
+        raio_cone->setValue(0.1);
 
         gridLayout_5->addWidget(raio_cone, 0, 1, 1, 1);
 
@@ -816,7 +816,7 @@ public:
         comprimento_cone->setObjectName(QString::fromUtf8("comprimento_cone"));
         comprimento_cone->setDecimals(3);
         comprimento_cone->setSingleStep(0.01);
-        comprimento_cone->setValue(0.2);
+        comprimento_cone->setValue(0.1);
 
         gridLayout_5->addWidget(comprimento_cone, 1, 1, 1, 1);
 
@@ -1029,7 +1029,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 900, 24));
+        menuBar->setGeometry(QRect(0, 0, 900, 25));
         MainWindow->setMenuBar(menuBar);
         ToolBar_File = new QToolBar(MainWindow);
         ToolBar_File->setObjectName(QString::fromUtf8("ToolBar_File"));

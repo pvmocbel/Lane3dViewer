@@ -89,6 +89,11 @@ public:
     float dx;
     float dy;
 
+    void geraMalhaCube(const irr::core::aabbox3df& box, FILE *file);
+    void geraMalhaCone(const irr::core::aabbox3df& box, const Vector3df&, FILE *file);
+    void geraMalhaEsfera(const irr::core::aabbox3df& box, const Vector3df&, FILE *file);
+    void geraMalhaCilindro(const irr::core::aabbox3df& box, const Vector3df&, FILE *file);
+
     void insertHaste(int , IrrNode* node, nodeParam*);
     void insertHasteChanged(IrrNode* node, nodeParam*, int);
 
