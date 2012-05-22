@@ -73,6 +73,7 @@ void Cena::cenaIluminacao(){
         light->getLightData().DiffuseColor = irr::video::SColorf( 0.8f, 0.8f, 0.8f, 1.0f );
     }
 }
+
 void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
     if(smgr)
     {
@@ -108,6 +109,7 @@ void Cena::printRegiaoAnalise(irr::core::aabbox3df box){
         video_driver->draw3DBox(box, irr::video::SColor(255, 250, 150, 150));
     }
 }
+
 void Cena::gizmo(){
     if(smgr)
     {
@@ -117,6 +119,7 @@ void Cena::gizmo(){
         delete node;
     }
 }
+
 void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 {
     if(smgr && selectedSceneNode){
@@ -151,6 +154,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
         aux = *param;
         myMap[id] = aux;
 
+        qDebug()<<"position"<<" x "<<aux.position.X<<" y "<<aux.position.Y<<" z "<<aux.position.Z;
         switch((selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
                  qDebug()<<"cubo";
@@ -249,17 +253,7 @@ void Cena::geraMalha(){
         fclose(file);
 
     }//smgr
-}//fim funcao
-
-int Cena::calcula_raio(const intVector &p1, const intVector &p2){
-    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
-    return raio;
 }
-int Cena::calcula_raio2(const intVector &p1, const intVector &p2){
-    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
-    return raio;
-}
-
 void Cena::geraMalhaCube(const irr::core::aabbox3df &box, FILE *file){
     int x_inicial = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
     int x_final = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
@@ -354,6 +348,14 @@ void Cena::geraMalhaEsfera(const irr::core::aabbox3df& box, const Vector3df& dim
             }//for k
         }//for j
     }//for i
+}
+int Cena::calcula_raio(const intVector &p1, const intVector &p2){
+    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
+    return raio;
+}
+int Cena::calcula_raio2(const intVector &p1, const intVector &p2){
+    int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
+    return raio;
 }
 
 //--------------------------------EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
@@ -745,7 +747,7 @@ void Cena::sendMouseEventToIrrlicht( QMouseEvent* event,bool pressedDown)
     }
     event->ignore();
 }
-//-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO--------------------------------------//
+//-------------------------------FIM-EVENTOS-DE-MOUSE-E-TECLADO------------------------------------//
 
 //-----------------------------------MODIFICADORES-DE-OBEJTOS--------------------------------------//
 void Cena::insertHaste(int id, IrrNode *node, nodeParam* param){
@@ -1043,11 +1045,12 @@ void Cena::aproximaObjetoSelecionado(){
 }
 //--------------------------------FIM-MODIFICADORES-DE-OBEJTOS--------------------------------------//
 
-//-----------------------------------------SELECAO-E-PINTURA----------z-----------------------------------//
+//-----------------------------------------SELECAO-E-PINTURA----------------------------------------//
 void Cena::selection()
 {
     if(smgr)
     {
+        Vector3df dim;
         irr::core::vector3df intersection;
         irr::core::triangle3df tri;
         irr::core::line3df ray = smgr->getSceneCollisionManager()->getRayFromScreenCoordinates(
@@ -1069,6 +1072,7 @@ void Cena::selection()
 
              const irr::c8* test = selectedSceneNode->getName();
              int id = getIdFromNode(test);
+             dim = myMap[id].dimension;
 
              irr::core::aabbox3df box = selectedSceneNode->getBoundingBox();
 
@@ -1082,7 +1086,7 @@ void Cena::selection()
              gizmo_Z = 0;
 
              node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, box);
-             delete node;
+             delete node;             
          }
          else
          {
@@ -1095,8 +1099,8 @@ void Cena::selection()
              key_x_on = false;
              key_y_on = false;
              key_z_on = false;
-         }
-         emit send_selection_call();
+         }         
+         emit send_selection_call(dim);
     }
 }
 void Cena::drawIrrlichtScene()
@@ -1111,4 +1115,4 @@ void Cena::drawIrrlichtScene()
         video_driver->endScene();
     }
 }
-//---------------------------------------FIM-SELECAO-E-PINTURA-------------------------------------------//
+//---------------------------------------FIM-SELECAO-E-PINTURA--------------------------------------//

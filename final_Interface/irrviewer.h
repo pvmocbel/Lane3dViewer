@@ -67,7 +67,7 @@ public:
 signals:
     void send_position_change();
     void send_dimension();
-    void send_selection_call();
+    void send_selection_call(const Vector3df&);
 
 public slots:
       virtual void receiver_changed_position_mainwindow(const Pos3df& pos);

@@ -1147,6 +1147,12 @@
                    <string>Dimension</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_5">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_52">
                      <property name="minimumSize">
@@ -1166,31 +1172,6 @@
                      </property>
                      <property name="indent">
                       <number>-1</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QDoubleSpinBox" name="raio_cone">
-                     <property name="minimumSize">
-                      <size>
-                       <width>60</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="suffix">
-                      <string> m</string>
-                     </property>
-                     <property name="decimals">
-                      <number>3</number>
-                     </property>
-                     <property name="minimum">
-                      <double>0.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>0.100000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1223,6 +1204,31 @@
                      </property>
                      <property name="decimals">
                       <number>3</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="raio_cone">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="suffix">
+                      <string> m</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="minimum">
+                      <double>0.000000000000000</double>
                      </property>
                      <property name="singleStep">
                       <double>0.010000000000000</double>
@@ -2022,22 +2028,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>raio_cone</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>set_cone()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>797</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>641</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>comprimento_cone</sender>
    <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
@@ -2050,6 +2040,22 @@
     <hint type="destinationlabel">
      <x>654</x>
      <y>273</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>raio_cone</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>set_cone()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>797</x>
+     <y>255</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>641</x>
+     <y>237</y>
     </hint>
    </hints>
   </connection>

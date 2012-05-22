@@ -5,3 +5,6 @@ moc_*
 ./Qt_Irrlicht-build-desktop/*
 Makefile
 *.pro.user
+*autosave
+mainwindow1.ui
+

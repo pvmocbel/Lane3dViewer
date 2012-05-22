@@ -43,15 +43,11 @@ public slots:
     void set_cilindro();
     void set_cone();
 
-    virtual QPaintEngine * paintEngine() const;
-
     void gerarMalha();
 
-    void return_position_changed();
-    void receiver_selection();
-
+    void receiver_selection(const Vector3df& dim);
     void change_position();
-
+    void return_position_changed();
     void receiver_dimesion();
 
     void setPainelPonto();

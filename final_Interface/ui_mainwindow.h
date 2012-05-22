@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue May 22 14:09:03 2012
+** Created: Tue May 22 17:05:07 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -142,9 +142,9 @@ public:
     QGroupBox *groupBox_21;
     QGridLayout *gridLayout_5;
     QLabel *label_52;
-    QDoubleSpinBox *raio_cone;
     QLabel *label_60;
     QDoubleSpinBox *comprimento_cone;
+    QDoubleSpinBox *raio_cone;
     QGroupBox *groupBox_Material;
     QFormLayout *formLayout;
     QLabel *label_48;
@@ -784,6 +784,7 @@ public:
         gridLayout_5->setSpacing(6);
         gridLayout_5->setContentsMargins(11, 11, 11, 11);
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        gridLayout_5->setContentsMargins(0, 0, -1, -1);
         label_52 = new QLabel(groupBox_21);
         label_52->setObjectName(QString::fromUtf8("label_52"));
         label_52->setMinimumSize(QSize(40, 0));
@@ -792,16 +793,6 @@ public:
         label_52->setIndent(-1);
 
         gridLayout_5->addWidget(label_52, 0, 0, 1, 1);
-
-        raio_cone = new QDoubleSpinBox(groupBox_21);
-        raio_cone->setObjectName(QString::fromUtf8("raio_cone"));
-        raio_cone->setMinimumSize(QSize(60, 0));
-        raio_cone->setDecimals(3);
-        raio_cone->setMinimum(0);
-        raio_cone->setSingleStep(0.01);
-        raio_cone->setValue(0.1);
-
-        gridLayout_5->addWidget(raio_cone, 0, 1, 1, 1);
 
         label_60 = new QLabel(groupBox_21);
         label_60->setObjectName(QString::fromUtf8("label_60"));
@@ -819,6 +810,16 @@ public:
         comprimento_cone->setValue(0.1);
 
         gridLayout_5->addWidget(comprimento_cone, 1, 1, 1, 1);
+
+        raio_cone = new QDoubleSpinBox(groupBox_21);
+        raio_cone->setObjectName(QString::fromUtf8("raio_cone"));
+        raio_cone->setMinimumSize(QSize(60, 0));
+        raio_cone->setDecimals(3);
+        raio_cone->setMinimum(0);
+        raio_cone->setSingleStep(0.01);
+        raio_cone->setValue(0.1);
+
+        gridLayout_5->addWidget(raio_cone, 0, 1, 1, 1);
 
         stackedWidget_pnLateralObj->addWidget(page_Cone);
 
@@ -1074,8 +1075,8 @@ public:
         QObject::connect(raio_esfera, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_esfera()));
         QObject::connect(raio_cilindro, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cilindro()));
         QObject::connect(comprimento_cilindro, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cilindro()));
-        QObject::connect(raio_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
         QObject::connect(comprimento_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
+        QObject::connect(raio_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
 
         stackedWidget_Lateral->setCurrentIndex(1);
         stackedWidget_pnLateralObj->setCurrentIndex(5);
@@ -1171,9 +1172,9 @@ public:
         comprimento_cilindro->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
         groupBox_21->setTitle(QApplication::translate("MainWindow", "Dimension", 0, QApplication::UnicodeUTF8));
         label_52->setText(QApplication::translate("MainWindow", "raio:", 0, QApplication::UnicodeUTF8));
-        raio_cone->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
         label_60->setText(QApplication::translate("MainWindow", "comp:", 0, QApplication::UnicodeUTF8));
         comprimento_cone->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
+        raio_cone->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
         groupBox_Material->setTitle(QApplication::translate("MainWindow", "Materiais", 0, QApplication::UnicodeUTF8));
         label_48->setText(QApplication::translate("MainWindow", "Permissi:", 0, QApplication::UnicodeUTF8));
         label_49->setText(QApplication::translate("MainWindow", "Permea:", 0, QApplication::UnicodeUTF8));

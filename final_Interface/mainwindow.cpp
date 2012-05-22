@@ -24,15 +24,6 @@ void MainWindow::init()
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
 }
-
-QPaintEngine* MainWindow::paintEngine() const
-{
-    if (cena) {
-        QWidget::paintEngine();
-        qDebug()<<"paint egine";
-        return 0;
-    }
-}
 void MainWindow::gerarMalha(){
     if(cena){
         cena->geraMalha();
@@ -49,18 +40,68 @@ void MainWindow::change_position(){
     if(cena && cena->selectedSceneNode){
         Pos3df pos ;
         pos.set(ui->position_X->value(),ui->position_Y->value(),ui->position_Z->value());
-
-        irr::core::aabbox3df box = cena->selectedSceneNode->getBoundingBox();
-//        qDebug()<<"box min x"<<cena->selectedSceneNode->getPosition().X + box.MinEdge.X
-//                <<" y "<<cena->selectedSceneNode->getPosition().Y + box.MinEdge.Y
-//                <<" z "<<cena->selectedSceneNode->getPosition().Z + box.MinEdge.Z;
-//        qDebug()<<"box max x"<<cena->selectedSceneNode->getPosition().X + box.MaxEdge.X
-//                <<" y "<<cena->selectedSceneNode->getPosition().Y + box.MaxEdge.Y
-//                <<" z "<<cena->selectedSceneNode->getPosition().Z + box.MaxEdge.Z;
-
         emit send_to_cena_changed_position(pos);
     }
 }
+void MainWindow::receiver_selection(const Vector3df &dim){
+    if(cena && cena->selectedSceneNode){
+
+        ui->position_X->setValue(cena->selectedSceneNode->getPosition().X);
+        ui->position_Y->setValue(cena->selectedSceneNode->getPosition().Y);
+        ui->position_Z->setValue(cena->selectedSceneNode->getPosition().Z);
+
+        switch((cena->selectedSceneNode->getID()&MASK)){
+             case(ID_FLAG_CUBO):
+                 setPainelCubo();
+                 cena->setFocus();
+                 ui->cube_dim_X->setValue(dim.X);
+                 ui->cube_dim_Y->setValue(dim.Y);
+                 ui->cube_dim_Z->setValue(dim.Z);
+                 break;
+
+             case(ID_FLAG_ESFERA):
+                 setPainelEsfera();
+                 cena->setFocus();
+                 ui->raio_esfera->setValue(dim.X);
+                 break;
+
+             case(ID_FLAG_CILINDRO):
+                 setPainelCilindro();
+                 cena->setFocus();
+                 ui->raio_cilindro->setValue(dim.X);
+                 ui->comprimento_cilindro->setValue(dim.Y);
+                 break;
+
+             case(ID_FLAG_CONE):
+                 setPainelCone();
+                 cena->setFocus();
+                 ui->raio_cone->setValue(dim.X);
+                 ui->comprimento_cone->setValue(dim.Y);
+                 break;
+
+             case(ID_FLAG_HASTE):
+                setPainelHaste();
+                cena->setFocus();
+                ui->haste_final_x->setValue(dim.X);
+                ui->haste_final_y->setValue(dim.Y);
+                ui->haste_final_z->setValue(dim.Z);
+                break;
+
+             case(ID_FLAG_PONTO):
+                setPainelPonto();
+                cena->setFocus();
+                break;
+         }
+    }
+}
+void MainWindow::receiver_dimesion(){
+    if(cena && cena->selectedSceneNode){
+        ui->cube_dim_X->setValue(cena->selectedSceneNode->getScale().X);
+        ui->cube_dim_Y->setValue(cena->selectedSceneNode->getScale().Y);
+        ui->cube_dim_Z->setValue(cena->selectedSceneNode->getScale().Z);
+    }
+}
+
 void MainWindow::set_haste(){
     if(cena && (cena->selectedSceneNode)){
         nodeParam *param = new nodeParam();
@@ -131,42 +172,7 @@ void MainWindow::set_cone(){
         delete param;
     }
 }
-void MainWindow::receiver_dimesion(){
-    if(cena && cena->selectedSceneNode){
-        ui->cube_dim_X->setValue(cena->selectedSceneNode->getScale().X);
-        ui->cube_dim_Y->setValue(cena->selectedSceneNode->getScale().Y);
-        ui->cube_dim_Z->setValue(cena->selectedSceneNode->getScale().Z);
-    }
-}
-void MainWindow::receiver_selection(){
-    if(cena && cena->selectedSceneNode){
-        switch((cena->selectedSceneNode->getID()&MASK)){
-             case(ID_FLAG_CUBO):
-                 setPainelCubo();
-                 break;
 
-             case(ID_FLAG_ESFERA):
-                 setPainelEsfera();
-                 break;
-
-             case(ID_FLAG_CILINDRO):
-                 setPainelCilindro();
-                 break;
-
-             case(ID_FLAG_CONE):
-                 setPainelCone();
-                 break;
-
-             case(ID_FLAG_HASTE):
-                setPainelHaste();
-                break;
-
-             case(ID_FLAG_PONTO):
-                setPainelPonto();
-                break;
-         }
-    }
-}
 void MainWindow::new_triggered()
 {
     Dialog_CGerais* d = new Dialog_CGerais();
@@ -179,12 +185,13 @@ void MainWindow::new_triggered()
 
     connect(cena, SIGNAL(send_position_change()),this, SLOT(return_position_changed()));
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
-    connect(cena, SIGNAL(send_selection_call()), this, SLOT(receiver_selection()));
+    connect(cena, SIGNAL(send_selection_call(Vector3df)), this, SLOT(receiver_selection(Vector3df)));
     connect(this, SIGNAL(send_changed_dimension(nodeParam*)), cena, SLOT(receiver_changed_dimension(nodeParam*)));
 
     cena->resize(2048, 2048);
     ui->grid_Interface->addWidget(cena, 0, 0);
-
+    cena->setFocus(Qt::MouseFocusReason);
+    ui->centralWidget->setFocus(Qt::MouseFocusReason);
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
     cena->criaRegiaoAnalise(d->getDimension(), d->getDelta());
@@ -207,6 +214,7 @@ void MainWindow::rotacao_triggered()
 {
     //ui->lineEdit_LinhaName->setText("Rotao");
 }
+
 void MainWindow::ponto_triggered()
 {
     setPainelPonto();
@@ -287,6 +295,7 @@ void MainWindow::cone_triggered()
     cena->insertCone(id, new IrrNode(), param);
     delete param;
 }
+
 void MainWindow::setPainelPonto()
 {
     ui->label_PainelTitulo_1->setText("PONTO");
@@ -350,7 +359,9 @@ void MainWindow::setPainelCilindro(){
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
+
 void MainWindow::keyPressEvent( QKeyEvent * event){
     cena->keyPressEvent(event);
+    cena->setFocus();
 }
 
