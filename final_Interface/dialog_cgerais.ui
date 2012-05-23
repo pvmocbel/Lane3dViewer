@@ -72,7 +72,7 @@
          <double>1000.000000000000000</double>
         </property>
         <property name="value">
-         <double>0.500000000000000</double>
+         <double>5.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -108,7 +108,7 @@
          <double>1000.000000000000000</double>
         </property>
         <property name="value">
-         <double>0.500000000000000</double>
+         <double>5.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -147,7 +147,7 @@
          <double>1000.000000000000000</double>
         </property>
         <property name="value">
-         <double>0.500000000000000</double>
+         <double>5.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -177,7 +177,7 @@
          <number>4</number>
         </property>
         <property name="value">
-         <double>0.005000000000000</double>
+         <double>0.020000000000000</double>
         </property>
        </widget>
       </item>
@@ -224,8 +224,8 @@
    <slot>slotRejected()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>579</x>
-     <y>251</y>
+     <x>588</x>
+     <y>165</y>
     </hint>
     <hint type="destinationlabel">
      <x>209</x>
@@ -240,8 +240,8 @@
    <slot>slotAccepted()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>579</x>
-     <y>251</y>
+     <x>588</x>
+     <y>165</y>
     </hint>
     <hint type="destinationlabel">
      <x>214</x>
@@ -304,8 +304,8 @@
    <slot>slotSetValoresAmbiente()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>315</x>
-     <y>99</y>
+     <x>194</x>
+     <y>109</y>
     </hint>
     <hint type="destinationlabel">
      <x>289</x>

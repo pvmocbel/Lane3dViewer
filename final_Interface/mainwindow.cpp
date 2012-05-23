@@ -54,6 +54,9 @@ void MainWindow::receiver_selection(const Vector3df &dim){
              case(ID_FLAG_CUBO):
                  setPainelCubo();
                  cena->setFocus();
+                 ui->position_X->setEnabled(true);
+                 ui->position_Y->setEnabled(true);
+                 ui->position_Z->setEnabled(true);
                  ui->cube_dim_X->setValue(dim.X);
                  ui->cube_dim_Y->setValue(dim.Y);
                  ui->cube_dim_Z->setValue(dim.Z);
@@ -62,12 +65,18 @@ void MainWindow::receiver_selection(const Vector3df &dim){
              case(ID_FLAG_ESFERA):
                  setPainelEsfera();
                  cena->setFocus();
+                 ui->position_X->setEnabled(true);
+                 ui->position_Y->setEnabled(true);
+                 ui->position_Z->setEnabled(true);
                  ui->raio_esfera->setValue(dim.X);
                  break;
 
              case(ID_FLAG_CILINDRO):
                  setPainelCilindro();
                  cena->setFocus();
+                 ui->position_X->setEnabled(true);
+                 ui->position_Y->setEnabled(true);
+                 ui->position_Z->setEnabled(true);
                  ui->raio_cilindro->setValue(dim.X);
                  ui->comprimento_cilindro->setValue(dim.Y);
                  break;
@@ -75,6 +84,9 @@ void MainWindow::receiver_selection(const Vector3df &dim){
              case(ID_FLAG_CONE):
                  setPainelCone();
                  cena->setFocus();
+                 ui->position_X->setEnabled(true);
+                 ui->position_Y->setEnabled(true);
+                 ui->position_Z->setEnabled(true);
                  ui->raio_cone->setValue(dim.X);
                  ui->comprimento_cone->setValue(dim.Y);
                  break;
@@ -82,6 +94,9 @@ void MainWindow::receiver_selection(const Vector3df &dim){
              case(ID_FLAG_HASTE):
                 setPainelHaste();
                 cena->setFocus();
+                ui->position_X->setEnabled(false);
+                ui->position_Y->setEnabled(false);
+                ui->position_Z->setEnabled(false);
                 ui->haste_final_x->setValue(dim.X);
                 ui->haste_final_y->setValue(dim.Y);
                 ui->haste_final_z->setValue(dim.Z);
@@ -103,6 +118,8 @@ void MainWindow::set_haste(){
         param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
         param->type = Haste;
         param->box = cena->selectedSceneNode->getBoundingBox();
+        qDebug()<<"box min x"<<param->box.MinEdge.X<<" y "<<param->box.MinEdge.Y<<" z "<<param->box.MinEdge.Z;
+        qDebug()<<"box max x"<<param->box.MaxEdge.X<<" y "<<param->box.MaxEdge.Y<<" z "<<param->box.MaxEdge.Z;
         param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
 
         emit send_changed_dimension(param);
@@ -185,10 +202,61 @@ void MainWindow::new_triggered()
     ui->grid_Interface->addWidget(cena, 0, 0);
     cena->setFocus(Qt::MouseFocusReason);
     ui->centralWidget->setFocus(Qt::MouseFocusReason);
+
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
     cena->criaRegiaoAnalise(d->getDimension(), d->getDelta());
 
+    ui->position_X->setSingleStep(d->delta);
+    ui->position_Y->setSingleStep(d->delta);
+    ui->position_Z->setSingleStep(d->delta);
+
+    ui->raio_haste->setMaximum(d->delta*0.5);
+    ui->raio_haste->setMinimum(d->delta*0.1);
+    ui->raio_haste->setSingleStep(d->delta);
+
+    ui->raio_cilindro->setMinimum(d->delta*2);
+
+    ui->haste_inicial_x->setMinimum(-d->getDimension().X);
+    ui->haste_inicial_y->setMinimum(-d->getDimension().X);
+    ui->haste_inicial_z->setMinimum(-d->getDimension().X);
+    ui->haste_inicial_x->setMaximum(d->getDimension().X);
+    ui->haste_inicial_y->setMaximum(d->getDimension().Y);
+    ui->haste_inicial_z->setMaximum(d->getDimension().Z);
+
+    ui->haste_inicial_x->setSingleStep(d->delta);
+    ui->haste_inicial_y->setSingleStep(d->delta);
+    ui->haste_inicial_z->setSingleStep(d->delta);
+
+    ui->haste_final_x->setMinimum(-d->getDimension().X);
+    ui->haste_final_y->setMinimum(-d->getDimension().X);
+    ui->haste_final_z->setMinimum(-d->getDimension().X);
+    ui->haste_final_x->setMaximum(d->getDimension().X);
+    ui->haste_final_y->setMaximum(d->getDimension().Y);
+    ui->haste_final_z->setMaximum(d->getDimension().Z);
+
+    ui->haste_final_x->setSingleStep(d->delta);
+    ui->haste_final_y->setSingleStep(d->delta);
+    ui->haste_final_z->setSingleStep(d->delta);
+
+    ui->cube_dim_X->setMinimum(d->delta);
+    ui->cube_dim_X->setSingleStep(d->delta);
+    ui->cube_dim_Y->setMinimum(d->delta);
+    ui->cube_dim_Y->setSingleStep(d->delta);
+    ui->cube_dim_Z->setMinimum(d->delta);
+    ui->cube_dim_Z->setSingleStep(d->delta);
+
+    ui->raio_cilindro->setSingleStep(d->delta);
+    ui->comprimento_cilindro->setMinimum(d->delta);
+    ui->comprimento_cilindro->setSingleStep(d->delta);
+
+    ui->raio_cone->setMinimum(d->delta*2);
+    ui->raio_cone->setSingleStep(d->delta);
+    ui->comprimento_cone->setMinimum(d->delta);
+    ui->comprimento_cone->setSingleStep(d->delta);
+
+    ui->raio_esfera->setMinimum(d->delta*2);
+    ui->raio_esfera->setSingleStep(d->delta);
     delete d;
 }
 void MainWindow::open_triggered()
@@ -228,7 +296,9 @@ void MainWindow::linha_triggered()
     param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
     param->type = Haste;
-
+    ui->position_X->setEnabled(false);
+    ui->position_Y->setEnabled(false);
+    ui->position_Z->setEnabled(false);
     cena->insertHaste(id, new IrrNode(), param);
     delete param;
 }
@@ -237,7 +307,9 @@ void MainWindow::cubo_triggered()
     setPainelCubo();
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
-
+    ui->position_X->setEnabled(true);
+    ui->position_Y->setEnabled(true);
+    ui->position_Z->setEnabled(true);
     param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
     param->dimension.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
@@ -251,7 +323,9 @@ void MainWindow::esfera_triggered()
     setPainelEsfera();
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
-
+    ui->position_X->setEnabled(true);
+    ui->position_Y->setEnabled(true);
+    ui->position_Z->setEnabled(true);
     param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
     param->dimension.set(ui->raio_esfera->value(), 0, 0);
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
@@ -265,7 +339,9 @@ void MainWindow::cilindro_triggered()
     setPainelCilindro();
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
-
+    ui->position_X->setEnabled(true);
+    ui->position_Y->setEnabled(true);
+    ui->position_Z->setEnabled(true);
     param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
     param->dimension.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
@@ -279,7 +355,9 @@ void MainWindow::cone_triggered()
     setPainelCone();
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
-
+    ui->position_X->setEnabled(true);
+    ui->position_Y->setEnabled(true);
+    ui->position_Z->setEnabled(true);
     param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
     param->dimension.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
@@ -336,17 +414,17 @@ void MainWindow::setPainelEsfera()
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-void MainWindow::setPainelCone(){
-    ui->label_PainelTitulo_1->setText("CONE");
-    ui->lineEdit_Name->setText("Cone");
+void MainWindow::setPainelCilindro(){
+    ui->label_PainelTitulo_1->setText("CILINDRO");
+    ui->lineEdit_Name->setText("Cilindro");
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(4);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-void MainWindow::setPainelCilindro(){
-    ui->label_PainelTitulo_1->setText("CILINDRO");
-    ui->lineEdit_Name->setText("Cilindro");
+void MainWindow::setPainelCone(){
+    ui->label_PainelTitulo_1->setText("CONE");
+    ui->lineEdit_Name->setText("Cone");
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(5);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);

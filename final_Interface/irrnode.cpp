@@ -48,7 +48,7 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
         if(param->position.X != param->dimension.X){
             angle.X = 0;
             angle.Y = 0;
-            angle.Z = 90;
+            angle.Z = -90;
         }
         else if(param->position.Y != param->dimension.Y){
             angle.X = 0;
@@ -56,6 +56,7 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
             angle.Z = 0;
         }
         else if(param->position.Z != param->dimension.Z){
+            angle.X = -90;
             angle.Y = 0;
             angle.Z = 0;                        
         }

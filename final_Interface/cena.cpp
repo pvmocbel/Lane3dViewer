@@ -2,7 +2,7 @@
 
 Cena::Cena():IrrViewer(0),light(0),mouse_key_test(false),
     selectedSceneNode(0),collMan(0),duplicateNode_mouse_key(false),
-    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(0.1),afasta(0.1)
+    mouseXi(0),mouseYi(0),dx(0),dy(0),MoveSceneNode(0),aproxima(0.05),afasta(0.05)
 {
     init();
 }
@@ -208,7 +208,12 @@ void Cena::geraMalha(){
     if(smgr)
     {
         FILE *file = fopen("bm.in","w+");
+        FILE *haste = fopen("hastes.in","w+");
         if(!file){
+            qDebug()<<"falha na leitura do arquivo";
+            return;
+        }
+        if(!haste){
             qDebug()<<"falha na leitura do arquivo";
             return;
         }
@@ -242,6 +247,30 @@ void Cena::geraMalha(){
 
                 case(Haste):
                     qDebug()<<"haste gera malha";
+                    if((*it).second.position.X != (*it).second.dimension.X)
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.position.X -this->box.MinEdge.X)/delta),
+                                                          (int)(((*it).second.dimension.X -this->box.MinEdge.X)/delta),
+                                                          (int)(((*it).second.position.Y -this->box.MinEdge.Y)/delta),
+                                                          0,
+                                                          (int)(((*it).second.position.Z -this->box.MinEdge.Z)/delta),
+                                                          0,
+                                                          (delta*500));
+                    else if((*it).second.position.Y != (*it).second.dimension.Y)
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.position.X -this->box.MinEdge.X)/delta),
+                                                          0,
+                                                          (int)(((*it).second.position.Y -this->box.MinEdge.Y)/delta),
+                                                          (int)(((*it).second.dimension.Y -this->box.MinEdge.Y)/delta),
+                                                          (int)(((*it).second.position.Z -this->box.MinEdge.Z)/delta),
+                                                          0,
+                                                          (delta*500));
+                    else if((*it).second.position.Z != (*it).second.dimension.Z)
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.position.X -this->box.MinEdge.X)/delta),
+                                                          0,
+                                                          (int)(((*it).second.position.Y -this->box.MinEdge.Y)/delta),
+                                                          0,
+                                                          (int)(((*it).second.position.Z -this->box.MinEdge.Z)/delta),
+                                                          (int)(((*it).second.dimension.Z -this->box.MinEdge.Z)/delta),
+                                                          (delta*500));
                     break;
 
                  default:
@@ -249,7 +278,9 @@ void Cena::geraMalha(){
             }
         }//fim for map
         fprintf(file,"%d \n",-1);
+        fprintf(haste,"%d \n",-1);
         fclose(file);
+        fclose(haste);
     }//smgr
 }
 void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE *file){
@@ -343,31 +374,46 @@ void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FI
     int raio = 0;
     int count = 0;
     intVector position;
+    intVector position2;
+    irr::core::aabbox3df box_aux;
 
-    raio = (int)((param.dimension.X)/delta);
+    raio = (int)((myMap[1].dimension.X)/delta);
 
-    box.MinEdge.set(box.MinEdge.X + param.position.X,
-                    box.MinEdge.Y + param.position.Y,
-                    box.MinEdge.Z + param.position.Z);
-    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-                    box.MaxEdge.Y + param.position.Y,
-                    box.MaxEdge.Z + param.position.Z);
+    box_aux.MaxEdge = myMap[1].box.MaxEdge;
+    box_aux.MinEdge = myMap[2].box.MinEdge;
 
-    position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
-                 (int)((param.position.Y-this->box.MinEdge.Y)/delta),
-                 (int)((param.position.Z-this->box.MinEdge.Z)/delta));
+    box_aux.MinEdge.set(box_aux.MinEdge.X + myMap[2].position.X,
+                        box_aux.MinEdge.Y + myMap[2].position.Y,
+                        box_aux.MinEdge.X + myMap[2].position.X);
+    box_aux.MaxEdge.set(box.MaxEdge.X + myMap[1].position.X,
+                        box_aux.MaxEdge.Y + myMap[1].position.Y,
+                        box_aux.MaxEdge.Z + myMap[1].position.Z);
 
-    for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
-       for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<=(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
-           for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<=(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+    qDebug()<<"box min x"<<box_aux.MinEdge.X<<" y "<<box_aux.MinEdge.Y<<" z "<<box_aux.MinEdge.Z;
+    qDebug()<<"box max x"<<box_aux.MaxEdge.X<<" y "<<box_aux.MaxEdge.Y<<" z "<<box_aux.MaxEdge.Z;
+
+//    box.MinEdge.set(box.MinEdge.X + param.position.X,
+//                    box.MinEdge.Y + param.position.Y,
+//                    box.MinEdge.Z + param.position.Z);
+//    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+//                    box.MaxEdge.Y + param.position.Y,
+//                    box.MaxEdge.Z + param.position.Z);
+
+    position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
+                 (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
+                 (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+    position2.set((int)((myMap[2].position.X-this->box.MinEdge.X)/delta),
+                 (int)((myMap[2].position.Y-this->box.MinEdge.Y)/delta),
+                 (int)((myMap[2].position.Z-this->box.MinEdge.Z)/delta));
+
+    for(int i = (int)((box_aux.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box_aux.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
+       for(int j = (int)((box_aux.MinEdge.Y - this->box.MinEdge.Y)/delta); j<=(int)((box_aux.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
+           for(int k = (box_aux.MinEdge.Z/delta - this->box.MinEdge.Z); k<=(int)((box_aux.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
             {
                 int novo_raio = calcula_raio(position, intVector(i,j,k));
-                novo_raio = novo_raio*novo_raio;
+                int novo_raio2 = calcula_raio(position2, intVector(i,j,k));
 
-                qDebug()<<"box min x"<<box.MinEdge.X<<" y "<<box.MinEdge.Y<<" z "<<box.MinEdge.Z;
-                qDebug()<<"box max x"<<box.MaxEdge.X<<" y "<<box.MaxEdge.Y<<" z "<<box.MaxEdge.Z;
-                qDebug()<<"raio "<<param.dimension.X;
-                if(novo_raio<=raio*raio)
+                if((novo_raio<raio*raio)&&(novo_raio2<raio*raio))
                     fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
                 qDebug()<<"contador..."<<++count;
             }//for k
