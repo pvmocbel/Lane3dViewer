@@ -48,7 +48,6 @@ public slots:
     void receiver_selection(const Vector3df& dim);
     void change_position();
     void return_position_changed();
-    void receiver_dimesion();
 
     void setPainelPonto();
     void setPainelHaste();

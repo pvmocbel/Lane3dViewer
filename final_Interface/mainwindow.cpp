@@ -94,13 +94,6 @@ void MainWindow::receiver_selection(const Vector3df &dim){
          }
     }
 }
-void MainWindow::receiver_dimesion(){
-    if(cena && cena->selectedSceneNode){
-        ui->cube_dim_X->setValue(cena->selectedSceneNode->getScale().X);
-        ui->cube_dim_Y->setValue(cena->selectedSceneNode->getScale().Y);
-        ui->cube_dim_Z->setValue(cena->selectedSceneNode->getScale().Z);
-    }
-}
 
 void MainWindow::set_haste(){
     if(cena && (cena->selectedSceneNode)){

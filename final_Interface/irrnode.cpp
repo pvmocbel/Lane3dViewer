@@ -33,6 +33,13 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
     if(smgr)
     {
         Vector3df angle;
+        Vector3df v1,v2,v3,v4;
+        v1.set(1,0,0);
+        v2.set(0,1,0);
+        v3.set(0,0,1);
+        v4.set(param->dimension.X-param->position.X,
+               param->dimension.Y-param->position.Y,
+               param->dimension.Z-param->position.Z);
 
         double height = sqrt((param->dimension.X-param->position.X)*(param->dimension.X-param->position.X)
                              +(param->dimension.Y-param->position.Y)*(param->dimension.Y-param->position.Y)
@@ -49,15 +56,14 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
             angle.Z = 0;
         }
         else if(param->position.Z != param->dimension.Z){
-            angle.X = 90;
             angle.Y = 0;
-            angle.Z = 0;
+            angle.Z = 0;                        
         }
 
-        float raio = 0.5;
+        float raio = 0.005;
 
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(raio, height, 15);
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(raio, height, 6);
         irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
 
         if (cilindro_node)
@@ -185,6 +191,7 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
                         irr::scene::IMeshSceneNode** gizmo_Y,
                         irr::scene::IMeshSceneNode** gizmo_Z,
                         const irr::core::aabbox3df& box)
+
 {
     const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
 

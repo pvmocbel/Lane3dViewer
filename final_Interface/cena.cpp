@@ -212,49 +212,55 @@ void Cena::geraMalha(){
             qDebug()<<"falha na leitura do arquivo";
             return;
         }
-        int count  = 0;
-//        for(it = myMap.begin(); it != myMap.end(); it++){
 
-        NodeType type = myMap[1].type;
-        irr::core::aabbox3df box = myMap[1].box;
-        intVector position;
-        int raio;
-
-        switch(type)
+        for(it = myMap.begin(); it != myMap.end(); it++)
         {
-            case (Cube):
-                qDebug()<<"cube gera malha";
-                geraMalhaCube(box, file);
-                break;
+            NodeType type = (*it).second.type;
+            irr::core::aabbox3df box = (*it).second.box;
 
-            case(Cone):
-                qDebug()<<"cone gera malha";
-                geraMalhaCone(box, myMap[1].dimension, file);
-                break;
+            switch(type)
+            {
+                case (Cube):
+                    qDebug()<<"cube gera malha";
+                    geraMalhaCube(box, (*it).second, file);
+                    break;
 
-            case(Cilindro):
-                qDebug()<<"cilindro gera malha";
-                geraMalhaCilindro(box, myMap[1].dimension, file);
-                break;
+                case(Cone):
+                    qDebug()<<"cone gera malha";
+                    geraMalhaCone(box, (*it).second, file);
+                    break;
 
-            case(Esphere):
-                qDebug()<<"esphere gera malha";
-                geraMalhaEsfera(box, myMap[1].dimension, file );
-                break;
+                case(Cilindro):
+                    qDebug()<<"cilindro gera malha";
+                    geraMalhaCilindro(box, (*it).second, file);
+                    break;
 
-            case(Haste):
-                qDebug()<<"haste gera malha";
-                break;
+                case(Esphere):
+                    qDebug()<<"esphere gera malha";
+                    geraMalhaEsfera(box, (*it).second, file );
+                    break;
 
-             default:
-                break;
-        }
+                case(Haste):
+                    qDebug()<<"haste gera malha";
+                    break;
+
+                 default:
+                    break;
+            }
+        }//fim for map
         fprintf(file,"%d \n",-1);
         fclose(file);
-
     }//smgr
 }
-void Cena::geraMalhaCube(const irr::core::aabbox3df &box, FILE *file){
+void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE *file){
+
+    box.MinEdge.set(box.MinEdge.X + param.position.X,
+                    box.MinEdge.Y + param.position.Y,
+                    box.MinEdge.Z + param.position.Z);
+    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+                    box.MaxEdge.Y + param.position.Y,
+                    box.MaxEdge.Z + param.position.Z);
+
     int x_inicial = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
     int x_final = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
 
@@ -266,36 +272,50 @@ void Cena::geraMalhaCube(const irr::core::aabbox3df &box, FILE *file){
 
     fprintf(file,"%d %d %d %d %d %d \n",x_inicial, x_final, z_inicial, z_final, y_inicial, y_final);
 }
-void Cena::geraMalhaCilindro(const irr::core::aabbox3df &box, const Vector3df &dimension, FILE *file){
+void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, FILE *file){
+    if(param.type == Cilindro){
     intVector position;
-    position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                 (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
-                 (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+    position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
+                 (int)((param.position.Y-this->box.MinEdge.Y)/delta),
+                 (int)((param.position.Z-this->box.MinEdge.Z)/delta));
+    box.MinEdge.set(box.MinEdge.X + param.position.X,
+                    box.MinEdge.Y + param.position.Y,
+                    box.MinEdge.Z + param.position.Z);
+    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+                    box.MaxEdge.Y + param.position.Y,
+                    box.MaxEdge.Z + param.position.Z);
 
-    int raio = (int)((dimension.X)/delta);
+    int raio = (int)((param.dimension.X)/delta);
 
     for(int j = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta); j<=(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++){
         for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++){
             for(int k = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta); k<=(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++){
                 position.set(position.X,j,position.Z);
+                qDebug()<<"box min x"<<box.MinEdge.X<<" y "<<box.MinEdge.Y<<" z "<<box.MinEdge.Z;
+                qDebug()<<"box max x"<<box.MaxEdge.X<<" y "<<box.MaxEdge.Y<<" z "<<box.MaxEdge.Z;
                 int novo_raio = calcula_raio2(position, intVector(i,j,k));
                 if(novo_raio<raio*raio)
                     fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
             }
         }
     }
-
+    }
 }
-void Cena::geraMalhaCone(const irr::core::aabbox3df &box, const Vector3df & dim, FILE* file){
-
+void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE* file){
     intVector position;
-    position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                 (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
-                 (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
-    double h = dim.Y/delta;
-    double tang = (dim.Y/dim.X);
+    position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
+                 (int)((param.position.Y-this->box.MinEdge.Y)/delta),
+                 (int)((param.position.Z-this->box.MinEdge.Z)/delta));
+    box.MinEdge.set(box.MinEdge.X + param.position.X,
+                    box.MinEdge.Y + param.position.Y,
+                    box.MinEdge.Z + param.position.Z);
+    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+                    box.MaxEdge.Y + param.position.Y,
+                    box.MaxEdge.Z + param.position.Z);
+    double h = param.dimension.Y/delta;
+    double tang = (param.dimension.Y/param.dimension.X);
     double p = delta/tang;
-    double raio = dim.X;
+    double raio = param.dimension.X;
     double raio_cone = 0;
 
     int raio_cilindro = 0;
@@ -319,35 +339,38 @@ void Cena::geraMalhaCone(const irr::core::aabbox3df &box, const Vector3df & dim,
         count++;
     }
 }
-void Cena::geraMalhaEsfera(const irr::core::aabbox3df& box, const Vector3df& dim, FILE *file ){
+void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
     int raio = 0;
     int count = 0;
     intVector position;
 
-    raio = (int)((myMap[1].dimension.X)/delta);
+    raio = (int)((param.dimension.X)/delta);
 
-    position.set((int)((myMap[1].position.X-this->box.MinEdge.X)/delta),
-                 (int)((myMap[1].position.Y-this->box.MinEdge.Y)/delta),
-                 (int)((myMap[1].position.Z-this->box.MinEdge.Z)/delta));
+    box.MinEdge.set(box.MinEdge.X + param.position.X,
+                    box.MinEdge.Y + param.position.Y,
+                    box.MinEdge.Z + param.position.Z);
+    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+                    box.MaxEdge.Y + param.position.Y,
+                    box.MaxEdge.Z + param.position.Z);
 
-    for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
-    {
-        for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
-        {
-            for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
+    position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
+                 (int)((param.position.Y-this->box.MinEdge.Y)/delta),
+                 (int)((param.position.Z-this->box.MinEdge.Z)/delta));
+
+    for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++)
+       for(int j = (int)((box.MinEdge.Y - this->box.MinEdge.Y)/delta); j<=(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++)
+           for(int k = (box.MinEdge.Z/delta - this->box.MinEdge.Z); k<=(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++)
             {
                 int novo_raio = calcula_raio(position, intVector(i,j,k));
                 novo_raio = novo_raio*novo_raio;
 
-                qDebug()<<"raio em celulas  "<<raio;
-                qDebug()<<"novoraio em celulas  "<<novo_raio;
-
+                qDebug()<<"box min x"<<box.MinEdge.X<<" y "<<box.MinEdge.Y<<" z "<<box.MinEdge.Z;
+                qDebug()<<"box max x"<<box.MaxEdge.X<<" y "<<box.MaxEdge.Y<<" z "<<box.MaxEdge.Z;
+                qDebug()<<"raio "<<param.dimension.X;
                 if(novo_raio<=raio*raio)
-                    fprintf(file,"%d %d %d %d %d %d \n", i, i, j, j, k, k);
+                    fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
                 qDebug()<<"contador..."<<++count;
             }//for k
-        }//for j
-    }//for i
 }
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);

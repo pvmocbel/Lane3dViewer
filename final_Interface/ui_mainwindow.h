@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue May 22 17:05:07 2012
+** Created: Tue May 22 19:29:19 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -552,7 +552,7 @@ public:
         haste_final_x->setDecimals(3);
         haste_final_x->setMinimum(-100);
         haste_final_x->setSingleStep(0.01);
-        haste_final_x->setValue(1);
+        haste_final_x->setValue(0.3);
 
         gridLayout_2->addWidget(haste_final_x, 6, 3, 1, 1);
 
@@ -1079,7 +1079,7 @@ public:
         QObject::connect(raio_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
 
         stackedWidget_Lateral->setCurrentIndex(1);
-        stackedWidget_pnLateralObj->setCurrentIndex(5);
+        stackedWidget_pnLateralObj->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
