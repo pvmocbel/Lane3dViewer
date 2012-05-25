@@ -242,7 +242,7 @@ void Cena::geraMalha(){
 
                 case(Esphere):
                     qDebug()<<"esphere gera malha";
-                    geraMalhaEsfera(box, (*it).second, file );
+                    geraMalhaEsfera((*it).first , box, (*it).second, file );
                     break;
 
                 case(Haste):
@@ -374,15 +374,18 @@ void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE*
         count++;
     }
 }
-void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
+void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
+    if(id == 2)
+    {
     int raio = 0;
     int count = 0;
+    int novo_raio = 0;
+    int novo_raio2 = 0;
+    float pertence = 0;
     intVector position;
     intVector position2;
-    intVector p;
     float x,y,z,d;
-    Vector3df p1,p2,pc,v1,v2, ponto;
-
+    Vector3df p1,p2,pc,v1,v2;
 
     irr::core::aabbox3df box_aux;
 
@@ -397,7 +400,6 @@ void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FI
     box_aux.MaxEdge.set(box_aux.MaxEdge.X ,
                         box_aux.MaxEdge.Y ,
                         box_aux.MaxEdge.Z );
-
     pc.set(0, 0, 0);
     p1.set(box_aux.MaxEdge.X, 0, 0);
     p2.set(0, box_aux.MinEdge.Y, 0);
@@ -407,19 +409,7 @@ void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FI
     x = v1.Y*v2.Z - v2.Y*v1.Z;
     y = v1.Z*v2.X - v2.Z*v1.X;
     z = v1.X*v2.Y - v2.X*v1.Y;
-//    z=0;
     d = -(x*p1.X + y*p1.Y + z*p1.Z);
-
-
-    qDebug()<<"box min x"<<box_aux.MinEdge.X<<" y "<<box_aux.MinEdge.Y<<" z "<<box_aux.MinEdge.Z;
-    qDebug()<<"box max x"<<box_aux.MaxEdge.X<<" y "<<box_aux.MaxEdge.Y<<" z "<<box_aux.MaxEdge.Z;
-
-//    box.MinEdge.set(box.MinEdge.X + param.position.X,
-//                    box.MinEdge.Y + param.position.Y,
-//                    box.MinEdge.Z + param.position.Z);
-//    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-//                    box.MaxEdge.Y + param.position.Y,
-//                    box.MaxEdge.Z + param.position.Z);
 
     position.set((int)((myMap[1].position.X)/delta),
                  (int)((myMap[1].position.Y)/delta),
@@ -428,24 +418,32 @@ void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FI
                  (int)((myMap[2].position.Y)/delta),
                  (int)((myMap[2].position.Z)/delta));
 
-//    p.set(box_aux. ,0,0);
-
     for(int i = (int)((box_aux.MinEdge.X)/delta); i<=(int)((box_aux.MaxEdge.X)/delta); i++)
        for(int j = (int)((box_aux.MinEdge.Y)/delta); j<=(int)((box_aux.MaxEdge.Y)/delta); j++)
-           for(int k = (box_aux.MinEdge.Z/delta); k<=(int)((box_aux.MaxEdge.Z)/delta); k++)
-            {
-                int novo_raio = calcula_raio(position, intVector(i,j,k));
-                int novo_raio2 = calcula_raio(position2, intVector(i,j,k));
-//                int ponto_plano = calcula_raio();
-//                ponto.set(0);
-                float pertence = i*x+j*y+k*z+d;
+           for(int k = (box_aux.MinEdge.Z/delta); k<=(int)((box_aux.MaxEdge.Z)/delta); k++){
+              p1.set(i, p1.Y, k);
+                  v1.set(p1.X-pc.X, p1.Y-pc.Y, p1.Z-pc.Z);
+                  v2.set(p2.X-pc.X, p2.Y-pc.Y, p2.Z-pc.Z);
+                  x = v1.Y*v2.Z - v2.Y*v1.Z;
+                  y = v1.Z*v2.X - v2.Z*v1.X;
+                  z = v1.X*v2.Y - v2.X*v1.Y;
+                  d = -(x*p1.X + y*p1.Y + z*p1.Z);
 
-                if((novo_raio<raio*raio)&&(novo_raio2<raio*raio)&&(pertence==0)){
+                  novo_raio = calcula_raio(position, intVector(i,j,k));
+                  novo_raio2 = calcula_raio(position2, intVector(i,j,k));
+                  pertence = i*x+j*y+k*z+d;
 
-                    fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
-                }
-                qDebug()<<"contador..."<<++count;
-            }//for k
+                if((novo_raio<raio*raio)&&(novo_raio2<raio*raio)&&(pertence==0))
+                    fprintf(file,"%d %d %d %d %d %d \n", (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
+                                                         (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
+                                                         (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
+                                                         (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
+                                                         (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)),
+                                                         (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)));
+
+           }
+
+    }
 }
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);

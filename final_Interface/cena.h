@@ -91,7 +91,7 @@ public:
 
     void geraMalhaCube(irr::core::aabbox3df box, const nodeParam& , FILE *file);
     void geraMalhaCone(irr::core::aabbox3df box, const nodeParam&, FILE *file);
-    void geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam&, FILE *file);
+    void geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam&, FILE *file);
 
     void insertHaste(int , IrrNode* node, nodeParam*);
