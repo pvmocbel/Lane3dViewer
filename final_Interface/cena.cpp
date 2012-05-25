@@ -377,11 +377,21 @@ void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE*
 void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
     if(id == 2)
     {
+    FILE * file2 = fopen("test","w+");
+    FILE * file3 = fopen("test2","w+");
     int raio = 0;
     int count = 0;
+
     int novo_raio = 0;
     int novo_raio2 = 0;
     float pertence = 0;
+
+    int first_x = 0;
+    int last_x = 0;
+    int first_y = 0;
+    int last_y = 0;
+    int first_z = 0;
+    int last_z = 0;
     intVector position;
     intVector position2;
     float x,y,z,d;
@@ -421,29 +431,62 @@ void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &p
     for(int i = (int)((box_aux.MinEdge.X)/delta); i<=(int)((box_aux.MaxEdge.X)/delta); i++)
        for(int j = (int)((box_aux.MinEdge.Y)/delta); j<=(int)((box_aux.MaxEdge.Y)/delta); j++)
            for(int k = (box_aux.MinEdge.Z/delta); k<=(int)((box_aux.MaxEdge.Z)/delta); k++){
-              p1.set(i, p1.Y, k);
-                  v1.set(p1.X-pc.X, p1.Y-pc.Y, p1.Z-pc.Z);
-                  v2.set(p2.X-pc.X, p2.Y-pc.Y, p2.Z-pc.Z);
-                  x = v1.Y*v2.Z - v2.Y*v1.Z;
-                  y = v1.Z*v2.X - v2.Z*v1.X;
-                  z = v1.X*v2.Y - v2.X*v1.Y;
-                  d = -(x*p1.X + y*p1.Y + z*p1.Z);
 
                   novo_raio = calcula_raio(position, intVector(i,j,k));
                   novo_raio2 = calcula_raio(position2, intVector(i,j,k));
                   pertence = i*x+j*y+k*z+d;
 
-                if((novo_raio<raio*raio)&&(novo_raio2<raio*raio)&&(pertence==0))
+                if((novo_raio<raio*raio)&&(novo_raio2<raio*raio)&&(pertence==0)){
+                    count++;
+                    if(count == 1){
+                        first_x = i;
+                        first_y = j;
+                        first_z = k;
+                    }
+                    if(last_x<i) last_x = i;
+                    if(last_y<j) last_y = j;
+                    if(last_z<k) last_z = k;
+
                     fprintf(file,"%d %d %d %d %d %d \n", (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
                                                          (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
                                                          (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
                                                          (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
                                                          (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)),
                                                          (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)));
+                    fprintf(file2, "%d %d %d \n", i,j,k);
+                }//fim if
 
-           }
+           }//fim for k
+
+    int x_aux = 0;
+    int z_aux = 0;
+    int y_aux = 0;
+
+    rewind(file2);
+
+    while(fscanf(file2, "%d", &x_aux)==1){
+        fscanf(file2, "%d", &y_aux);
+        fscanf(file2, "%d", &z_aux);
+        x_aux = x_aux;
+        z_aux = z_aux;
+        y_aux = y_aux - ((last_y - first_y)/2);
+        int test = x_aux;
+        x_aux = (int)(x_aux*cos((90*PI)/180) - y_aux*sin((90*PI)/180));
+        y_aux = (int)(test*sin((90*PI)/180) + y_aux*cos((90*PI)/180));
+        fprintf(file3," %d %d %d \n", x_aux, y_aux, z_aux);
+        fprintf(file,"%d %d %d %d %d %d \n", ( x_aux /*+ 7 */+ (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta)),
+                                             ( x_aux /*+ 7*/ + (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta)),
+                                             ( y_aux + ((last_y - first_y)/2) + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Z/delta)),
+                                             ( y_aux + ((last_y - first_y)/2) + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Z/delta)),
+                                             ( z_aux + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta)),
+                                             ( z_aux + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta)));
 
     }
+
+    fclose(file2);
+    fclose(file3);
+    }//if
+
 }
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
