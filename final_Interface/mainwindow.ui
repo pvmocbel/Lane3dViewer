@@ -113,8 +113,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>144</width>
-               <height>167</height>
+               <width>142</width>
+               <height>195</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -374,7 +374,7 @@
                <x>0</x>
                <y>0</y>
                <width>150</width>
-               <height>549</height>
+               <height>611</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
@@ -679,7 +679,7 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>6</number>
                 </property>
                 <widget class="QWidget" name="page_Ponto">
                  <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1463,6 +1463,72 @@
                   </item>
                  </layout>
                 </widget>
+                <widget class="QWidget" name="page">
+                 <layout class="QGridLayout" name="gridLayout_5">
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="groupBox_3">
+                    <property name="title">
+                     <string>GroupBox</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_6">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_15">
+                       <property name="text">
+                        <string>raio:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1" colspan="2">
+                      <widget class="QDoubleSpinBox" name="raio_eye_antenna">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="suffix">
+                        <string>m</string>
+                       </property>
+                       <property name="decimals">
+                        <number>5</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0" colspan="2">
+                      <widget class="QLabel" name="label_16">
+                       <property name="text">
+                        <string>altura:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="2">
+                      <widget class="QDoubleSpinBox" name="height_eye_antenna">
+                       <property name="suffix">
+                        <string>m</string>
+                       </property>
+                       <property name="decimals">
+                        <number>4</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="2">
+                      <spacer name="verticalSpacer_7">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>148</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
               </item>
              </layout>
@@ -1683,7 +1749,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>24</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
@@ -1728,6 +1794,7 @@
    <addaction name="actionEsfera"/>
    <addaction name="actionCilindro"/>
    <addaction name="actionCone"/>
+   <addaction name="actionEyeAntenna"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -1815,6 +1882,14 @@
    </property>
    <property name="toolTip">
     <string>Cria Cone</string>
+   </property>
+  </action>
+  <action name="actionEyeAntenna">
+   <property name="text">
+    <string>EyeAntenna</string>
+   </property>
+   <property name="toolTip">
+    <string>cria Eye Antenna</string>
    </property>
   </action>
  </widget>

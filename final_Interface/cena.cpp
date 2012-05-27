@@ -158,7 +158,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
         switch((selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
                  qDebug()<<"cubo";
-                 removeChangedSceneNode();
+                 removeChangedSceneNode(id);
                  insertCuboChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
@@ -167,7 +167,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 
              case(ID_FLAG_ESFERA):
                  qDebug()<<"esfera";
-                 removeChangedSceneNode();
+                 removeChangedSceneNode(id);
                  insertEsferaChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
@@ -176,7 +176,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 
              case(ID_FLAG_CILINDRO):
                  qDebug()<<"cilindro";
-                 removeChangedSceneNode();
+                 removeChangedSceneNode(id);
                  insertCilindroChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
@@ -185,7 +185,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 
              case(ID_FLAG_CONE):
                  qDebug()<<"cone";
-                 removeChangedSceneNode();
+                 removeChangedSceneNode(id);
                  insertConeChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
@@ -194,12 +194,20 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 
              case(ID_FLAG_HASTE):
                  qDebug()<<"haste";
-                 removeChangedSceneNode();
+                 removeChangedSceneNode(id);
                  insertHasteChanged(new IrrNode(), param, id);
                  sprintf(name, "%d", id);
                  selectedSceneNode  = smgr->getSceneNodeFromName(name);
                  selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
                  break;
+            case(ID_FLAG_EYE_ANTENNA):
+                qDebug()<<"eyeAntenna";
+                removeChangedSceneNode(id);
+                insertEyeAntennaChanged(new IrrNode(), param, id);
+                sprintf(name, "%d", id);
+                selectedSceneNode  = smgr->getSceneNodeFromName(name);
+                selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
+                break;
          }//fim switch
         drawIrrlichtScene();
     }//fim smgr
@@ -243,6 +251,11 @@ void Cena::geraMalha(){
                 case(Esphere):
                     qDebug()<<"esphere gera malha";
                     geraMalhaEsfera((*it).first , box, (*it).second, file );
+                    break;
+
+                case(EyeAntenna):
+                    qDebug()<<"eye antenna gera malha";
+                    geraMalhaEyeAntenna((*it).second, file);
                     break;
 
                 case(Haste):
@@ -304,7 +317,6 @@ void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE
     fprintf(file,"%d %d %d %d %d %d \n",x_inicial, x_final, z_inicial, z_final, y_inicial, y_final);
 }
 void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, FILE *file){
-    if(param.type == Cilindro){
     intVector position;
     position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
                  (int)((param.position.Y-this->box.MinEdge.Y)/delta),
@@ -329,8 +341,7 @@ void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, F
                     fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
             }
         }
-    }
-    }
+    }    
 }
 void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE* file){
 
@@ -375,88 +386,93 @@ void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE*
     }
 }
 void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
-    if(id == 2)
-    {
-        FILE * file2 = fopen("test","w+");
-        FILE * file3 = fopen("test2","w+");
-        int raio = 0;
-        int count = 0;
-        int novo_raio = 0;
-        int novo_raio2 = 0;
-        int raio_cilindro = 0;
-        intVector position;
-        intVector position2;
-        irr::core::plane3df myplane;
-        irr::core::plane3df myplane2;
-        Vector3df p1,p2,pc,p3;
-        irr::core::aabbox3df box_aux;
-
-        raio = (int)((myMap[1].dimension.X)/delta);
-
-        box_aux.MaxEdge = myMap[1].box.MaxEdge;
-        box_aux.MinEdge = myMap[2].box.MinEdge;
-
-        box_aux.MinEdge.set(box_aux.MinEdge.X ,
-                            box_aux.MinEdge.Y ,
-                            box_aux.MinEdge.X );
-        box_aux.MaxEdge.set(box_aux.MaxEdge.X ,
-                            box_aux.MaxEdge.Y ,
-                            box_aux.MaxEdge.Z );
-
-        pc.set(0, 0, 0);
-        p1.set(0.00733, 0, 0);
-        p2.set(0, box_aux.MinEdge.Y, 0);
-        p3.set(0, 0, 0.00733);
-        myplane.setPlane(pc, p1, p2);
-        myplane2.setPlane(pc, p3, p1);
-
-        position.set((int)((myMap[1].position.X)/delta),
-                     (int)((myMap[1].position.Y)/delta),
-                     (int)((myMap[1].position.Z)/delta));
-        position2.set((int)((myMap[2].position.X)/delta),
-                     (int)((myMap[2].position.Y)/delta),
-                     (int)((myMap[2].position.Z)/delta));
-        raio_cilindro = (int)(0.00733/delta);
-
-        for(int j = (int)((box_aux.MinEdge.Y)/delta); j<=(int)((box_aux.MaxEdge.Y)/delta); j++)
-            for(int i = (int)((box_aux.MinEdge.X)/delta); i<=(int)((box_aux.MaxEdge.X)/delta); i++)
-               for(int k = (int)((box_aux.MinEdge.Z)/delta); k<=(int)((box_aux.MaxEdge.Z)/delta); k++){
-                   novo_raio = calcula_raio(position, intVector(i,j,k));
-                   novo_raio2 = calcula_raio(position2, intVector(i,j,k));
-                   irr::core::EIntersectionRelation3D relation1 = myplane.classifyPointRelation(Vector3df(i,j,k));
-                   if((novo_raio<raio*raio)&&
-                      (novo_raio2<raio*raio)&&
-                      (relation1 == irr::core::ISREL3D_PLANAR)){
-
-                      fprintf(file,"%d %d %d %d %d %d \n", (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
-                                                           (i+(int)(param.position.X/delta)-(int)(this->box.MinEdge.X/delta)),
-                                                           (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
-                                                           (k+(int)(param.position.Z/delta)-(int)(this->box.MinEdge.Z/delta)),
-                                                           (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)),
-                                                           (j+(int)(param.position.Y/delta)-(int)(this->box.MinEdge.Y/delta)));
-                      fprintf(file2, "%d %d %d \n", i,j,k);
-                    }//fim if
-
-               }//fim for k
-        int x_aux, y_aux, z_aux;
-        rewind(file2);
-        while(fscanf(file2, "%d", &x_aux)==1){
-            fscanf(file2, "%d", &y_aux);
-            fscanf(file2, "%d", &z_aux);
-
-        }//fim while
-
-    fclose(file2);
-    fclose(file3);
-    }//if
 
 }
+void Cena::geraMalhaEyeAntenna(const nodeParam &, FILE *file){
+    Vector3df position(0,0,0);
+    float raio_max = 0.00733,
+          raio = 0;
+
+    for(float height = -0.014; height<0; height=height+delta)
+    {
+        raio = raio + delta*0.6;
+        if(raio<raio_max){
+            for(float x = -raio_max; x <= raio_max; x=x+delta)
+                for(float z = -raio_max; z<=raio_max; z=z+delta){
+                    position.set(0, height, 0);
+                    float novo_raio = calcula_raio(position, Vector3df(x, height, z));
+                    if(novo_raio<raio*raio)
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Z/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta));
+                }//fim for z
+        }//fim if comparation raio
+        else {
+            raio = raio_max;
+            for(float x = -raio_max; x <= raio_max; x=x+delta)
+                for(float z = -raio_max; z<=raio_max; z=z+delta){
+                    position.set(0, height, 0);
+                    float novo_raio = calcula_raio(position, Vector3df(x, height, z));
+                    if(novo_raio<raio*raio)
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Z/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta));
+                }//fim for z
+        }//fim else
+    }// fim height 1
+
+    raio = 0;
+    for(float height = 0.014 ; height>0; height=height-delta)
+    {
+        raio = raio + delta*0.6;
+        if(raio<raio_max){
+            for(float x = -raio_max; x <= raio_max; x=x+delta)
+                for(float z = -raio_max; z<=raio_max; z=z+delta){
+                    position.set(0, height, 0);
+                    float novo_raio = calcula_raio(position, Vector3df(x, height, z));
+                    if(novo_raio<raio*raio)
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Z/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta));
+                }// fim for z
+        }// end if comparacao
+        else{
+            raio = raio_max;
+            for(float x = -raio_max; x <= raio_max; x=x+delta)
+                for(float z = -raio_max; z<=raio_max; z=z+delta){
+                    position.set(0, height, 0);
+                    float novo_raio = calcula_raio(position, Vector3df(x, height, z));
+                    if(novo_raio<raio*raio)
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(x/delta) - (int)(this->box.MinEdge.X/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(z/delta) - (int)(this->box.MinEdge.Z/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta),
+                                                             (int)(height/delta) - (int)(this->box.MinEdge.Y/delta));
+                }//end for z
+        }//end else
+    }//end height 2
+}
+
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Y-p1.Y)*(p2.Y-p1.Y) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
     return raio;
 }
 int Cena::calcula_raio2(const intVector &p1, const intVector &p2){
     int raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
+    return raio;
+}
+float Cena::calcula_raio(const Vector3df& p1, const Vector3df& p2){
+    float raio = (p2.X-p1.X)*(p2.X-p1.X) + (p2.Z-p1.Z)*(p2.Z-p1.Z);
     return raio;
 }
 
@@ -1037,6 +1053,42 @@ void Cena::insertConeChanged(IrrNode *node, nodeParam *param, int id){
     }
 }
 
+void Cena::insertEyeAntenna(int id, IrrNode *node, nodeParam *param){
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+
+        node->criaEyeAntenna(smgr, param, nodeName);
+
+        irr::scene::ISceneNode *aux = node->getNode();
+
+        nodeParam *eye_antenna = new nodeParam;
+        eye_antenna->dimension.set(param->dimension);
+        eye_antenna->position.set(param->position);
+        eye_antenna->parametros.set(param->parametros);
+        eye_antenna->box = aux->getBoundingBox();
+        eye_antenna->type = EyeAntenna;
+
+        myMap[id] = *eye_antenna;
+        nodeId[nodeName] = id;
+
+        drawIrrlichtScene();
+        delete eye_antenna;
+        delete node;
+    }
+}
+void Cena::insertEyeAntennaChanged(IrrNode *node, nodeParam *param, int id){
+    if(smgr)
+    {
+        irr::c8 nodeName[50];
+        sprintf(nodeName, "%d", id);
+        node->criaEyeAntenna(smgr, param, nodeName);
+        drawIrrlichtScene();
+        delete node;
+    }
+}
+
 void Cena::duplicateSceneNode()
 {
     if(smgr){
@@ -1072,16 +1124,19 @@ void Cena::removeSceneNode()
 
     }
 }
-void Cena::removeChangedSceneNode(){
+void Cena::removeChangedSceneNode(int id){
     if(smgr){
         if(smgr && selectedSceneNode)
         {
+            irr::c8 nodeName[50];
+            sprintf(nodeName, "%d", id);
+            irr::scene::ISceneNode* node = smgr->getSceneNodeFromName(nodeName);
+            node->remove();
             selectedSceneNode->remove();
             selectedSceneNode = 0;
             gizmo_X->setVisible(false);
             gizmo_Y->setVisible(false);
             gizmo_Z->setVisible(false);
-
         }
     }
 }

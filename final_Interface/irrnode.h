@@ -43,6 +43,10 @@ public:
                   nodeParam *param,
                   const irr::c8* nodeName);
 
+    void criaEyeAntenna(IrrSmgr* const smgr,
+                        nodeParam *param,
+                        const irr::c8* nodeName);
+
     void criaGizmo( IrrSmgr* const,
                     irr::scene::IMeshSceneNode **gizmo_X,
                     irr::scene::IMeshSceneNode **gizmo_Y,

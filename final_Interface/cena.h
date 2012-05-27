@@ -93,6 +93,7 @@ public:
     void geraMalhaCone(irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam&, FILE *file);
+    void geraMalhaEyeAntenna(const nodeParam &, FILE *file);
 
     void insertHaste(int , IrrNode* node, nodeParam*);
     void insertHasteChanged(IrrNode* node, nodeParam*, int);
@@ -109,6 +110,9 @@ public:
     void insertCilindro(int, IrrNode* node, nodeParam*);
     void insertCilindroChanged(IrrNode* node, nodeParam*, int);
 
+    void insertEyeAntenna(int, IrrNode*node, nodeParam*);
+    void insertEyeAntennaChanged(IrrNode*node, nodeParam*, int);
+
     int getIdFromNode(std::string nodeName){
         if(nodeId.find(nodeName)==nodeId.end()){
             return 0;
@@ -118,11 +122,12 @@ public:
 
     int calcula_raio(const intVector& p1, const intVector& p2);
     int calcula_raio2(const intVector& p1, const intVector& p2);
+    float calcula_raio(const Vector3df& p1, const Vector3df& p2);
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();
-    void removeChangedSceneNode();
+    void removeChangedSceneNode(int id);
     inline void duplicateSceneNode();
     void geraMalha();
 

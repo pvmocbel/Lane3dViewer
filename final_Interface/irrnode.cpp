@@ -182,9 +182,48 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
 
           selectedSceneNode = (irr::scene::ISceneNode*)cone_node;
         }
-
     }
+}
 
+void IrrNode::criaEyeAntenna(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *nodeName){
+    if(smgr)
+    {
+        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y*0.5, 8);
+        irr::scene::IMeshSceneNode *cone_node1 = smgr->addMeshSceneNode(mesh_cone_node);
+        irr::scene::IMeshSceneNode *cone_node2 = smgr->addMeshSceneNode(mesh_cone_node);
+
+        if (cone_node1)
+        {
+          cone_node1->setPosition(param->position);
+          cone_node1->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cone_node1->setID(ID_FLAG_EYE_ANTENNA|S);
+
+          seletor = smgr->createOctTreeTriangleSelector(cone_node1->getMesh(), cone_node1, 32);
+          cone_node1->setTriangleSelector(seletor);
+          seletor->drop();
+
+          cone_node1->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)cone_node1;
+        }
+        if (cone_node2)
+        {
+          cone_node2->setPosition(param->position);
+          cone_node2->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          cone_node2->setID(ID_FLAG_EYE_ANTENNA|S);
+          cone_node2->setRotation(Vector3df(180,0,0));
+          cone_node2->setParent(cone_node1);
+
+          seletor = smgr->createOctTreeTriangleSelector(cone_node2->getMesh(), cone_node2, 32);
+          cone_node2->setTriangleSelector(seletor);
+          seletor->drop();
+
+          cone_node2->setName(nodeName);
+
+          selectedSceneNode = (irr::scene::ISceneNode*)cone_node2;
+        }
+    }
 }
 
 void IrrNode::criaGizmo(IrrSmgr* const smgr,

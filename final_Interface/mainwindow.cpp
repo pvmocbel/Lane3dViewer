@@ -23,6 +23,7 @@ void MainWindow::init()
     connect(ui->actionCone, SIGNAL(triggered()), this, SLOT(cone_triggered()));
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
+    connect(ui->actionEyeAntenna, SIGNAL(triggered()), this , SLOT(eyeAntenna_triggered()));
 }
 void MainWindow::gerarMalha(){
     if(cena){
@@ -175,6 +176,20 @@ void MainWindow::set_cone(){
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->dimension.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
         param->type = Cone;
+        param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+
+        emit send_changed_dimension(param);
+        delete param;
+    }
+}
+void MainWindow::set_eyeAntenna(){
+    if(cena && cena->selectedSceneNode){
+        nodeParam *param = new nodeParam();
+
+        param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+        param->dimension.set(ui->raio_eye_antenna->value(), ui->height_eye_antenna->value(), 0);
+        param->type = EyeAntenna;
         param->box = cena->selectedSceneNode->getBoundingBox();
         param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
 
@@ -366,6 +381,23 @@ void MainWindow::cone_triggered()
     cena->insertCone(id, new IrrNode(), param);
     delete param;
 }
+void MainWindow::eyeAntenna_triggered(){
+    setPainelEyeAntenna();
+    int id = cena->get_serialize_id();
+    nodeParam *param = new nodeParam();
+
+    ui->position_X->setEnabled(true);
+    ui->position_Y->setEnabled(true);
+    ui->position_Z->setEnabled(true);
+
+    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
+    param->dimension.set(ui->raio_eye_antenna->value(), ui->height_eye_antenna->value(), 0);
+    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
+    param->type = EyeAntenna;
+
+    cena->insertEyeAntenna(id, new IrrNode(), param);
+    delete param;
+}
 
 void MainWindow::setPainelPonto()
 {
@@ -427,6 +459,14 @@ void MainWindow::setPainelCone(){
     ui->lineEdit_Name->setText("Cone");
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(5);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
+}
+void MainWindow::setPainelEyeAntenna(){
+    ui->label_PainelTitulo_1->setText("Eye Antenna");
+    ui->lineEdit_Name->setText("Eye Antenna");
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(6);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
