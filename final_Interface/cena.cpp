@@ -339,8 +339,6 @@ void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, F
         for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++){
             for(int k = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta); k<=(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++){
                 position.set(position.X,j,position.Z);
-                qDebug()<<"box min x"<<box.MinEdge.X<<" y "<<box.MinEdge.Y<<" z "<<box.MinEdge.Z;
-                qDebug()<<"box max x"<<box.MaxEdge.X<<" y "<<box.MaxEdge.Y<<" z "<<box.MaxEdge.Z;
                 int novo_raio = calcula_raio2(position, intVector(i,j,k));
                 if(novo_raio<raio*raio)
                     fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
@@ -373,7 +371,6 @@ void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE*
 
     for(double j = 0; j<dim.Y; j=j+delta){
         raio_cone = raio - count*p;
-        qDebug()<<"count "<<count;
         if(raio_cone>=delta)
         {
             raio_cilindro = (int)(raio_cone/delta);
@@ -394,51 +391,66 @@ void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &p
 }
 void Cena::geraMalhaEyeAntenna(const nodeParam &param, FILE *file){
     intVector position(0,0,0);
-    float raio_max = 0.00733,
-          raio = raio_max;
+    double h = 3.5*delta,
+           perda = 0,
+           raio_max = 0.00733,
+           raio = raio_max,
+           raio_esfera = 0.014;
     int count = 0;
 
-    for(int height = 0 ; height >= (-0.0119277/delta); height = height--)
+    for(int height = 0 ; height >= (int)(-0.0119277/delta); height = height--)
     {
-        if(count != 0)  raio = raio - delta*0.48;
-        count++;
+        double aux = raio_esfera;
+        raio_esfera = sqrt(( (raio_esfera*raio_esfera) - (h*h) ));
+        perda = aux - raio_esfera;
+        raio = raio - perda;
+
         if(raio >= delta){
             for(int x = (-raio_max/delta); x <= (raio_max/delta); x++)
                 for(int z = (-raio_max/delta); z<=(raio_max/delta); z++){
                     position.set(0, height, 0);
                     int novo_raio = calcula_raio(position, intVector(x, height, z));
-                    if(novo_raio <= (int)((raio/delta)*(raio/delta)))
-                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta),
-                                                             x + (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta),
-                                                             z + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Y/delta),
-                                                             z + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Z/delta),
-                                                             height + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta),
-                                                             height + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta));
+                    if(novo_raio < (int)((raio/delta)*(raio/delta)))
+                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) + 32,
+                                                             x + (int)(param.position.X/delta) + 32,
+                                                             z + (int)(param.position.Z/delta) + 32,
+                                                             z + (int)(param.position.Z/delta) + 32,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 37,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 37);
+
                 }//fim for z
         }//fim if comparation raio
     }// fim height 1
 
-    count = 0;
     raio = raio_max;
-    for(int height = 0 ; height <= (0.0119277/delta); height++)
+    perda = 0;
+    raio_esfera = 0.014;
+
+    for(int height = 0 ; height <= (int)(0.0119277/delta); height++)
     {
-        if(count !=0 )  raio = raio - delta*0.48;
-        count++;
+        double aux = raio_esfera;
+        raio_esfera = sqrt(( (raio_esfera*raio_esfera) - (h*h) ));
+        perda = aux - raio_esfera;
+        raio = raio - perda;
+
         if(raio >= delta){
             for(int x = (-raio_max/delta); x <= (raio_max/delta); x++)
                 for(int z = (-raio_max/delta); z<=(raio_max/delta); z++){
                     position.set(0, height, 0);
                     int novo_raio = calcula_raio(position, intVector(x, height, z));
-                    if(novo_raio <= (int)((raio/delta)*(raio/delta)))
-                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta),
-                                                             x + (int)(param.position.X/delta) - (int)(this->box.MinEdge.X/delta),
-                                                             z + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Y/delta),
-                                                             z + (int)(param.position.Z/delta) - (int)(this->box.MinEdge.Z/delta),
-                                                             height + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta),
-                                                             height + (int)(param.position.Y/delta) - (int)(this->box.MinEdge.Y/delta));
-                }// fim for z
-        }// end if comparacao
+                    if(novo_raio < (int)((raio/delta)*(raio/delta)))
+                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) + 32,
+                                                             x + (int)(param.position.X/delta) + 32,
+                                                             z + (int)(param.position.Z/delta) + 32,
+                                                             z + (int)(param.position.Z/delta) + 32,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 37,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 37);
+                }//fim for z
+        }//fim if comparation raio
     }//end height 2
+    qDebug()<<" celulas xy "<< (int)(0.01466/delta);
+    qDebug()<<" celulas z "<< (int)(0.0119277/delta);
+    qDebug()<<" celulas box min x  "<< -(int)(this->box.MinEdge.X/delta);
 }
 
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
