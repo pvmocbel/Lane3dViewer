@@ -44,7 +44,7 @@ void MainWindow::change_position(){
         emit send_to_cena_changed_position(pos);
     }
 }
-void MainWindow::receiver_selection(const Vector3df &dim){
+void MainWindow::receiver_selection(nodeDimensions* param){
     if(cena && cena->selectedSceneNode){
 
         ui->position_X->setValue(cena->selectedSceneNode->getPosition().X);
@@ -55,57 +55,85 @@ void MainWindow::receiver_selection(const Vector3df &dim){
              case(ID_FLAG_CUBO):
                  setPainelCubo();
                  cena->setFocus();
+
                  ui->position_X->setEnabled(true);
                  ui->position_Y->setEnabled(true);
                  ui->position_Z->setEnabled(true);
-                 ui->cube_dim_X->setValue(dim.X);
-                 ui->cube_dim_Y->setValue(dim.Y);
-                 ui->cube_dim_Z->setValue(dim.Z);
+
+                 ui->cube_dim_X->setValue(param->dimension.X);
+                 ui->cube_dim_Y->setValue(param->dimension.Y);
+                 ui->cube_dim_Z->setValue(param->dimension.Z);
                  break;
 
              case(ID_FLAG_ESFERA):
                  setPainelEsfera();
                  cena->setFocus();
+
                  ui->position_X->setEnabled(true);
                  ui->position_Y->setEnabled(true);
                  ui->position_Z->setEnabled(true);
-                 ui->raio_esfera->setValue(dim.X);
+
+                 ui->raio_esfera->setValue(param->dimension.X);
                  break;
 
              case(ID_FLAG_CILINDRO):
                  setPainelCilindro();
                  cena->setFocus();
+
                  ui->position_X->setEnabled(true);
                  ui->position_Y->setEnabled(true);
                  ui->position_Z->setEnabled(true);
-                 ui->raio_cilindro->setValue(dim.X);
-                 ui->comprimento_cilindro->setValue(dim.Y);
+
+                 ui->raio_cilindro->setValue(param->dimension.X);
+                 ui->comprimento_cilindro->setValue(param->dimension.Y);
                  break;
 
              case(ID_FLAG_CONE):
                  setPainelCone();
                  cena->setFocus();
+
                  ui->position_X->setEnabled(true);
                  ui->position_Y->setEnabled(true);
                  ui->position_Z->setEnabled(true);
-                 ui->raio_cone->setValue(dim.X);
-                 ui->comprimento_cone->setValue(dim.Y);
+
+                 ui->raio_cone->setValue(param->dimension.X);
+                 ui->comprimento_cone->setValue(param->dimension.Y);
                  break;
 
              case(ID_FLAG_HASTE):
                 setPainelHaste();
                 cena->setFocus();
+
                 ui->position_X->setEnabled(false);
                 ui->position_Y->setEnabled(false);
                 ui->position_Z->setEnabled(false);
-                ui->haste_final_x->setValue(dim.X);
-                ui->haste_final_y->setValue(dim.Y);
-                ui->haste_final_z->setValue(dim.Z);
+
+                ui->haste_inicial_x->setValue(param->dimension.X);
+                ui->haste_inicial_y->setValue(param->dimension.Y);
+                ui->haste_inicial_z->setValue(param->dimension.Z);
+
+                ui->haste_final_x->setValue(param->dimension2.X);
+                ui->haste_final_y->setValue(param->dimension2.X);
+                ui->haste_final_z->setValue(param->dimension2.X);
+                ui->raio_haste->setValue(param->raio_haste);
                 break;
 
              case(ID_FLAG_PONTO):
                 setPainelPonto();
                 cena->setFocus();
+                break;
+
+            case(ID_FLAG_EYE_ANTENNA):
+                setPainelEyeAntenna();
+                cena->setFocus();
+
+                ui->position_X->setEnabled(true);
+                ui->position_Y->setEnabled(true);
+                ui->position_Z->setEnabled(true);
+
+                ui->raio_cone_eye_antenna->setValue(param->dimension.X);
+                ui->height_cone_eye_antenna->setValue(param->dimension.Y);
+
                 break;
          }
     }
@@ -114,13 +142,11 @@ void MainWindow::receiver_selection(const Vector3df &dim){
 void MainWindow::set_haste(){
     if(cena && (cena->selectedSceneNode)){
         nodeParam *param = new nodeParam();
-
-        param->position.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
-        param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+        param->dimension.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
+        param->dimension2.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+        param->raio_haste = ui->raio_haste->value();
         param->type = Haste;
         param->box = cena->selectedSceneNode->getBoundingBox();
-        qDebug()<<"box min x"<<param->box.MinEdge.X<<" y "<<param->box.MinEdge.Y<<" z "<<param->box.MinEdge.Z;
-        qDebug()<<"box max x"<<param->box.MaxEdge.X<<" y "<<param->box.MaxEdge.Y<<" z "<<param->box.MaxEdge.Z;
         param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
 
         emit send_changed_dimension(param);
@@ -130,7 +156,6 @@ void MainWindow::set_haste(){
 void MainWindow::set_cube(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
-
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->dimension.set(ui->cube_dim_X->value(), ui->cube_dim_Y->value(), ui->cube_dim_Z->value());
         param->type = Cube;
@@ -144,7 +169,6 @@ void MainWindow::set_cube(){
 void MainWindow::set_esfera(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
-
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->dimension.set(ui->raio_esfera->value(), 0, 0);
         param->type = Esphere;
@@ -158,7 +182,6 @@ void MainWindow::set_esfera(){
 void MainWindow::set_cilindro(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
-
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->dimension.set(ui->raio_cilindro->value(), ui->comprimento_cilindro->value(), 0);
         param->type = Cilindro;
@@ -172,7 +195,6 @@ void MainWindow::set_cilindro(){
 void MainWindow::set_cone(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
-
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->dimension.set(ui->raio_cone->value(), ui->comprimento_cone->value(), 0);
         param->type = Cone;
@@ -186,9 +208,8 @@ void MainWindow::set_cone(){
 void MainWindow::set_eyeAntenna(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
-
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
-        param->dimension.set(ui->raio_eye_antenna->value(), ui->height_eye_antenna->value(), 0);
+        param->dimension.set(ui->raio_cone_eye_antenna->value(), ui->height_cone_eye_antenna->value(), 0);
         param->type = EyeAntenna;
         param->box = cena->selectedSceneNode->getBoundingBox();
         param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
@@ -210,7 +231,7 @@ void MainWindow::new_triggered()
 
     connect(cena, SIGNAL(send_position_change()),this, SLOT(return_position_changed()));
     connect(this, SIGNAL(send_to_cena_changed_position(Pos3df)), cena, SLOT(receiver_changed_position_mainwindow(Pos3df)));
-    connect(cena, SIGNAL(send_selection_call(Vector3df)), this, SLOT(receiver_selection(Vector3df)));
+    connect(cena, SIGNAL(send_selection_call(nodeDimensions*)), this, SLOT(receiver_selection(nodeDimensions*)));
     connect(this, SIGNAL(send_changed_dimension(nodeParam*)), cena, SLOT(receiver_changed_dimension(nodeParam*)));
 
     cena->resize(2048, 2048);
@@ -265,13 +286,21 @@ void MainWindow::new_triggered()
     ui->comprimento_cilindro->setMinimum(d->delta);
     ui->comprimento_cilindro->setSingleStep(d->delta);
 
-    ui->raio_cone->setMinimum(d->delta*2);
+    ui->raio_cone->setMinimum(d->delta*4);
     ui->raio_cone->setSingleStep(d->delta);
     ui->comprimento_cone->setMinimum(d->delta);
     ui->comprimento_cone->setSingleStep(d->delta);
 
-    ui->raio_esfera->setMinimum(d->delta*2);
+    ui->raio_esfera->setMinimum(d->delta*4);
     ui->raio_esfera->setSingleStep(d->delta);
+
+    ui->raio_cone_eye_antenna->setMinimum(d->delta*4);
+    ui->raio_cone_eye_antenna->setSingleStep(d->delta);
+    ui->height_cone_eye_antenna->setMinimum(d->delta*4);
+    ui->height_cone_eye_antenna->setSingleStep(d->delta);
+
+    ui->stackedWidget_Lateral->setCurrentIndex(0);
+
     delete d;
 }
 void MainWindow::open_triggered()
@@ -391,7 +420,7 @@ void MainWindow::eyeAntenna_triggered(){
     ui->position_Z->setEnabled(true);
 
     param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
-    param->dimension.set(ui->raio_eye_antenna->value(), ui->height_eye_antenna->value(), 0);
+    param->dimension.set(ui->raio_cone_eye_antenna->value(), ui->height_cone_eye_antenna->value(), 0);
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
     param->type = EyeAntenna;
 
@@ -468,7 +497,7 @@ void MainWindow::setPainelEyeAntenna(){
     ui->stackedWidget_Lateral->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setCurrentIndex(6);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
-    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(200);
 }
 
 void MainWindow::keyPressEvent( QKeyEvent * event){

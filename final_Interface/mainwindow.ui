@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>600</height>
+    <width>891</width>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout_6">
     <item row="0" column="0">
      <layout class="QGridLayout" name="grid_Interface">
       <item row="0" column="1">
@@ -113,8 +113,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>142</width>
-               <height>195</height>
+               <width>145</width>
+               <height>385</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -372,7 +372,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-103</y>
                <width>150</width>
                <height>611</height>
               </rect>
@@ -524,6 +524,19 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="permissividade">
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.010000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_49">
                    <property name="minimumSize">
@@ -611,19 +624,6 @@
                      <string>Fonte</string>
                     </property>
                    </item>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="permissividade">
-                   <property name="maximumSize">
-                    <size>
-                     <width>50</width>
-                     <height>27</height>
-                    </size>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.010000000000000</double>
-                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -1463,28 +1463,34 @@
                   </item>
                  </layout>
                 </widget>
-                <widget class="QWidget" name="page">
+                <widget class="QWidget" name="page_EyeAntenna">
                  <layout class="QGridLayout" name="gridLayout_5">
                   <item row="0" column="0">
                    <widget class="QGroupBox" name="groupBox_3">
                     <property name="title">
-                     <string>GroupBox</string>
+                     <string>Dimension</string>
                     </property>
-                    <layout class="QGridLayout" name="gridLayout_6">
+                    <layout class="QGridLayout" name="gridLayout">
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_15">
                        <property name="text">
-                        <string>raio:</string>
+                        <string>raio1:</string>
                        </property>
                       </widget>
                      </item>
                      <item row="0" column="1" colspan="2">
-                      <widget class="QDoubleSpinBox" name="raio_eye_antenna">
+                      <widget class="QDoubleSpinBox" name="raio_cone_eye_antenna">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                          <horstretch>0</horstretch>
                          <verstretch>0</verstretch>
                         </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>91</width>
+                         <height>27</height>
+                        </size>
                        </property>
                        <property name="suffix">
                         <string>m</string>
@@ -1492,22 +1498,37 @@
                        <property name="decimals">
                         <number>5</number>
                        </property>
+                       <property name="value">
+                        <double>0.007330000000000</double>
+                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0" colspan="2">
                       <widget class="QLabel" name="label_16">
                        <property name="text">
-                        <string>altura:</string>
+                        <string>altura1:</string>
                        </property>
                       </widget>
                      </item>
                      <item row="1" column="2">
-                      <widget class="QDoubleSpinBox" name="height_eye_antenna">
+                      <widget class="QDoubleSpinBox" name="height_cone_eye_antenna">
+                       <property name="minimumSize">
+                        <size>
+                         <width>81</width>
+                         <height>27</height>
+                        </size>
+                       </property>
                        <property name="suffix">
                         <string>m</string>
                        </property>
                        <property name="decimals">
-                        <number>4</number>
+                        <number>3</number>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.001000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>0.024000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -1518,7 +1539,7 @@
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
-                         <width>20</width>
+                         <width>48</width>
                          <height>148</height>
                         </size>
                        </property>
@@ -1748,7 +1769,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
+     <width>891</width>
      <height>25</height>
     </rect>
    </property>
@@ -1903,8 +1924,8 @@
    <slot>gerarMalha()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>504</x>
-     <y>552</y>
+     <x>644</x>
+     <y>525</y>
     </hint>
     <hint type="destinationlabel">
      <x>490</x>
@@ -1920,7 +1941,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>301</x>
-     <y>544</y>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
@@ -1935,8 +1956,8 @@
    <slot>change_position()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>399</x>
-     <y>538</y>
+     <x>533</x>
+     <y>525</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -1952,7 +1973,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>167</x>
-     <y>541</y>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>188</x>
@@ -1967,8 +1988,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>819</x>
-     <y>231</y>
+     <x>797</x>
+     <y>131</y>
     </hint>
     <hint type="destinationlabel">
      <x>638</x>
@@ -1983,8 +2004,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>803</x>
-     <y>269</y>
+     <x>797</x>
+     <y>147</y>
     </hint>
     <hint type="destinationlabel">
      <x>638</x>
@@ -1999,8 +2020,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>814</x>
-     <y>296</y>
+     <x>797</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
      <x>637</x>
@@ -2015,8 +2036,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>815</x>
-     <y>331</y>
+     <x>797</x>
+     <y>162</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2031,8 +2052,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>826</x>
-     <y>369</y>
+     <x>797</x>
+     <y>178</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2047,8 +2068,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>822</x>
-     <y>387</y>
+     <x>797</x>
+     <y>186</y>
     </hint>
     <hint type="destinationlabel">
      <x>635</x>
@@ -2063,8 +2084,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>820</x>
-     <y>419</y>
+     <x>797</x>
+     <y>193</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2079,8 +2100,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>815</x>
-     <y>224</y>
+     <x>837</x>
+     <y>142</y>
     </hint>
     <hint type="destinationlabel">
      <x>602</x>
@@ -2095,8 +2116,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>844</x>
-     <y>264</y>
+     <x>837</x>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>598</x>
@@ -2111,8 +2132,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>844</x>
-     <y>290</y>
+     <x>837</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>597</x>
@@ -2127,8 +2148,8 @@
    <slot>set_esfera()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>815</x>
-     <y>224</y>
+     <x>837</x>
+     <y>127</y>
     </hint>
     <hint type="destinationlabel">
      <x>625</x>
@@ -2143,8 +2164,8 @@
    <slot>set_cilindro()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>785</x>
-     <y>224</y>
+     <x>837</x>
+     <y>127</y>
     </hint>
     <hint type="destinationlabel">
      <x>621</x>
@@ -2159,8 +2180,8 @@
    <slot>set_cilindro()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>844</x>
-     <y>264</y>
+     <x>837</x>
+     <y>129</y>
     </hint>
     <hint type="destinationlabel">
      <x>608</x>
@@ -2175,8 +2196,8 @@
    <slot>set_cone()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>799</x>
-     <y>238</y>
+     <x>838</x>
+     <y>165</y>
     </hint>
     <hint type="destinationlabel">
      <x>671</x>
@@ -2191,12 +2212,44 @@
    <slot>set_cone()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>809</x>
-     <y>261</y>
+     <x>838</x>
+     <y>198</y>
     </hint>
     <hint type="destinationlabel">
      <x>672</x>
      <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>raio_cone_eye_antenna</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>set_eyeAntenna()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>798</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>690</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>height_cone_eye_antenna</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>set_eyeAntenna()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>688</x>
+     <y>285</y>
     </hint>
    </hints>
   </connection>
@@ -2217,5 +2270,6 @@
   <slot>set_esfera()</slot>
   <slot>set_cone()</slot>
   <slot>set_cilindro()</slot>
+  <slot>set_eyeAntenna()</slot>
  </slots>
 </ui>

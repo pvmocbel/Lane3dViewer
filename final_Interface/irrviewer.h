@@ -35,10 +35,18 @@ enum NodeType{Haste, Cube, Esphere, Cone, Cilindro, EyeAntenna};
 typedef struct NodeParameters{
     Vector3df position;
     Vector3df dimension;
+    Vector3df dimension2;
+    float raio_haste;
     Vector3df parametros;
     irr::core::aabbox3df box;
     NodeType type;
 } nodeParam;
+
+struct nodeDimensions{
+    Vector3df dimension;
+    Vector3df dimension2;
+    float raio_haste;
+};
 
 
 class IrrViewer : public QWidget
@@ -68,7 +76,7 @@ public:
 signals:
     void send_position_change();
     void send_dimension();
-    void send_selection_call(const Vector3df&);
+    void send_selection_call(nodeDimensions*);
 
 public slots:
       virtual void receiver_changed_position_mainwindow(const Pos3df& pos);

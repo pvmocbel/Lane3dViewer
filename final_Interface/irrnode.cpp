@@ -28,7 +28,6 @@ void IrrNode::criaPonto(IrrSmgr *const smgr, nodeParam* param, const irr::c8 *no
         }
     }
 }
-
 void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *nodeName){
     if(smgr)
     {
@@ -37,25 +36,25 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
         v1.set(1,0,0);
         v2.set(0,1,0);
         v3.set(0,0,1);
-        v4.set(param->dimension.X-param->position.X,
-               param->dimension.Y-param->position.Y,
-               param->dimension.Z-param->position.Z);
+        v4.set(param->dimension2.X-param->dimension.X,
+               param->dimension2.Y-param->dimension.Y,
+               param->dimension2.Z-param->dimension.Z);
 
-        double height = sqrt((param->dimension.X-param->position.X)*(param->dimension.X-param->position.X)
-                             +(param->dimension.Y-param->position.Y)*(param->dimension.Y-param->position.Y)
-                             +(param->dimension.Z-param->position.Z)*(param->dimension.Z-param->position.Z));
+        double height = sqrt((param->dimension2.X-param->dimension.X)*(param->dimension2.X-param->dimension.X)
+                             +(param->dimension2.Y-param->dimension.Y)*(param->dimension2.Y-param->dimension.Y)
+                             +(param->dimension2.Z-param->dimension.Z)*(param->dimension2.Z-param->dimension.Z));
 
-        if(param->position.X != param->dimension.X){
+        if(param->dimension.X != param->dimension2.X){
             angle.X = 0;
             angle.Y = 0;
             angle.Z = -90;
         }
-        else if(param->position.Y != param->dimension.Y){
+        else if(param->dimension.Y != param->dimension2.Y){
             angle.X = 0;
             angle.Y = 0;
             angle.Z = 0;
         }
-        else if(param->position.Z != param->dimension.Z){
+        else if(param->dimension.Z != param->dimension2.Z){
             angle.X = -90;
             angle.Y = 0;
             angle.Z = 0;                        
@@ -69,7 +68,7 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
 
         if (cilindro_node)
         {
-          cilindro_node->setPosition(param->position);
+          cilindro_node->setPosition(param->dimension);
           cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           cilindro_node->setID(ID_FLAG_HASTE|S);
 
@@ -85,7 +84,6 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
         }
     }
 }
-
 void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nodeName)
 {
     if(smgr)
@@ -111,7 +109,6 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
         }
     }
 }
-
 void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* nodeName){
     if(smgr)
     {
@@ -135,7 +132,6 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* n
         }
     }
 }
-
 void IrrNode::criaCilindro(IrrSmgr *const smgr, nodeParam* param, const irr::c8* nodeName){
     if(smgr)
     {
@@ -159,7 +155,6 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, nodeParam* param, const irr::c8*
         }
     }
 }
-
 void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nodeName)
 {
     if(smgr)
@@ -184,12 +179,11 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
         }
     }
 }
-
 void IrrNode::criaEyeAntenna(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y*0.5, 8);
+        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y*0.5, 6 );
         irr::scene::IMeshSceneNode *cone_node1 = smgr->addMeshSceneNode(mesh_cone_node);
         irr::scene::IMeshSceneNode *cone_node2 = smgr->addMeshSceneNode(mesh_cone_node);
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat May 26 19:47:33 2012
+** Created: Sun May 27 23:58:34 2012
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -55,7 +55,7 @@ public:
     QAction *actionCone;
     QAction *actionEyeAntenna;
     QWidget *centralWidget;
-    QGridLayout *gridLayout;
+    QGridLayout *gridLayout_6;
     QGridLayout *grid_Interface;
     QStackedWidget *stackedWidget_Lateral;
     QWidget *page_Ambiente;
@@ -90,13 +90,13 @@ public:
     QGroupBox *groupBox_Material;
     QFormLayout *formLayout;
     QLabel *label_48;
+    QDoubleSpinBox *permissividade;
     QLabel *label_49;
     QDoubleSpinBox *permeabilidade;
     QLabel *label_50;
     QDoubleSpinBox *condutibilidade;
     QLabel *label_5;
     QComboBox *comboBox_Prop;
-    QDoubleSpinBox *permissividade;
     QSpacerItem *verticalSpacer_4;
     QLabel *label_PainelTitulo_1;
     QStackedWidget *stackedWidget_pnLateralObj;
@@ -160,14 +160,14 @@ public:
     QLabel *label_60;
     QDoubleSpinBox *comprimento_cone;
     QSpacerItem *verticalSpacer_6;
-    QWidget *page;
+    QWidget *page_EyeAntenna;
     QGridLayout *gridLayout_5;
     QGroupBox *groupBox_3;
-    QGridLayout *gridLayout_6;
+    QGridLayout *gridLayout;
     QLabel *label_15;
-    QDoubleSpinBox *raio_eye_antenna;
+    QDoubleSpinBox *raio_cone_eye_antenna;
     QLabel *label_16;
-    QDoubleSpinBox *height_eye_antenna;
+    QDoubleSpinBox *height_cone_eye_antenna;
     QSpacerItem *verticalSpacer_7;
     QWidget *widget_2;
     QHBoxLayout *horizontalLayout;
@@ -197,7 +197,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(900, 600);
+        MainWindow->resize(891, 565);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
         actionNew = new QAction(MainWindow);
@@ -224,10 +224,10 @@ public:
         actionEyeAntenna->setObjectName(QString::fromUtf8("actionEyeAntenna"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        gridLayout = new QGridLayout(centralWidget);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout_6 = new QGridLayout(centralWidget);
+        gridLayout_6->setSpacing(6);
+        gridLayout_6->setContentsMargins(11, 11, 11, 11);
+        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
         grid_Interface = new QGridLayout();
         grid_Interface->setSpacing(6);
         grid_Interface->setObjectName(QString::fromUtf8("grid_Interface"));
@@ -274,7 +274,7 @@ public:
         scrollArea_0->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_0 = new QWidget();
         scrollAreaWidgetContents_pnLateral_0->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_0"));
-        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 142, 195));
+        scrollAreaWidgetContents_pnLateral_0->setGeometry(QRect(0, 0, 145, 385));
         verticalLayout_12 = new QVBoxLayout(scrollAreaWidgetContents_pnLateral_0);
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
@@ -398,7 +398,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_pnLateral_1 = new QWidget();
         scrollAreaWidgetContents_pnLateral_1->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_pnLateral_1"));
-        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, 0, 150, 611));
+        scrollAreaWidgetContents_pnLateral_1->setGeometry(QRect(0, -103, 150, 611));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_pnLateral_1);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -466,6 +466,13 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, label_48);
 
+        permissividade = new QDoubleSpinBox(groupBox_Material);
+        permissividade->setObjectName(QString::fromUtf8("permissividade"));
+        permissividade->setMaximumSize(QSize(50, 27));
+        permissividade->setSingleStep(0.01);
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, permissividade);
+
         label_49 = new QLabel(groupBox_Material);
         label_49->setObjectName(QString::fromUtf8("label_49"));
         label_49->setMinimumSize(QSize(40, 0));
@@ -502,13 +509,6 @@ public:
         comboBox_Prop->setObjectName(QString::fromUtf8("comboBox_Prop"));
 
         formLayout->setWidget(4, QFormLayout::SpanningRole, comboBox_Prop);
-
-        permissividade = new QDoubleSpinBox(groupBox_Material);
-        permissividade->setObjectName(QString::fromUtf8("permissividade"));
-        permissividade->setMaximumSize(QSize(50, 27));
-        permissividade->setSingleStep(0.01);
-
-        formLayout->setWidget(0, QFormLayout::FieldRole, permissividade);
 
 
         gridLayout_3->addWidget(groupBox_Material, 3, 0, 1, 1);
@@ -922,53 +922,58 @@ public:
         gridLayout_7->addWidget(groupBox_2, 0, 0, 1, 1);
 
         stackedWidget_pnLateralObj->addWidget(page_cone);
-        page = new QWidget();
-        page->setObjectName(QString::fromUtf8("page"));
-        gridLayout_5 = new QGridLayout(page);
+        page_EyeAntenna = new QWidget();
+        page_EyeAntenna->setObjectName(QString::fromUtf8("page_EyeAntenna"));
+        gridLayout_5 = new QGridLayout(page_EyeAntenna);
         gridLayout_5->setSpacing(6);
         gridLayout_5->setContentsMargins(11, 11, 11, 11);
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        groupBox_3 = new QGroupBox(page);
+        groupBox_3 = new QGroupBox(page_EyeAntenna);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        gridLayout_6 = new QGridLayout(groupBox_3);
-        gridLayout_6->setSpacing(6);
-        gridLayout_6->setContentsMargins(11, 11, 11, 11);
-        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
+        gridLayout = new QGridLayout(groupBox_3);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         label_15 = new QLabel(groupBox_3);
         label_15->setObjectName(QString::fromUtf8("label_15"));
 
-        gridLayout_6->addWidget(label_15, 0, 0, 1, 1);
+        gridLayout->addWidget(label_15, 0, 0, 1, 1);
 
-        raio_eye_antenna = new QDoubleSpinBox(groupBox_3);
-        raio_eye_antenna->setObjectName(QString::fromUtf8("raio_eye_antenna"));
+        raio_cone_eye_antenna = new QDoubleSpinBox(groupBox_3);
+        raio_cone_eye_antenna->setObjectName(QString::fromUtf8("raio_cone_eye_antenna"));
         QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy5.setHorizontalStretch(0);
         sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(raio_eye_antenna->sizePolicy().hasHeightForWidth());
-        raio_eye_antenna->setSizePolicy(sizePolicy5);
-        raio_eye_antenna->setDecimals(5);
+        sizePolicy5.setHeightForWidth(raio_cone_eye_antenna->sizePolicy().hasHeightForWidth());
+        raio_cone_eye_antenna->setSizePolicy(sizePolicy5);
+        raio_cone_eye_antenna->setMinimumSize(QSize(91, 27));
+        raio_cone_eye_antenna->setDecimals(5);
+        raio_cone_eye_antenna->setValue(0.00733);
 
-        gridLayout_6->addWidget(raio_eye_antenna, 0, 1, 1, 2);
+        gridLayout->addWidget(raio_cone_eye_antenna, 0, 1, 1, 2);
 
         label_16 = new QLabel(groupBox_3);
         label_16->setObjectName(QString::fromUtf8("label_16"));
 
-        gridLayout_6->addWidget(label_16, 1, 0, 1, 2);
+        gridLayout->addWidget(label_16, 1, 0, 1, 2);
 
-        height_eye_antenna = new QDoubleSpinBox(groupBox_3);
-        height_eye_antenna->setObjectName(QString::fromUtf8("height_eye_antenna"));
-        height_eye_antenna->setDecimals(4);
+        height_cone_eye_antenna = new QDoubleSpinBox(groupBox_3);
+        height_cone_eye_antenna->setObjectName(QString::fromUtf8("height_cone_eye_antenna"));
+        height_cone_eye_antenna->setMinimumSize(QSize(81, 27));
+        height_cone_eye_antenna->setDecimals(3);
+        height_cone_eye_antenna->setSingleStep(0.001);
+        height_cone_eye_antenna->setValue(0.024);
 
-        gridLayout_6->addWidget(height_eye_antenna, 1, 2, 1, 1);
+        gridLayout->addWidget(height_cone_eye_antenna, 1, 2, 1, 1);
 
-        verticalSpacer_7 = new QSpacerItem(20, 148, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_7 = new QSpacerItem(48, 148, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_6->addItem(verticalSpacer_7, 2, 2, 1, 1);
+        gridLayout->addItem(verticalSpacer_7, 2, 2, 1, 1);
 
 
         gridLayout_5->addWidget(groupBox_3, 0, 0, 1, 1);
 
-        stackedWidget_pnLateralObj->addWidget(page);
+        stackedWidget_pnLateralObj->addWidget(page_EyeAntenna);
 
         gridLayout_3->addWidget(stackedWidget_pnLateralObj, 2, 0, 1, 1);
 
@@ -1099,12 +1104,12 @@ public:
         grid_Interface->addWidget(widget_1, 1, 1, 1, 1);
 
 
-        gridLayout->addLayout(grid_Interface, 0, 0, 1, 1);
+        gridLayout_6->addLayout(grid_Interface, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 900, 25));
+        menuBar->setGeometry(QRect(0, 0, 891, 25));
         MainWindow->setMenuBar(menuBar);
         ToolBar_File = new QToolBar(MainWindow);
         ToolBar_File->setObjectName(QString::fromUtf8("ToolBar_File"));
@@ -1171,6 +1176,8 @@ public:
         QObject::connect(comprimento_cilindro, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cilindro()));
         QObject::connect(raio_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
         QObject::connect(comprimento_cone, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_cone()));
+        QObject::connect(raio_cone_eye_antenna, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_eyeAntenna()));
+        QObject::connect(height_cone_eye_antenna, SIGNAL(valueChanged(double)), MainWindow, SLOT(set_eyeAntenna()));
 
         stackedWidget_Lateral->setCurrentIndex(1);
         stackedWidget_pnLateralObj->setCurrentIndex(6);
@@ -1287,11 +1294,11 @@ public:
         raio_cone->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
         label_60->setText(QApplication::translate("MainWindow", "comp:", 0, QApplication::UnicodeUTF8));
         comprimento_cone->setSuffix(QApplication::translate("MainWindow", " m", 0, QApplication::UnicodeUTF8));
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "GroupBox", 0, QApplication::UnicodeUTF8));
-        label_15->setText(QApplication::translate("MainWindow", "raio:", 0, QApplication::UnicodeUTF8));
-        raio_eye_antenna->setSuffix(QApplication::translate("MainWindow", "m", 0, QApplication::UnicodeUTF8));
-        label_16->setText(QApplication::translate("MainWindow", "altura:", 0, QApplication::UnicodeUTF8));
-        height_eye_antenna->setSuffix(QApplication::translate("MainWindow", "m", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "Dimension", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("MainWindow", "raio1:", 0, QApplication::UnicodeUTF8));
+        raio_cone_eye_antenna->setSuffix(QApplication::translate("MainWindow", "m", 0, QApplication::UnicodeUTF8));
+        label_16->setText(QApplication::translate("MainWindow", "altura1:", 0, QApplication::UnicodeUTF8));
+        height_cone_eye_antenna->setSuffix(QApplication::translate("MainWindow", "m", 0, QApplication::UnicodeUTF8));
         PositionButton->setText(QApplication::translate("MainWindow", "Pos", 0, QApplication::UnicodeUTF8));
         RotationButton->setText(QApplication::translate("MainWindow", "Rot", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "X:", 0, QApplication::UnicodeUTF8));

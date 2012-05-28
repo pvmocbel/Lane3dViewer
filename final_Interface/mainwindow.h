@@ -47,7 +47,7 @@ public slots:
 
     void gerarMalha();
 
-    void receiver_selection(const Vector3df& dim);
+    void receiver_selection(nodeDimensions*);
     void change_position();
     void return_position_changed();
 

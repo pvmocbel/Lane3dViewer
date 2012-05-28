@@ -122,12 +122,11 @@ public:
 
     int calcula_raio(const intVector& p1, const intVector& p2);
     int calcula_raio2(const intVector& p1, const intVector& p2);
-    float calcula_raio(const Vector3df& p1, const Vector3df& p2);
 
     void printRegiaoAnalise(irr::core::aabbox3df box);
 
     inline void removeSceneNode();
-    void removeChangedSceneNode(int id);
+    void removeChangedSceneNode();
     inline void duplicateSceneNode();
     void geraMalha();
 
