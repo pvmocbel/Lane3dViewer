@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_cgerais.ui'
 **
-** Created: Mon May 28 16:25:40 2012
+** Created: Fri Jun 1 11:37:00 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -75,7 +75,7 @@ public:
         dim_regiao_livre_x->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_x->setDecimals(4);
         dim_regiao_livre_x->setMaximum(1000);
-        dim_regiao_livre_x->setValue(0.04);
+        dim_regiao_livre_x->setValue(0.15);
 
         gridLayout->addWidget(dim_regiao_livre_x, 0, 1, 1, 1);
 
@@ -97,7 +97,7 @@ public:
         dim_regiao_livre_y->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_y->setDecimals(4);
         dim_regiao_livre_y->setMaximum(1000);
-        dim_regiao_livre_y->setValue(0.04);
+        dim_regiao_livre_y->setValue(0.075);
 
         gridLayout->addWidget(dim_regiao_livre_y, 0, 4, 1, 1);
 
@@ -120,7 +120,7 @@ public:
         dim_regiao_livre_z->setMinimumSize(QSize(40, 0));
         dim_regiao_livre_z->setDecimals(4);
         dim_regiao_livre_z->setMaximum(1000);
-        dim_regiao_livre_z->setValue(0.047);
+        dim_regiao_livre_z->setValue(0.15);
 
         gridLayout->addWidget(dim_regiao_livre_z, 0, 7, 1, 1);
 

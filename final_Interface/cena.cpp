@@ -323,28 +323,23 @@ void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE
 }
 void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, FILE *file){
     intVector position;
-    position.set((int)((param.position.X-this->box.MinEdge.X)/delta),
-                 (int)((param.position.Y-this->box.MinEdge.Y)/delta),
-                 (int)((param.position.Z-this->box.MinEdge.Z)/delta));
-    box.MinEdge.set(box.MinEdge.X + param.position.X,
-                    box.MinEdge.Y + param.position.Y,
-                    box.MinEdge.Z + param.position.Z);
-    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-                    box.MaxEdge.Y + param.position.Y,
-                    box.MaxEdge.Z + param.position.Z);
+    position.set(0,0,0);
 
     int raio = (int)((param.dimension.X)/delta);
 
-    for(int j = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta); j<=(int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta); j++){
-        for(int i = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta); i<=(int)((box.MaxEdge.X - this->box.MinEdge.X)/delta); i++){
-            for(int k = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta); k<=(int)((box.MaxEdge.Z - this->box.MinEdge.Z)/delta); k++){
-                position.set(position.X,j,position.Z);
-                int novo_raio = calcula_raio2(position, intVector(i,j,k));
+    for(float j = box.MinEdge.Y; j<box.MaxEdge.Y; j=j+delta){
+        for(float i = box.MinEdge.X; i<box.MaxEdge.X; i=i+delta){
+            for(float k = box.MinEdge.Z; k<box.MaxEdge.Z; k=k+delta){
+                position.set(position.X, (int)(j/delta), position.Z);
+                int novo_raio = calcula_raio2(position, intVector((int)(i/delta),(int)(j/delta),(int)(k/delta)));
                 if(novo_raio<raio*raio)
-                    fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, j, j);
+                    fprintf(file,"%d %d %d %d %d %d \n", (int)(i/delta)+75, (int)(i/delta)+75,
+                                                         (int)(k/delta)+75, (int)(k/delta)+75,
+                                                         (int)(j/delta)+26, (int)(j/delta)+26);
             }
         }
-    }    
+    }
+
 }
 void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE* file){
     intVector position;
@@ -406,17 +401,17 @@ void Cena::geraMalhaEyeAntenna(const nodeParam &param, FILE *file){
         raio = raio - perda;
 
         if(raio >= delta){
-            for(int x = (-raio_max/delta); x <= (raio_max/delta); x++)
-                for(int z = (-raio_max/delta); z<=(raio_max/delta); z++){
+            for(float x = -raio_max; x < raio_max; x=x+delta)
+                for(float z = -raio_max; z<raio_max; z=z+delta){
                     position.set(0, height, 0);
-                    int novo_raio = calcula_raio(position, intVector(x, height, z));
+                    int novo_raio = calcula_raio(position, intVector((int)(x/delta), height, (int)(z/delta)));
                     if(novo_raio < (int)((raio/delta)*(raio/delta)))
-                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) + 32,
-                                                             x + (int)(param.position.X/delta) + 32,
-                                                             z + (int)(param.position.Z/delta) + 32,
-                                                             z + (int)(param.position.Z/delta) + 32,
-                                                             height /*+ (int)(param.position.Y/delta)*/ + 37,
-                                                             height /*+ (int)(param.position.Y/delta)*/ + 37);
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) + (int)(param.position.X/delta) + 75,
+                                                             (int)(x/delta) + (int)(param.position.X/delta) + 75,
+                                                             (int)(z/delta) + (int)(param.position.Z/delta) + 75,
+                                                             (int)(z/delta) + (int)(param.position.Z/delta) + 75,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 39,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 39);
 
                 }//fim for z
         }//fim if comparation raio
@@ -434,23 +429,20 @@ void Cena::geraMalhaEyeAntenna(const nodeParam &param, FILE *file){
         raio = raio - perda;
 
         if(raio >= delta){
-            for(int x = (-raio_max/delta); x <= (raio_max/delta); x++)
-                for(int z = (-raio_max/delta); z<=(raio_max/delta); z++){
+            for(float x = -raio_max; x < raio_max; x=x+delta)
+                for(float z = -raio_max; z<raio_max; z=z+delta){
                     position.set(0, height, 0);
-                    int novo_raio = calcula_raio(position, intVector(x, height, z));
+                    int novo_raio = calcula_raio(position, intVector((int)(x/delta), height, (int)(z/delta)));
                     if(novo_raio < (int)((raio/delta)*(raio/delta)))
-                        fprintf(file,"%d %d %d %d %d %d \n", x + (int)(param.position.X/delta) + 32,
-                                                             x + (int)(param.position.X/delta) + 32,
-                                                             z + (int)(param.position.Z/delta) + 32,
-                                                             z + (int)(param.position.Z/delta) + 32,
-                                                             height /*+ (int)(param.position.Y/delta)*/ + 37,
-                                                             height /*+ (int)(param.position.Y/delta)*/ + 37);
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)(x/delta) + (int)(param.position.X/delta) + 75,
+                                                             (int)(x/delta) + (int)(param.position.X/delta) + 75,
+                                                             (int)(z/delta) + (int)(param.position.Z/delta) + 75,
+                                                             (int)(z/delta) + (int)(param.position.Z/delta) + 75,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 39,
+                                                             height /*+ (int)(param.position.Y/delta)*/ + 39);
                 }//fim for z
         }//fim if comparation raio
     }//end height 2
-    qDebug()<<" celulas xy "<< (int)(0.01466/delta);
-    qDebug()<<" celulas z "<< (int)(0.0119277/delta);
-    qDebug()<<" celulas box min x  "<< -(int)(this->box.MinEdge.X/delta);
 }
 
 int Cena::calcula_raio(const intVector &p1, const intVector &p2){
