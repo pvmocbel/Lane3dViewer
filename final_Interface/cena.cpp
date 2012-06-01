@@ -303,23 +303,34 @@ void Cena::geraMalha(){
 }
 void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE *file){
 
-    box.MinEdge.set(box.MinEdge.X + param.position.X,
-                    box.MinEdge.Y + param.position.Y,
-                    box.MinEdge.Z + param.position.Z);
-    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-                    box.MaxEdge.Y + param.position.Y,
-                    box.MaxEdge.Z + param.position.Z);
+//    box.MinEdge.set(box.MinEdge.X + param.position.X,
+//                    box.MinEdge.Y + param.position.Y,
+//                    box.MinEdge.Z + param.position.Z);
+//    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
+//                    box.MaxEdge.Y + param.position.Y,
+//                    box.MaxEdge.Z + param.position.Z);
 
-    int x_inicial = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
-    int x_final = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
+//    int x_inicial = (int)((box.MinEdge.X-this->box.MinEdge.X)/delta);
+//    int x_final = (int)((box.MaxEdge.X-this->box.MinEdge.X)/delta);
 
-    int y_inicial = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta);
-    int y_final = (int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta);
+//    int y_inicial = (int)((box.MinEdge.Y-this->box.MinEdge.Y)/delta);
+//    int y_final = (int)((box.MaxEdge.Y-this->box.MinEdge.Y)/delta);
 
-    int z_inicial = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta);
-    int z_final = (int)((box.MaxEdge.Z-this->box.MinEdge.Z)/delta);
+//    int z_inicial = (int)((box.MinEdge.Z-this->box.MinEdge.Z)/delta);
+//    int z_final = (int)((box.MaxEdge.Z-this->box.MinEdge.Z)/delta);
 
-    fprintf(file,"%d %d %d %d %d %d \n",x_inicial, x_final, z_inicial, z_final, y_inicial, y_final);
+    int x_inicial1 = 0;
+    int x_final1 = 1;
+
+    int y_inicial1 = 0;
+    int y_final1 = 3;
+
+    int z_inicial1 = 0;
+    int z_final1 = 1;
+
+    fprintf(file,"%d %d %d %d %d %d \n",x_inicial1 + 27, x_final1 + 27, z_inicial1 +27 , z_final1+27, y_inicial1+28, y_final1+28);
+//    fprintf(file,"%d %d %d %d %d %d \n",x_inicial1 + 33, x_final1 + 33, z_inicial1 +26 , z_final1+26, y_inicial1+26, y_final1+26);
+
 }
 void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, FILE *file){
     intVector position;
