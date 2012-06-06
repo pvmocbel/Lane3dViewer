@@ -58,7 +58,7 @@ void Cena::cenaIrrlicht()
 void Cena::cenaCameras(){
     if (smgr) {
         camera = smgr->addCameraSceneNode();
-        camera->setPosition(Vector3df(dim.X/2, dim.Y/2, (box.MinEdge.Z-0.9)));
+        camera->setPosition(Vector3df(dim.X/2, dim.Y/2, -0.9));
         camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
         camera_01 = true;
         smgr->setActiveCamera(camera);
@@ -89,6 +89,7 @@ void Cena::criaRegiaoAnalise(const Dim3df& dim, double delta){
         fprintf(out, "%d %d %d %g %d\n", ncelulas_x, ncelulas_z, ncelulas_y, delta, 2000 );
         box.MinEdge.set(0,0,0);
         box.MaxEdge.set(dim.X, dim.Y, dim.Z);
+        camera->setPosition(Vector3df(dim.X/2, dim.Y/2, -50*delta));
         camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
         node->gizmosRegiaoAnalise(smgr, &r_analise_gizmo_X, &r_analise_gizmo_Y, &r_analise_gizmo_Z, dim);
 
@@ -341,6 +342,7 @@ void Cena::receiver_changed_dimension(nodeParam* param){
         drawIrrlichtScene();
     }//fim smgr
 }
+
 void Cena::geraMalha(){
     if(smgr)
     {
@@ -369,7 +371,7 @@ void Cena::geraMalha(){
 
                 case(Cone):
                     qDebug()<<"cone gera malha";
-                    geraMalhaCone(box, (*it).second, file);
+                    geraMalhaCone((*it).second, file);
                     break;
 
                 case(Cilindro):
@@ -379,7 +381,7 @@ void Cena::geraMalha(){
 
                 case(Esphere):
                     qDebug()<<"esphere gera malha";
-                    geraMalhaEsfera((*it).first , box, (*it).second, file );
+                    geraMalhaEsfera(box, (*it).second, file );
                     break;
 
                 case(Antenna):
@@ -390,28 +392,28 @@ void Cena::geraMalha(){
                 case(Haste):
                     qDebug()<<"haste gera malha";
                     if((*it).second.dimension.X != (*it).second.dimension2.X)
-                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.dimension.X + this->box.MinEdge.X)/delta),
-                                                          (int)(((*it).second.dimension2.X + this->box.MinEdge.X)/delta),
-                                                          (int)(((*it).second.dimension2.Y + this->box.MinEdge.Y)/delta),
-                                                          0,
-                                                          (int)(((*it).second.dimension2.Z + this->box.MinEdge.Z)/delta),
-                                                          0,
-                                                          ((*it).second.raio_haste));
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)( round(((*it).second.dimension.X )/delta) ),
+                                                          (int)( round( ( (*it).second.dimension2.X)/delta) ),
+                                                          (int)( round( ( (*it).second.dimension.Y)/delta) ),
+                                                           0,
+                                                          (int)( round( ((*it).second.dimension.Z)/delta) ),
+                                                           0,
+                                                          ( (*it).second.raio_haste) );
                     else if((*it).second.dimension.Y != (*it).second.dimension2.Y)
-                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.dimension.X + this->box.MinEdge.X)/delta),
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)( round( ( (*it).second.dimension.X)/delta) ),
                                                           0,
-                                                          (int)(((*it).second.dimension.Y + this->box.MinEdge.Y)/delta),
-                                                          (int)(((*it).second.dimension2.Y + this->box.MinEdge.Y)/delta),
-                                                          (int)(((*it).second.dimension.Z + this->box.MinEdge.Z)/delta),
+                                                          (int)( round( ( (*it).second.dimension.Y)/delta) ),
+                                                          (int)( round( ( (*it).second.dimension2.Y)/delta) ),
+                                                          (int)( round( ((*it).second.dimension.Z)/delta) ),
                                                           0,
                                                           ((*it).second.raio_haste));
                     else if((*it).second.dimension.Z != (*it).second.dimension2.Z)
-                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(((*it).second.dimension.X + this->box.MinEdge.X)/delta),
+                        fprintf(haste, "%d %d %d %d %d %d %f \n", (int)(round ( ((*it).second.dimension.X)/delta) ),
                                                           0,
-                                                          (int)(((*it).second.dimension.Y + this->box.MinEdge.Y)/delta),
+                                                          (int)( round( ( (*it).second.dimension.Y)/delta) ),
                                                           0,
-                                                          (int)(((*it).second.dimension.Z + this->box.MinEdge.Z)/delta),
-                                                          (int)(((*it).second.dimension2.Z + this->box.MinEdge.Z)/delta),
+                                                          (int)( round( ((*it).second.dimension.Z)/delta) ),
+                                                          (int)( round( ((*it).second.dimension2.Z)/delta) ),
                                                           ((*it).second.raio_haste));
                     break;
 
@@ -427,21 +429,14 @@ void Cena::geraMalha(){
 }
 void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE *file){
 
-    box.MinEdge.set(box.MinEdge.X + param.position.X,
-                    box.MinEdge.Y + param.position.Y,
-                    box.MinEdge.Z + param.position.Z);
-    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-                    box.MaxEdge.Y + param.position.Y,
-                    box.MaxEdge.Z + param.position.Z);
+    int x_inicial = (int)( round( (box.MinEdge.X + param.position.X) / delta) );
+    int x_final = (int)( round( (box.MaxEdge.X + param.position.X) / delta) ) - 1;
 
-    int x_inicial = (int)( round( (box.MinEdge.X + this->box.MinEdge.X) / delta) );
-    int x_final = (int)( round( (box.MaxEdge.X + this->box.MinEdge.X) / delta) );
+    int y_inicial = (int)( round( (box.MinEdge.Y + param.position.Y) / delta) );
+    int y_final = (int)( round( (box.MaxEdge.Y + param.position.Y) / delta) ) - 1;
 
-    int y_inicial = (int)( round( (box.MinEdge.Y + this->box.MinEdge.Y) / delta) );
-    int y_final = (int)( round( (box.MaxEdge.Y + this->box.MinEdge.Y) / delta) );
-
-    int z_inicial = (int)( round( (box.MinEdge.Z + this->box.MinEdge.Z) / delta) );
-    int z_final = (int)( round( (box.MaxEdge.Z + this->box.MinEdge.Z) / delta) );
+    int z_inicial = (int)( round( (box.MinEdge.Z + param.position.Z) / delta) );
+    int z_final = (int)( round( (box.MaxEdge.Z + param.position.Z) / delta) ) - 1;
 
     fprintf(file,"%d %d %d %d %d %d \n",x_inicial, x_final, z_inicial, z_final, y_inicial, y_final);
 }
@@ -449,35 +444,34 @@ void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, F
     intVector position;
     position.set(0,0,0);
 
-    int raio = (int)((param.dimension.X)/delta);
+    float raio = (param.dimension.X);
 
-    for(float j = box.MinEdge.Y; j<box.MaxEdge.Y; j=j+delta){
-        for(float i = box.MinEdge.X; i<box.MaxEdge.X; i=i+delta){
-            for(float k = box.MinEdge.Z; k<box.MaxEdge.Z; k=k+delta){
-                position.set(position.X, (int)(j/delta), position.Z);
-                int novo_raio = calcula_raio2(position, intVector((int)(i/delta),(int)(j/delta),(int)(k/delta)));
-                if(novo_raio<raio*raio)
-                    fprintf(file,"%d %d %d %d %d %d \n", (int)(i/delta)+75, (int)(i/delta)+75,
-                                                         (int)(k/delta)+75, (int)(k/delta)+75,
-                                                         (int)(j/delta)+26, (int)(j/delta)+26);
-            }
-        }
-    }
+    for(float j = box.MinEdge.Y; j< box.MaxEdge.Y; j = j + delta)
+        for(float i = box.MinEdge.X; i< box.MaxEdge.X; i = i + delta)
+            for(float k = box.MinEdge.Z; k< box.MaxEdge.Z; k = k + delta)
+            {
+                position.set(position.X, (int)( round(j/delta) ), position.Z);
+                int novo_raio = calcula_raio2(position, intVector((int)( round(i/delta)  ),
+                                                                  (int)( round(j/delta)  ),
+                                                                  (int)( round(k/delta)) ) );
+
+                if(novo_raio < (int)(round (raio/delta) )*(int)(round (raio/delta) ))
+                    fprintf(file,"%d %d %d %d %d %d \n", (int)( round( (i + param.position.X)/delta) ),
+                                                         (int)( round( (i + param.position.X)/delta) ),
+                                                         (int)( round( (k + param.position.Z)/delta) ),
+                                                         (int)( round( (k + param.position.Z)/delta) ),
+                                                         (int)( round( (j + param.position.Y)/delta) ),
+                                                         (int)( round( (j + param.position.Y)/delta) )
+                                                         );  //end fprintf
+            }   //end for k
+
+
 
 }
-void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE* file){
+void Cena::geraMalhaCone(const nodeParam &param, FILE* file){
     intVector position;
 
-    position.set((int)((param.position.X + this->box.MinEdge.X)/delta),
-                 (int)((param.position.Y + this->box.MinEdge.Y)/delta),
-                 (int)((param.position.Z + this->box.MinEdge.Z)/delta));
-
-    box.MinEdge.set(box.MinEdge.X + param.position.X,
-                    box.MinEdge.Y + param.position.Y,
-                    box.MinEdge.Z + param.position.Z);
-    box.MaxEdge.set(box.MaxEdge.X + param.position.X,
-                    box.MaxEdge.Y + param.position.Y,
-                    box.MaxEdge.Z + param.position.Z);
+    position.set(0,0,0);
 
     double h = param.dimension.Y/delta;
     double tang = (param.dimension.Y/param.dimension.X);
@@ -488,25 +482,53 @@ void Cena::geraMalhaCone(irr::core::aabbox3df box, const nodeParam &param, FILE*
     int raio_cilindro = 0;
     int count = 0;
 
-    for(double j = 0; j<dim.Y; j=j+delta){
+    for(float j = 0; j < param.dimension.Y; j=j+delta){
         raio_cone = raio - count*p;
         if(raio_cone>=delta)
         {
-            raio_cilindro = (int)(raio_cone/delta);
-            for(int i = (int)((-raio_cilindro + this->box.MinEdge.X)/delta); i<=(int)((raio_cilindro + this->box.MinEdge.X)/delta); i++)
-                for(int k = (int)((-raio_cilindro + this->box.MinEdge.Z)/delta); k<=(int)((raio_cilindro + this->box.MinEdge.Z)/delta); k++){
-                    position.set(position.X, (int)(h+count), position.Z);
-                    int novo_raio = calcula_raio2(position, intVector(i,(int)(h+count), k));
-                    if(novo_raio<raio_cilindro*raio_cilindro)
-                        fprintf(file,"%d %d %d %d %d %d \n", i, i, k, k, (int)(h+count), (int)(h+count));
-                }
+            raio_cilindro = (int)( round(raio_cone/delta) );
+            for(float i = (-raio_cilindro); i <= (raio_cilindro); i=i+delta)
+                for(float k = (-raio_cilindro ); k <= (raio_cilindro); k=k+delta)
+                {
+                    position.set(position.X, (int)(j), position.Z);
+                    int novo_raio = calcula_raio2(position, intVector( (int)(round(i/delta) ),
+                                                                       (int)( round((j)/delta) ),
+                                                                       (int)( round(k/delta) ) ) );
+                    if(novo_raio<=raio_cilindro*raio_cilindro)
+                        fprintf(file,"%d %d %d %d %d %d \n", (int)( round( (i + param.position.X)/delta) ),
+                                                             (int)( round( (i + param.position.X)/delta) ),
+                                                             (int)( round( (k + param.position.Z)/delta) ),
+                                                             (int)( round( (k + param.position.Z)/delta) ),
+                                                             (int)( round( (j+param.position.Y)/delta) ),
+                                                             (int)( round( (j+param.position.Y)/delta) )
+                                                            );  //end fprintf
+                }   //end for k
 
-        }
+        }   //end if raio
         count++;
-    }
+    }   //end for j
 }
-void Cena:: geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
+void Cena:: geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam &param, FILE *file ){
 
+   intVector position(0,0,0);
+   int raio = (int)( round(param.dimension.X/delta) );
+
+   for(float i = box.MinEdge.X; i <= box.MaxEdge.X; i=i+delta)
+      for(float j = box.MinEdge.Y; j <= box.MaxEdge.Y; j=j+delta)
+          for(float k = box.MinEdge.Z; k <= box.MaxEdge.Z; k=k+delta)
+           {
+               int novo_raio = calcula_raio(position, intVector((int)(round(i/delta)),
+                                                                (int)(round(j/delta)),
+                                                                (int)(round(k/delta)) ) );
+               if(novo_raio <= raio*raio)
+                   fprintf(file,"%d %d %d %d %d %d \n", (int)( round( (i + param.position.X)/delta) ),
+                                                        (int)( round( (i + param.position.X)/delta) ),
+                                                        (int)( round( (k + param.position.Z)/delta) ),
+                                                        (int)( round( (k + param.position.Z)/delta) ),
+                                                        (int)( round( (j + param.position.Y)/delta) ),
+                                                        (int)( round( (j + param.position.Y)/delta) )
+                                                        );  //end fprintf
+            }   //end for k
 }
 void Cena::geraMalhaAntenna(const Vector3df &position, FILE *file, FILE *file2){
  //--cubo
@@ -603,35 +625,35 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
         if((event->modifiers() == Qt::ShiftModifier) && (event->key() == Qt::Key_P))//aproxima camera
         {
-            if(camera_01 && (camera->getPosition().Z < (box.MinEdge.Z))){
+            if(camera_01 && (camera->getPosition().Z < (camera->getTarget().X - 10*delta))){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
-                                              camera->getPosition().Z + aproxima*2));
+                                              camera->getPosition().Z + delta*2));
             }
-            else if(camera_04 && (camera->getPosition().Z > (box.MaxEdge.Z))){
+            else if(camera_04 && (camera->getPosition().Z > (box.MaxEdge.Z + 10*delta))){
                 camera->setPosition(Vector3df(camera->getPosition().X,
                                               camera->getPosition().Y,
-                                              camera->getPosition().Z - aproxima*2));
+                                              camera->getPosition().Z - delta*2));
             }
 
-            else if(camera_06 && (camera->getPosition().Y < (box.MinEdge.Y) - 1)){
+            else if(camera_06 && (camera->getPosition().Y < (box.MinEdge.Y - 10*delta))){
                 camera->setPosition(Vector3df(camera->getPosition().X,
-                                              camera->getPosition().Y + aproxima*2,
+                                              camera->getPosition().Y + delta*2,
                                               camera->getPosition().Z ));
             }
-            else if(camera_05 && (camera->getPosition().Y > (box.MaxEdge.Y) + 1)){
+            else if(camera_05 && (camera->getPosition().Y > (box.MaxEdge.Y + 10*delta))){
                 camera->setPosition(Vector3df(camera->getPosition().X,
-                                              camera->getPosition().Y - aproxima*2,
+                                              camera->getPosition().Y - delta*2,
                                               camera->getPosition().Z));
             }
 
-            else if(camera_03 && ( camera->getPosition().X < (box.MinEdge.X) )){
-                camera->setPosition(Vector3df(camera->getPosition().X + aproxima*2,
+            else if(camera_03 && ( camera->getPosition().X < (box.MinEdge.X - 10*delta) )){
+                camera->setPosition(Vector3df(camera->getPosition().X + delta*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
             }
-            else if(camera_02 && (camera->getPosition().X > (box.MaxEdge.X))){
-                camera->setPosition(Vector3df(camera->getPosition().X - aproxima*2,
+            else if(camera_02 && (camera->getPosition().X > (box.MaxEdge.X + 10*delta))){
+                camera->setPosition(Vector3df(camera->getPosition().X - delta*2,
                                               camera->getPosition().Y,
                                               camera->getPosition().Z));
             }
@@ -711,7 +733,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
                 break;
 
             case (Qt::Key_1): //camera na posicao padrão
-                camera->setPosition(Vector3df(dim.X/2, dim.Y/2, this->box.MinEdge.Z-1));
+                camera->setPosition(Vector3df(dim.X/2, dim.Y/2, -50*delta));
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
 
                 camera_01 = true;
@@ -724,7 +746,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_2):  //camera posionada na direita
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
-                camera->setPosition(Vector3df(this->box.MaxEdge.X + 1, dim.Y/2, dim.Z/2));
+                camera->setPosition(Vector3df(dim.X+50*delta, dim.Y/2, dim.Z/2));
 
                 camera_01 = false;
                 camera_02 = true;
@@ -736,7 +758,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_3):   //camera posicionada na esquerda
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
-                camera->setPosition(Vector3df(this->box.MinEdge.X - 1, dim.Y/2, dim.Z/2));
+                camera->setPosition(Vector3df(-50*delta, dim.Y/2, dim.Z/2));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -748,7 +770,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_4):   //camera posionada na parte de tras
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
-                camera->setPosition(Vector3df(dim.X/2, dim.Y/2, this->box.MaxEdge.Z + 1));
+                camera->setPosition(Vector3df(dim.X/2, dim.Y/2, dim.Z+50*delta));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -760,7 +782,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_5):   //camera posionada no topo
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
-                camera->setPosition(Vector3df(dim.X/2, this->box.MaxEdge.Y + 1, dim.Z/2));
+                camera->setPosition(Vector3df(dim.X/2, dim.Y+50*delta, dim.Z/2));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -772,7 +794,7 @@ void Cena::keyPressEvent(QKeyEvent *event){
 
             case (Qt::Key_6):   //camera posionada na base
                 camera->setTarget(Vector3df(dim.X/2, dim.Y/2, dim.Z/2));
-                camera->setPosition(Vector3df(dim.X/2, this->box.MinEdge.Y - 1, dim.Z/2));
+                camera->setPosition(Vector3df(dim.X/2, -50*delta, dim.Z/2));
 
                 camera_01 = false;
                 camera_02 = false;
@@ -1209,7 +1231,7 @@ void Cena::aproximaObjetoSelecionado(){
         if(camera_01){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
-                                          selectedSceneNode->getPosition().Z - 0.1));
+                                          selectedSceneNode->getPosition().Z - 15*delta));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
@@ -1218,7 +1240,7 @@ void Cena::aproximaObjetoSelecionado(){
         else if(camera_04){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
                                           selectedSceneNode->getPosition().Y,
-                                          selectedSceneNode->getPosition().Z + 0.1));
+                                          selectedSceneNode->getPosition().Z + 15*delta));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
                                         selectedSceneNode->getPosition().Y,
@@ -1227,7 +1249,7 @@ void Cena::aproximaObjetoSelecionado(){
 
         if(camera_06){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                          selectedSceneNode->getPosition().Y - 0.1,
+                                          selectedSceneNode->getPosition().Y - 15*delta,
                                           selectedSceneNode->getPosition().Z ));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
@@ -1236,7 +1258,7 @@ void Cena::aproximaObjetoSelecionado(){
         }
         else if(camera_05){
             camera->setPosition(Vector3df(selectedSceneNode->getPosition().X,
-                                          selectedSceneNode->getPosition().Y + 0.1,
+                                          selectedSceneNode->getPosition().Y + 15*delta,
                                           selectedSceneNode->getPosition().Z));
 
             camera->setTarget(Vector3df(selectedSceneNode->getPosition().X,
@@ -1245,7 +1267,7 @@ void Cena::aproximaObjetoSelecionado(){
         }
 
         if(camera_03){
-            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X - 0.1,
+            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X - 15*delta,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
 
@@ -1254,7 +1276,7 @@ void Cena::aproximaObjetoSelecionado(){
                                         selectedSceneNode->getPosition().Z));
         }
         else if(camera_02){
-            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X + 0.1,
+            camera->setPosition(Vector3df(selectedSceneNode->getPosition().X + 15*delta,
                                           selectedSceneNode->getPosition().Y,
                                           selectedSceneNode->getPosition().Z));
 
@@ -1278,7 +1300,7 @@ void Cena::selection()
                                                         smgr->getActiveCamera());
         if (selectedSceneNode){
                     selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
-                    selectedSceneNode = 0;                    
+                    selectedSceneNode = 0;
         }
 
         selectedSceneNode = collMan->getSceneNodeAndCollisionPointFromRay(ray, intersection, tri, S);

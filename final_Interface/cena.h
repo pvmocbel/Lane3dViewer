@@ -93,8 +93,8 @@ public:
     void load();
     void geraMalha();
     void geraMalhaCube(irr::core::aabbox3df box, const nodeParam& , FILE *file);
-    void geraMalhaCone(irr::core::aabbox3df box, const nodeParam&, FILE *file);
-    void geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam&, FILE *file);
+    void geraMalhaCone(const nodeParam &param, FILE *file);
+    void geraMalhaEsfera(irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaAntenna(const Vector3df &position, FILE *file, FILE* file2);
 
