@@ -113,8 +113,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>145</width>
-               <height>385</height>
+               <width>140</width>
+               <height>195</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -372,7 +372,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-103</y>
+               <y>0</y>
                <width>150</width>
                <height>611</height>
               </rect>
@@ -679,7 +679,7 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>6</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_Ponto">
                  <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -730,16 +730,19 @@
                         </size>
                        </property>
                        <property name="suffix">
-                        <string>m</string>
+                        <string>mm</string>
                        </property>
                        <property name="decimals">
-                        <number>5</number>
+                        <number>3</number>
                        </property>
                        <property name="minimum">
                         <double>-100.000000000000000</double>
                        </property>
                        <property name="singleStep">
                         <double>0.010000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>7.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -862,7 +865,7 @@
                         <double>0.010000000000000</double>
                        </property>
                        <property name="value">
-                        <double>0.300000000000000</double>
+                        <double>0.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -888,7 +891,7 @@
                         <double>0.010000000000000</double>
                        </property>
                        <property name="value">
-                        <double>0.000000000000000</double>
+                        <double>0.100000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -1470,82 +1473,7 @@
                     <property name="title">
                      <string>Dimension</string>
                     </property>
-                    <layout class="QGridLayout" name="gridLayout">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_15">
-                       <property name="text">
-                        <string>raio1:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1" colspan="2">
-                      <widget class="QDoubleSpinBox" name="raio_cone_eye_antenna">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>91</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="suffix">
-                        <string>m</string>
-                       </property>
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="value">
-                        <double>0.007330000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0" colspan="2">
-                      <widget class="QLabel" name="label_16">
-                       <property name="text">
-                        <string>altura1:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="2">
-                      <widget class="QDoubleSpinBox" name="height_cone_eye_antenna">
-                       <property name="minimumSize">
-                        <size>
-                         <width>81</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="suffix">
-                        <string>m</string>
-                       </property>
-                       <property name="decimals">
-                        <number>3</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.001000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>0.024000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="2">
-                      <spacer name="verticalSpacer_7">
-                       <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>48</width>
-                         <height>148</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
+                    <layout class="QGridLayout" name="gridLayout"/>
                    </widget>
                   </item>
                  </layout>
@@ -1907,10 +1835,10 @@
   </action>
   <action name="actionEyeAntenna">
    <property name="text">
-    <string>EyeAntenna</string>
+    <string>Antenna</string>
    </property>
    <property name="toolTip">
-    <string>cria Eye Antenna</string>
+    <string>Antenna</string>
    </property>
   </action>
  </widget>
@@ -1988,8 +1916,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>131</y>
+     <x>847</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>638</x>
@@ -2004,8 +1932,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>147</y>
+     <x>847</x>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel">
      <x>638</x>
@@ -2020,8 +1948,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>155</y>
+     <x>847</x>
+     <y>311</y>
     </hint>
     <hint type="destinationlabel">
      <x>637</x>
@@ -2036,8 +1964,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>162</y>
+     <x>847</x>
+     <y>351</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2052,8 +1980,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>178</y>
+     <x>847</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2068,8 +1996,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>186</y>
+     <x>847</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
      <x>635</x>
@@ -2084,8 +2012,8 @@
    <slot>set_haste()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>797</x>
-     <y>193</y>
+     <x>847</x>
+     <y>467</y>
     </hint>
     <hint type="destinationlabel">
      <x>636</x>
@@ -2100,8 +2028,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>142</y>
+     <x>806</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>602</x>
@@ -2116,8 +2044,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>189</y>
+     <x>806</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
      <x>598</x>
@@ -2132,8 +2060,8 @@
    <slot>set_cube()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>222</y>
+     <x>806</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
      <x>597</x>
@@ -2148,8 +2076,8 @@
    <slot>set_esfera()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>127</y>
+     <x>806</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>625</x>
@@ -2164,8 +2092,8 @@
    <slot>set_cilindro()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>127</y>
+     <x>806</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>621</x>
@@ -2180,8 +2108,8 @@
    <slot>set_cilindro()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>837</x>
-     <y>129</y>
+     <x>806</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>608</x>
@@ -2196,8 +2124,8 @@
    <slot>set_cone()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>838</x>
-     <y>165</y>
+     <x>806</x>
+     <y>229</y>
     </hint>
     <hint type="destinationlabel">
      <x>671</x>
@@ -2212,44 +2140,12 @@
    <slot>set_cone()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>838</x>
-     <y>198</y>
+     <x>806</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
      <x>672</x>
      <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>raio_cone_eye_antenna</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>set_eyeAntenna()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>798</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>690</x>
-     <y>245</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>height_cone_eye_antenna</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>set_eyeAntenna()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>819</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>688</x>
-     <y>285</y>
     </hint>
    </hints>
   </connection>

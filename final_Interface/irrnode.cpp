@@ -1,9 +1,8 @@
 #include "irrnode.h"
 
 
-IrrNode::IrrNode():selectedSceneNode(0),first_cube(true)
-{
-}
+IrrNode::IrrNode():selectedSceneNode(0),delta(0.0)
+{}
 
 void IrrNode::criaPonto(IrrSmgr *const smgr, nodeParam* param, const irr::c8 *nodeName){
     if(smgr)
@@ -32,35 +31,29 @@ void IrrNode::criaHaste(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *no
     if(smgr)
     {
         Vector3df angle;
-        Vector3df v1,v2,v3,v4;
-        v1.set(1,0,0);
-        v2.set(0,1,0);
-        v3.set(0,0,1);
-        v4.set(param->dimension2.X-param->dimension.X,
-               param->dimension2.Y-param->dimension.Y,
-               param->dimension2.Z-param->dimension.Z);
-
-        double height = sqrt((param->dimension2.X-param->dimension.X)*(param->dimension2.X-param->dimension.X)
-                             +(param->dimension2.Y-param->dimension.Y)*(param->dimension2.Y-param->dimension.Y)
-                             +(param->dimension2.Z-param->dimension.Z)*(param->dimension2.Z-param->dimension.Z));
+        double height = 0;
 
         if(param->dimension.X != param->dimension2.X){
+            height = param->dimension2.X - param->dimension.X;
             angle.X = 0;
             angle.Y = 0;
             angle.Z = -90;
         }
         else if(param->dimension.Y != param->dimension2.Y){
+            height = param->dimension2.Y - param->dimension.Y;
             angle.X = 0;
             angle.Y = 0;
             angle.Z = 0;
         }
         else if(param->dimension.Z != param->dimension2.Z){
+            height = param->dimension2.Z - param->dimension.Z;
             angle.X = -90;
             angle.Y = 0;
             angle.Z = 0;                        
         }
 
-        float raio = 0.005;
+        float raio = param->raio_haste/1000.0;
+        if(raio<0.005) raio = raio*50;
 
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
         irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(raio, height, 6);
@@ -90,17 +83,25 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
         irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(param->dimension);
-        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
+        irr::scene::IMesh* mesh_aux = geo->createCubeMesh(Vector3df(0,0,0));
+        irr::scene::IMeshSceneNode *cube_node_temp = smgr->addMeshSceneNode(mesh_cube_node);
+        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_aux);
 
-        if (cube_node)
+        if (cube_node_temp)
         {
-          cube_node->setPosition(param->position);
+           cube_node->setPosition(Vector3df(param->position.X + param->dimension.X/2,
+                                             param->position.Y + param->dimension.Y/2,
+                                             param->position.Z + param->dimension.Z/2));
+
+          cube_node->addChild(cube_node_temp);
           cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
           cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-          cube_node->setID(ID_FLAG_CUBO|S);
+//          cube_node->setID(ID_FLAG_CUBO|S);
+          cube_node_temp->setID(ID_FLAG_CUBO|S);
 
-          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 32);
+          seletor = smgr->createOctTreeTriangleSelector(cube_node_temp->getMesh(), cube_node_temp, 32);
           cube_node->setTriangleSelector(seletor);
+//          cube_node->setTriangleSelector(seletor);
           seletor->drop();
 
           cube_node->setName(nodeName);
@@ -179,43 +180,61 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
         }
     }
 }
-void IrrNode::criaEyeAntenna(IrrSmgr *const smgr, nodeParam *param, const irr::c8 *nodeName){
+void IrrNode::criaAntenna(IrrSmgr *const smgr, const Vector3df& position, const irr::c8 *nodeName){
     if(smgr)
     {
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y*0.5, 6 );
-        irr::scene::IMeshSceneNode *cone_node1 = smgr->addMeshSceneNode(mesh_cone_node);
-        irr::scene::IMeshSceneNode *cone_node2 = smgr->addMeshSceneNode(mesh_cone_node);
 
-        if (cone_node1)
+        irr::scene::IMesh *mesh_plane = geo->createCubeMesh(Vector3df(0.3, delta, 0.3));
+        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(Vector3df(0.06, 0.09, 0.06));
+
+        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
+        irr::scene::IMeshSceneNode *plane = smgr->addMeshSceneNode(mesh_plane);
+
+        irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(0.01, 0.03, 10);
+        irr::scene::IMeshSceneNode *haste = smgr->addMeshSceneNode(mesh_cilindro_node);
+
+        if (plane)
         {
-          cone_node1->setPosition(param->position);
-          cone_node1->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cone_node1->setID(ID_FLAG_EYE_ANTENNA|S);
-
-          seletor = smgr->createOctTreeTriangleSelector(cone_node1->getMesh(), cone_node1, 32);
-          cone_node1->setTriangleSelector(seletor);
+          plane->setPosition(Vector3df(position.X, (position.Y + 0.15)-0.09/2, position.Z));
+          plane->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
+          plane->setMaterialFlag(irr::video::EMF_LIGHTING, true);
+          plane->setID(ID_FLAG_ANTENNA);
+          plane->setParent(cube_node);
+          seletor = smgr->createOctTreeTriangleSelector(plane->getMesh(), plane, 32);
+          plane->setTriangleSelector(seletor);
           seletor->drop();
 
-          cone_node1->setName(nodeName);
-
-          selectedSceneNode = (irr::scene::ISceneNode*)cone_node1;
+          selectedSceneNode = (irr::scene::ISceneNode*)plane;
         }
-        if (cone_node2)
-        {
-          cone_node2->setPosition(param->position);
-          cone_node2->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-          cone_node2->setID(ID_FLAG_EYE_ANTENNA|S);
-          cone_node2->setRotation(Vector3df(180,0,0));
-          cone_node2->setParent(cone_node1);
 
-          seletor = smgr->createOctTreeTriangleSelector(cone_node2->getMesh(), cone_node2, 32);
-          cone_node2->setTriangleSelector(seletor);
+        if (cube_node)
+        {
+          cube_node->setPosition(position);
+          cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
+          cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
+          cube_node->setID(ID_FLAG_ANTENNA|S);
+
+          seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 32);
+          cube_node->setTriangleSelector(seletor);
           seletor->drop();
 
-          cone_node2->setName(nodeName);
+          cube_node->setName(nodeName);
 
-          selectedSceneNode = (irr::scene::ISceneNode*)cone_node2;
+          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;
+        }
+
+        if (haste)
+        {
+            haste->setPosition(Vector3df(position.X, (position.Y + 0.09)-0.09/2, position.Z));
+          haste->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+          haste->setID(ID_FLAG_ANTENNA);
+          haste->setParent(cube_node);
+          seletor = smgr->createOctTreeTriangleSelector(plane->getMesh(), haste, 128);
+          haste->setTriangleSelector(seletor);
+          seletor->drop();
+
+          selectedSceneNode = (irr::scene::ISceneNode*)haste;
         }
     }
 }
@@ -277,9 +296,6 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
         (*gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_Z)->setVisible(false);
     }
-    mesh_gizmo_X->drop();
-    mesh_gizmo_Y->drop();
-    mesh_gizmo_Z->drop();
 }
 
 void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
@@ -322,23 +338,17 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
 
     if((*r_analise_gizmo_X)&& (*r_analise_gizmo_Y) && (*r_analise_gizmo_Z))
     {
-        (*r_analise_gizmo_X)->setPosition(Vector3df(-dim.X*0.5,
-                                                    -dim.Y*0.5,
-                                                    dim.Z*0.5));
+        (*r_analise_gizmo_X)->setPosition(Vector3df(0, 0, 0));
         (*r_analise_gizmo_X)->setRotation(Vector3df(0,0,-90));
         (*r_analise_gizmo_X)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_X)->setVisible(true);
 
-        (*r_analise_gizmo_Y)->setPosition(Vector3df(-dim.X*0.5,
-                                                    -dim.Y*0.5,
-                                                    dim.Z*0.5));
+        (*r_analise_gizmo_Y)->setPosition(Vector3df(0,0,0));
         (*r_analise_gizmo_Y)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Y)->setVisible(true);
 
-        (*r_analise_gizmo_Z)->setPosition(Vector3df(-dim.X*0.5,
-                                                    -dim.Y*0.5,
-                                                    dim.Z*0.5));
-        (*r_analise_gizmo_Z)->setRotation(Vector3df(-90,0,0));
+        (*r_analise_gizmo_Z)->setPosition(Vector3df(0,0,0));
+        (*r_analise_gizmo_Z)->setRotation(Vector3df(90,0,0));
         (*r_analise_gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*r_analise_gizmo_Z)->setVisible(true);
     }

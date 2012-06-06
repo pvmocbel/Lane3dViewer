@@ -89,11 +89,14 @@ public:
     float dx;
     float dy;
 
+    void save();
+    void load();
+    void geraMalha();
     void geraMalhaCube(irr::core::aabbox3df box, const nodeParam& , FILE *file);
     void geraMalhaCone(irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaEsfera(int id, irr::core::aabbox3df box, const nodeParam&, FILE *file);
     void geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam&, FILE *file);
-    void geraMalhaEyeAntenna(const nodeParam &, FILE *file);
+    void geraMalhaAntenna(const Vector3df &position, FILE *file, FILE* file2);
 
     void insertHaste(int , IrrNode* node, nodeParam*);
     void insertHasteChanged(IrrNode* node, nodeParam*, int);
@@ -110,8 +113,7 @@ public:
     void insertCilindro(int, IrrNode* node, nodeParam*);
     void insertCilindroChanged(IrrNode* node, nodeParam*, int);
 
-    void insertEyeAntenna(int, IrrNode*node, nodeParam*);
-    void insertEyeAntennaChanged(IrrNode*node, nodeParam*, int);
+    void insertAntenna(int, IrrNode*node, const Vector3df&position);
 
     int getIdFromNode(std::string nodeName){
         if(nodeId.find(nodeName)==nodeId.end()){
@@ -123,12 +125,9 @@ public:
     int calcula_raio(const intVector& p1, const intVector& p2);
     int calcula_raio2(const intVector& p1, const intVector& p2);
 
-    void printRegiaoAnalise(irr::core::aabbox3df box);
-
     inline void removeSceneNode();
     void removeChangedSceneNode();
     inline void duplicateSceneNode();
-    void geraMalha();
 
     inline void gizmo();
     void cenaIrrlicht();
@@ -140,8 +139,8 @@ public:
     void criaRegiaoAnalise(const Dim3df& dim, double delta);
     inline void cenaIluminacao();
 
+    void printRegiaoAnalise(irr::core::aabbox3df box);
     void drawIrrlichtScene();
-
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent( QMouseEvent* event );

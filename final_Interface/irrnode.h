@@ -9,14 +9,10 @@ private:
     irr::scene::ITriangleSelector* seletor;
     irr::scene::ISceneNode* selectedSceneNode;
 
-    Pos3df position;
-    Dim3df dimension;
-
-    bool first_cube;
-
 public:
     IrrNode();
     irr::scene::ISceneNode* getNode()const {return selectedSceneNode;}
+    float delta;
 
     void criaCubo(IrrSmgr* const,
                   nodeParam* param,
@@ -43,8 +39,8 @@ public:
                   nodeParam *param,
                   const irr::c8* nodeName);
 
-    void criaEyeAntenna(IrrSmgr* const smgr,
-                        nodeParam *param,
+    void criaAntenna(IrrSmgr* const smgr,
+                        const Vector3df& position,
                         const irr::c8* nodeName);
 
     void criaGizmo( IrrSmgr* const,

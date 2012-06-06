@@ -36,14 +36,14 @@ public slots:
     void cone_triggered();
     void cilindro_triggered();
     void esfera_triggered();
-    void eyeAntenna_triggered();
+    void antenna_triggered();
 
     void set_haste();
     void set_esfera();
     void set_cube();
     void set_cilindro();
     void set_cone();
-    void set_eyeAntenna();
+    void set_antenna();
 
     void gerarMalha();
 
@@ -57,7 +57,7 @@ public slots:
     void setPainelEsfera();
     void setPainelCilindro();
     void setPainelCone();
-    void setPainelEyeAntenna();
+    void setPainelAntenna();
 
 protected:
 

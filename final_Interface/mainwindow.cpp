@@ -16,14 +16,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
+    ui->stackedWidget_Lateral->setCurrentIndex(0);
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(new_triggered()));
+    connect(ui->actionSave, SIGNAL(triggered()), this , SLOT(save_triggered()));
+    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open_triggered()));
     connect(ui->actionPonto, SIGNAL(triggered()), this, SLOT(ponto_triggered()));
     connect(ui->actionCubo, SIGNAL(triggered()), this, SLOT(cubo_triggered()));
     connect(ui->actionLinha, SIGNAL(triggered()), this , SLOT(linha_triggered()));
     connect(ui->actionCone, SIGNAL(triggered()), this, SLOT(cone_triggered()));
     connect(ui->actionEsfera, SIGNAL(triggered()), this, SLOT(esfera_triggered()));
     connect(ui->actionCilindro, SIGNAL(triggered()), this, SLOT(cilindro_triggered()));
-    connect(ui->actionEyeAntenna, SIGNAL(triggered()), this , SLOT(eyeAntenna_triggered()));
+    connect(ui->actionEyeAntenna, SIGNAL(triggered()), this , SLOT(antenna_triggered()));
 }
 void MainWindow::gerarMalha(){
     if(cena){
@@ -47,9 +50,16 @@ void MainWindow::change_position(){
 void MainWindow::receiver_selection(nodeDimensions* param){
     if(cena && cena->selectedSceneNode){
 
-        ui->position_X->setValue(cena->selectedSceneNode->getPosition().X);
-        ui->position_Y->setValue(cena->selectedSceneNode->getPosition().Y);
-        ui->position_Z->setValue(cena->selectedSceneNode->getPosition().Z);
+        float x,y,z;
+        x = cena->selectedSceneNode->getPosition().X;
+        y = cena->selectedSceneNode->getPosition().Y;
+        z = cena->selectedSceneNode->getPosition().Z;
+
+        ui->position_X->setValue(x);
+        ui->position_Y->setValue(y);
+        ui->position_Z->setValue(z);
+
+        cena->selectedSceneNode->setPosition(Vector3df(x,y,z));
 
         switch((cena->selectedSceneNode->getID()&MASK)){
              case(ID_FLAG_CUBO):
@@ -113,8 +123,9 @@ void MainWindow::receiver_selection(nodeDimensions* param){
                 ui->haste_inicial_z->setValue(param->dimension.Z);
 
                 ui->haste_final_x->setValue(param->dimension2.X);
-                ui->haste_final_y->setValue(param->dimension2.X);
-                ui->haste_final_z->setValue(param->dimension2.X);
+                ui->haste_final_y->setValue(param->dimension2.Y);
+                ui->haste_final_z->setValue(param->dimension2.Z);
+
                 ui->raio_haste->setValue(param->raio_haste);
                 break;
 
@@ -123,16 +134,13 @@ void MainWindow::receiver_selection(nodeDimensions* param){
                 cena->setFocus();
                 break;
 
-            case(ID_FLAG_EYE_ANTENNA):
-                setPainelEyeAntenna();
+            case(ID_FLAG_ANTENNA):
+                setPainelAntenna();
                 cena->setFocus();
 
                 ui->position_X->setEnabled(true);
                 ui->position_Y->setEnabled(true);
                 ui->position_Z->setEnabled(true);
-
-                ui->raio_cone_eye_antenna->setValue(param->dimension.X);
-                ui->height_cone_eye_antenna->setValue(param->dimension.Y);
 
                 break;
          }
@@ -142,6 +150,40 @@ void MainWindow::receiver_selection(nodeDimensions* param){
 void MainWindow::set_haste(){
     if(cena && (cena->selectedSceneNode)){
         nodeParam *param = new nodeParam();
+        if(ui->haste_inicial_x->value() != ui->haste_final_x->value()){
+            if(ui->haste_inicial_x->value()>ui->haste_final_x->value()){
+                float aux = ui->haste_final_x->value();
+                ui->haste_final_x->setValue(ui->haste_inicial_x->value());
+                ui->haste_inicial_x->setValue(aux);
+            }
+            if(ui->haste_inicial_y->value() != ui->haste_final_y->value())
+                ui->haste_final_y->setValue(ui->haste_inicial_y->value());
+            if(ui->haste_inicial_z->value() != ui->haste_final_z->value())
+                ui->haste_final_z->setValue(ui->haste_inicial_z->value());
+        }
+        else if (ui->haste_inicial_y->value() != ui->haste_final_y->value()){
+            if(ui->haste_inicial_y->value()>ui->haste_final_y->value()){
+                float aux = ui->haste_final_y->value();
+                ui->haste_final_y->setValue(ui->haste_inicial_y->value());
+                ui->haste_inicial_y->setValue(aux);
+            }
+            if(ui->haste_inicial_x->value() != ui->haste_final_x->value())
+                ui->haste_final_x->setValue(ui->haste_inicial_x->value());
+            if(ui->haste_inicial_z->value() != ui->haste_final_z->value())
+                ui->haste_final_z->setValue(ui->haste_inicial_z->value());
+        }
+        else if(ui->haste_inicial_z->value() != ui->haste_final_z->value()){
+            if(ui->haste_inicial_z->value()>ui->haste_final_z->value()){
+                float aux = ui->haste_final_z->value();
+                ui->haste_final_z->setValue(ui->haste_inicial_z->value());
+                ui->haste_inicial_z->setValue(aux);
+            }
+            if(ui->haste_inicial_x->value() != ui->haste_final_x->value())
+                ui->haste_final_x->setValue(ui->haste_inicial_x->value());
+            if(ui->haste_inicial_y->value() != ui->haste_final_y->value())
+                ui->haste_final_y->setValue(ui->haste_inicial_y->value());
+        }
+
         param->dimension.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
         param->dimension2.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
         param->raio_haste = ui->raio_haste->value();
@@ -205,12 +247,11 @@ void MainWindow::set_cone(){
         delete param;
     }
 }
-void MainWindow::set_eyeAntenna(){
+void MainWindow::set_antenna(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
-        param->dimension.set(ui->raio_cone_eye_antenna->value(), ui->height_cone_eye_antenna->value(), 0);
-        param->type = EyeAntenna;
+        param->type = Antenna;
         param->box = cena->selectedSceneNode->getBoundingBox();
         param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
 
@@ -222,7 +263,6 @@ void MainWindow::set_eyeAntenna(){
 void MainWindow::new_triggered()
 {
     Dialog_CGerais* d = new Dialog_CGerais();
-
     d->show();
     d->exec();
 
@@ -237,44 +277,39 @@ void MainWindow::new_triggered()
     cena->resize(2048, 2048);
     ui->grid_Interface->addWidget(cena, 0, 0);
     cena->setFocus(Qt::MouseFocusReason);
-    ui->centralWidget->setFocus(Qt::MouseFocusReason);
 
     cena->createIrrichtDevice();
     cena->cenaIrrlicht();
     cena->criaRegiaoAnalise(d->getDimension(), d->getDelta());
 
+//-------------------position------------------------//
+    ui->position_X->setMinimum(0);
+    ui->position_Y->setMinimum(0);
+    ui->position_Z->setMinimum(0);
+
     ui->position_X->setSingleStep(d->delta);
     ui->position_Y->setSingleStep(d->delta);
     ui->position_Z->setSingleStep(d->delta);
 
-    ui->raio_haste->setMaximum(d->delta*0.5);
-    ui->raio_haste->setMinimum(d->delta*0.1);
+//-------------------haste------------------------//
+    ui->raio_haste->setMinimum(d->delta/10);
     ui->raio_haste->setSingleStep(d->delta);
 
-    ui->raio_cilindro->setMinimum(d->delta*2);
-
-    ui->haste_inicial_x->setMinimum(-d->getDimension().X);
-    ui->haste_inicial_y->setMinimum(-d->getDimension().X);
-    ui->haste_inicial_z->setMinimum(-d->getDimension().X);
-    ui->haste_inicial_x->setMaximum(d->getDimension().X);
-    ui->haste_inicial_y->setMaximum(d->getDimension().Y);
-    ui->haste_inicial_z->setMaximum(d->getDimension().Z);
-
+    ui->haste_inicial_x->setMinimum(0);
     ui->haste_inicial_x->setSingleStep(d->delta);
+    ui->haste_inicial_y->setMinimum(0);
     ui->haste_inicial_y->setSingleStep(d->delta);
+    ui->haste_inicial_z->setMinimum(0);
     ui->haste_inicial_z->setSingleStep(d->delta);
 
-    ui->haste_final_x->setMinimum(-d->getDimension().X);
-    ui->haste_final_y->setMinimum(-d->getDimension().X);
-    ui->haste_final_z->setMinimum(-d->getDimension().X);
-    ui->haste_final_x->setMaximum(d->getDimension().X);
-    ui->haste_final_y->setMaximum(d->getDimension().Y);
-    ui->haste_final_z->setMaximum(d->getDimension().Z);
-
+    ui->haste_final_x->setMaximum(d->dimension.X);
     ui->haste_final_x->setSingleStep(d->delta);
+    ui->haste_final_y->setMaximum(d->dimension.Y);
     ui->haste_final_y->setSingleStep(d->delta);
+    ui->haste_final_z->setMaximum(d->dimension.Z);
     ui->haste_final_z->setSingleStep(d->delta);
 
+//-------------------cube------------------------//
     ui->cube_dim_X->setMinimum(d->delta);
     ui->cube_dim_X->setSingleStep(d->delta);
     ui->cube_dim_Y->setMinimum(d->delta);
@@ -282,22 +317,20 @@ void MainWindow::new_triggered()
     ui->cube_dim_Z->setMinimum(d->delta);
     ui->cube_dim_Z->setSingleStep(d->delta);
 
-    ui->raio_cilindro->setSingleStep(d->delta);
+//-------------------cilindro------------------------//
+    ui->raio_cilindro->setSingleStep(d->delta*4);
     ui->comprimento_cilindro->setMinimum(d->delta);
     ui->comprimento_cilindro->setSingleStep(d->delta);
 
+ //-------------------cone------------------------//
     ui->raio_cone->setMinimum(d->delta*4);
     ui->raio_cone->setSingleStep(d->delta);
     ui->comprimento_cone->setMinimum(d->delta);
     ui->comprimento_cone->setSingleStep(d->delta);
 
+  //-------------------esfera------------------------//
     ui->raio_esfera->setMinimum(d->delta*4);
     ui->raio_esfera->setSingleStep(d->delta);
-
-    ui->raio_cone_eye_antenna->setMinimum(d->delta*4);
-    ui->raio_cone_eye_antenna->setSingleStep(d->delta);
-    ui->height_cone_eye_antenna->setMinimum(d->delta*4);
-    ui->height_cone_eye_antenna->setSingleStep(d->delta);
 
     ui->stackedWidget_Lateral->setCurrentIndex(0);
 
@@ -305,11 +338,11 @@ void MainWindow::new_triggered()
 }
 void MainWindow::open_triggered()
 {
-   // ui->lineEdit_LinhaName->setText("Open");
+   cena->load();
 }
 void MainWindow::save_triggered()
 {
-    //ui->lineEdit_LinhaName->setText("Save");
+    cena->save();
 }
 void MainWindow::posicao_triggered()
 {
@@ -336,10 +369,12 @@ void MainWindow::linha_triggered()
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
 
-    param->position.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
-    param->dimension.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+    param->dimension.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
+    param->dimension2.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
     param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
     param->type = Haste;
+    param->raio_haste = ui->raio_haste->value();
+
     ui->position_X->setEnabled(false);
     ui->position_Y->setEnabled(false);
     ui->position_Z->setEnabled(false);
@@ -410,22 +445,17 @@ void MainWindow::cone_triggered()
     cena->insertCone(id, new IrrNode(), param);
     delete param;
 }
-void MainWindow::eyeAntenna_triggered(){
-    setPainelEyeAntenna();
+void MainWindow::antenna_triggered(){
+    setPainelAntenna();
     int id = cena->get_serialize_id();
-    nodeParam *param = new nodeParam();
 
     ui->position_X->setEnabled(true);
     ui->position_Y->setEnabled(true);
     ui->position_Z->setEnabled(true);
 
-    param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
-    param->dimension.set(ui->raio_cone_eye_antenna->value(), ui->height_cone_eye_antenna->value(), 0);
-    param->parametros.set(ui->permissividade->value(), ui->permeabilidade->value(), ui->condutibilidade->value());
-    param->type = EyeAntenna;
+    Vector3df position(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
 
-    cena->insertEyeAntenna(id, new IrrNode(), param);
-    delete param;
+    cena->insertAntenna(id, new IrrNode(), position);
 }
 
 void MainWindow::setPainelPonto()
@@ -448,6 +478,8 @@ void MainWindow::setPainelHaste()
     ui->stackedWidget_pnLateralObj->setCurrentIndex(1);
     ui->stackedWidget_pnLateralObj->setMinimumHeight(230);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(230);
+//    ui->stackedWidget_pnLateralObj->setMinimumWidth(200);
+//    ui->stackedWidget_Lateral->setMinimumWidth(200);
 
     ui->haste_inicial_x->setMinimumWidth(62);
     ui->haste_inicial_y->setMinimumWidth(62);
@@ -491,7 +523,7 @@ void MainWindow::setPainelCone(){
     ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
     ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
-void MainWindow::setPainelEyeAntenna(){
+void MainWindow::setPainelAntenna(){
     ui->label_PainelTitulo_1->setText("Eye Antenna");
     ui->lineEdit_Name->setText("Eye Antenna");
     ui->stackedWidget_Lateral->setCurrentIndex(1);
