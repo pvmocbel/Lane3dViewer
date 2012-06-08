@@ -45,6 +45,8 @@ typedef struct NodeParameters{
 struct nodeDimensions{
     Vector3df dimension;
     Vector3df dimension2;
+    Vector3df parametros;
+    Vector3df position;
     float raio_haste;
 };
 
@@ -80,8 +82,8 @@ signals:
 
 public slots:
       virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
-      virtual void receiver_changed_dimension_mainwindow(const Dim3df& pos, int );
       virtual void receiver_changed_dimension(nodeParam*);
+      virtual void receiver_changed_material_parameter(const Vector3df&, int);
 
 
 };//fim da class irrViewer

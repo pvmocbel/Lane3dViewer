@@ -1,8 +1,58 @@
 #include "irrnode.h"
 
-
 IrrNode::IrrNode():selectedSceneNode(0),delta(0.0)
 {}
+
+
+irr::scene::IMesh* IrrNode::createCube(const Vector3df& size)const
+{
+    irr::scene::SMeshBuffer* buffer = new irr::scene::SMeshBuffer();
+
+    // Create indices
+    const irr::u16 u[36] = {   0,2,1,   0,3,2,   1,5,4,   1,2,5,   4,6,7,   4,5,6,
+            7,3,0,   7,6,3,   9,5,2,   9,8,5,   0,11,10,   0,10,7};
+
+    buffer->Indices.set_used(36);
+
+    for (irr::u32 i=0; i<36; ++i)
+        buffer->Indices[i] = u[i];
+
+
+    // Create vertices
+    irr::video::SColor clr(255,255,255,255);
+
+    buffer->Vertices.reallocate(12);
+
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,0,0, -1,-1,-1, clr, 0, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,0,0,  1,-1,-1, clr, 1, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,1,0,  1, 1,-1, clr, 1, 0));
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,1,0, -1, 1,-1, clr, 0, 0));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,0,1,  1,-1, 1, clr, 0, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,1,1,  1, 1, 1, clr, 0, 0));
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,1,1, -1, 1, 1, clr, 1, 0));
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,0,1, -1,-1, 1, clr, 1, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,1,1, -1, 1, 1, clr, 0, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(0,1,0, -1, 1,-1, clr, 1, 1));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,0,1,  1,-1, 1, clr, 1, 0));
+    buffer->Vertices.push_back(irr::video::S3DVertex(1,0,0,  1,-1,-1, clr, 0, 0));
+
+    // Recalculate bounding box
+    buffer->BoundingBox.reset(0,0,0);
+
+    for (irr::u32 i=0; i<12; ++i)
+    {
+                //buffer->Vertices[i].Pos -= core::vector3df(0.5f, 0.5f, 0.5f);
+        buffer->Vertices[i].Pos *= size;
+        buffer->BoundingBox.addInternalPoint(buffer->Vertices[i].Pos);
+    }
+
+    irr::scene::SMesh* mesh = new irr::scene::SMesh;
+    mesh->addMeshBuffer(buffer);
+    buffer->drop();
+
+    mesh->recalculateBoundingBox();
+    return mesh;
+}
 
 void IrrNode::criaPonto(IrrSmgr *const smgr, nodeParam* param, const irr::c8 *nodeName){
     if(smgr)
@@ -81,32 +131,22 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
 {
     if(smgr)
     {
-        const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
-        irr::scene::IMesh *mesh_cube_node = geo->createCubeMesh(param->dimension);
-        irr::scene::IMesh* mesh_aux = geo->createCubeMesh(Vector3df(0,0,0));
-        irr::scene::IMeshSceneNode *cube_node_temp = smgr->addMeshSceneNode(mesh_cube_node);
-        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_aux);
+        irr::scene::IMesh *mesh_cube_node = createCube(param->dimension);
+        irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
 
-        if (cube_node_temp)
+        if (cube_node)
         {
-           cube_node->setPosition(Vector3df(param->position.X + param->dimension.X/2,
-                                             param->position.Y + param->dimension.Y/2,
-                                             param->position.Z + param->dimension.Z/2));
+           cube_node->setPosition(param->position);
+           cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
+           cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
+           cube_node->setID(ID_FLAG_CUBO|S);
 
-          cube_node->addChild(cube_node_temp);
-          cube_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE,true);
-          cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-//          cube_node->setID(ID_FLAG_CUBO|S);
-          cube_node_temp->setID(ID_FLAG_CUBO|S);
+           seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
+           cube_node->setTriangleSelector(seletor);
+           seletor->drop();
 
-          seletor = smgr->createOctTreeTriangleSelector(cube_node_temp->getMesh(), cube_node_temp, 32);
-          cube_node->setTriangleSelector(seletor);
-//          cube_node->setTriangleSelector(seletor);
-          seletor->drop();
-
-          cube_node->setName(nodeName);
-
-          selectedSceneNode = (irr::scene::ISceneNode*)cube_node;
+           cube_node->setName(nodeName);
+           selectedSceneNode = (irr::scene::ISceneNode*)cube_node;
         }
     }
 }
@@ -292,7 +332,7 @@ void IrrNode::criaGizmo(IrrSmgr* const smgr,
 
         (*gizmo_Z)->setID(ID_FLAG_GIZMO_Z);
         (*gizmo_Z)->setPosition(Vector3df(0, 0, 0));
-        (*gizmo_Z)->setRotation(Vector3df(-90,0,0));
+        (*gizmo_Z)->setRotation(Vector3df(90,0,0));
         (*gizmo_Z)->setMaterialFlag(irr::video::EMF_LIGHTING,false);
         (*gizmo_Z)->setVisible(false);
     }
@@ -309,7 +349,7 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
 
     irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.X+0.1,
+                                                            dim.X + 3*delta,
                                                             dim.X,
                                                             0.005,
                                                             0.03,
@@ -317,16 +357,16 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
                                                             irr::video::SColor(255,0,0,255) );
     irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.X+0.1,
-                                                            dim.X,
+                                                            dim.Y + 3*delta,
+                                                            dim.Y,
                                                             0.005,
                                                             0.03,
                                                             irr::video::SColor(255,0,255,0),
                                                             irr::video::SColor(255,0,255,0) );
     irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.X+0.1,
-                                                            dim.X,
+                                                            dim.Z + 3*delta,
+                                                            dim.Y,
                                                             0.005,
                                                             0.03,
                                                             irr::video::SColor(255,255,0,0),

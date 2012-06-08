@@ -54,6 +54,8 @@ public:
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Y,
                     irr::scene::IMeshSceneNode **r_analise_gizmo_Z,
                     const Dim3df&);
+
+    irr::scene::IMesh* createCube(const Vector3df& size) const;
 };
 
 #endif // IRRNODE_H

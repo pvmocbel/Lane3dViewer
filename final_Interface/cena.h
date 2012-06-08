@@ -24,8 +24,7 @@ class Cena: public IrrViewer
 {
 //    Q_OBJECT
 private:
-    irr::scene::ISceneNode *MoveSceneNode;
-    irr::scene::ILightSceneNode *light;
+     irr::scene::ILightSceneNode *light;
     irr::scene::ISceneCollisionManager *collMan;
     irr::scene::ITriangleSelector* seletor;
 
@@ -51,6 +50,7 @@ private:
     bool camera_05;
     bool camera_06;
 
+    float fator;
     Vector3df dim;
     double delta;
 
@@ -72,6 +72,7 @@ public:
     Cena();
     ~Cena();
     void init();
+    irr::scene::ISceneNode *MoveSceneNode;
 
     int get_serialize_id(){
        static int id = 0;
@@ -91,6 +92,7 @@ public:
 
     void save();
     void load();
+
     void geraMalha();
     void geraMalhaCube(irr::core::aabbox3df box, const nodeParam& , FILE *file);
     void geraMalhaCone(const nodeParam &param, FILE *file);
@@ -150,6 +152,7 @@ public:
 public slots:
     virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
     virtual void receiver_changed_dimension(nodeParam*);
+    virtual void receiver_changed_material_parameter(const Vector3df &, int);
 
 };  //fim da classe Cena
 #endif // CENA_H

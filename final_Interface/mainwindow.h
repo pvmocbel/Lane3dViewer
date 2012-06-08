@@ -23,6 +23,9 @@ public:
     ~MainWindow();
      void keyPressEvent( QKeyEvent * event);
      void init();
+     NodeParameters *dim_aux;
+     QString pe, pm, c;
+     void set_selection();
 
 public slots:
     void new_triggered();
@@ -68,7 +71,7 @@ private:
 
 signals:
     void send_to_cena_changed_position(const Pos3df& pos);
-    void send_to_cena_changed_dimension(const Dim3df& dim, int eixo);
     void send_changed_dimension(nodeParam*);
+    void send_changed_material_parametros(const Vector3df&, int);
 };
 #endif // MAINWINDOW_H
