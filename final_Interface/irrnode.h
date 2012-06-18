@@ -13,6 +13,7 @@ public:
     IrrNode();
     irr::scene::ISceneNode* getNode()const {return selectedSceneNode;}
     float delta;
+    irr::video::SColor color;
 
     void criaCubo(IrrSmgr* const,
                   nodeParam* param,

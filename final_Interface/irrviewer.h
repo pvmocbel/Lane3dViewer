@@ -38,6 +38,7 @@ typedef struct NodeParameters{
     Vector3df dimension2;
     float raio_haste;
     Vector3df parametros;
+    int propriedade;
     irr::core::aabbox3df box;
     NodeType type;
 } nodeParam;
@@ -47,6 +48,7 @@ struct nodeDimensions{
     Vector3df dimension2;
     Vector3df parametros;
     Vector3df position;
+    int propriedade;
     float raio_haste;
 };
 
@@ -84,7 +86,7 @@ public slots:
       virtual void receiver_changed_position_mainwindow(const Pos3df& pos);
       virtual void receiver_changed_dimension(nodeParam*);
       virtual void receiver_changed_material_parameter(const Vector3df&, int);
-
+      virtual void receiver_changed_propriedade(int,int);
 
 };//fim da class irrViewer
 

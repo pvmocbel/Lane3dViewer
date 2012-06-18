@@ -50,6 +50,10 @@ void IrrViewer::receiver_changed_material_parameter(const Vector3df &parameters,
     receiver_changed_material_parameter(parameters, id);
 }
 
+void IrrViewer::receiver_changed_propriedade(int valor, int id){
+    receiver_changed_propriedade(valor, id);
+}
+
 void IrrViewer::paintEvent( QPaintEvent *event )
 {
     if (device) {

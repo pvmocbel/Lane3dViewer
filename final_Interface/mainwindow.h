@@ -47,6 +47,8 @@ public slots:
     void set_cilindro();
     void set_cone();
     void set_antenna();
+    void set_material_parametros();
+    void set_propriedade();
 
     void gerarMalha();
 
@@ -73,5 +75,6 @@ signals:
     void send_to_cena_changed_position(const Pos3df& pos);
     void send_changed_dimension(nodeParam*);
     void send_changed_material_parametros(const Vector3df&, int);
+    void send_changed_propriedade(int, int);
 };
 #endif // MAINWINDOW_H

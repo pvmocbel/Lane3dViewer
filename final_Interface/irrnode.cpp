@@ -1,7 +1,7 @@
 #include "irrnode.h"
 
 IrrNode::IrrNode():selectedSceneNode(0),delta(0.0)
-{}
+{   }
 
 
 irr::scene::IMesh* IrrNode::createCube(const Vector3df& size)const
@@ -131,7 +131,31 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
 {
     if(smgr)
     {
-        irr::scene::IMesh *mesh_cube_node = createCube(param->dimension);
+//         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
+         irr::scene::IMesh *mesh_cube_node = createCube(param->dimension);
+//        color.set(255, 200, 200 ,200);
+//        switch(param->propriedade){
+//         case(1):
+//            color.set(255, 169, 169, 169 );
+//            break;
+//        case(2):
+//            color.set(255, 205, 133, 63 );
+//            break;
+//        case(3):
+//            color.set(255, 221, 221, 221 );
+//            break;
+//        case(4):
+//            color.set(255, 255, 231, 186 );
+//            break;
+//        case(5):
+//            color.set(255, 232, 232, 232 );
+//            break;
+//        case(6):
+//            color.set(255, 139, 71, 38 );
+//            break;
+//        }
+
+
         irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
 
         if (cube_node)
@@ -141,6 +165,7 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
            cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
            cube_node->setID(ID_FLAG_CUBO|S);
 
+           smgr->getMeshManipulator()->setVertexColors(cube_node->getMesh(), irr::video::SColor(255,255,0,0));
            seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
            cube_node->setTriangleSelector(seletor);
            seletor->drop();
@@ -349,7 +374,7 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
 
     irr::scene::IMesh *mesh_gizmo_X = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.X + 3*delta,
+                                                            dim.X+0.1,
                                                             dim.X,
                                                             0.005,
                                                             0.03,
@@ -357,16 +382,16 @@ void IrrNode::gizmosRegiaoAnalise(IrrSmgr* const smgr,
                                                             irr::video::SColor(255,0,0,255) );
     irr::scene::IMesh *mesh_gizmo_Y = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.Y + 3*delta,
-                                                            dim.Y,
+                                                            dim.X+0.1,
+                                                            dim.X,
                                                             0.005,
                                                             0.03,
                                                             irr::video::SColor(255,0,255,0),
                                                             irr::video::SColor(255,0,255,0) );
     irr::scene::IMesh *mesh_gizmo_Z = geo->createArrowMesh( 2,
                                                             4,
-                                                            dim.Z + 3*delta,
-                                                            dim.Y,
+                                                            dim.X+0.1,
+                                                            dim.X,
                                                             0.005,
                                                             0.03,
                                                             irr::video::SColor(255,255,0,0),

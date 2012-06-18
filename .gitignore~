@@ -1,5 +1,10 @@
+lane3D
 moc_*
 *.o
 ./lane3D-buil-desktop/*
+./Qt_Irrlicht-build-desktop/*
 Makefile
-*.pro*
+*.pro.user
+*autosave
+mainwindow1.ui
+

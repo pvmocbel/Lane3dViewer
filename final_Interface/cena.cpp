@@ -292,6 +292,16 @@ void Cena::load(){
     }//end if smgr
 }
 
+void Cena::parametros( NodeParameters * param, int id){
+    if(smgr){
+        myMap[id].dimension = param->dimension;
+        myMap[id].dimension2 = param->dimension2;
+        myMap[id].raio_haste = param->raio_haste;
+        myMap[id].parametros = param->parametros;
+//        myMap[id].position = param->position;
+    }
+}
+
 void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 {
     if(smgr && selectedSceneNode){
@@ -382,11 +392,14 @@ void Cena::receiver_changed_dimension(nodeParam* param){
 void Cena::receiver_changed_material_parameter(const Vector3df &param, int id){
     myMap[id].parametros = param;
 }
+void Cena::receiver_changed_propriedade(int valor, int id){
+    myMap[id].propriedade = valor;
+}
 
 void Cena::geraMalha(){
     if(smgr)
     {
-        FILE *file = fopen("bm.in","w+");
+        FILE *file = fopen("bd.in","w+");
         FILE *haste = fopen("hastes.in","w+");
         if(!file){
             qDebug()<<"falha na leitura do arquivo";
@@ -490,7 +503,12 @@ void Cena::geraMalhaCube(irr::core::aabbox3df box, const nodeParam & param, FILE
     qDebug()<<"yi "<< y_inicial<< "y f"<<y_final;
     qDebug()<<"zi "<< z_inicial<< "z f"<<z_final;
 
-    fprintf(file,"%d %d %d %d %d %d \n",x_inicial, x_final, z_inicial, z_final, y_inicial, y_final);
+    fprintf(file,"%d %d %d %d %d %d %g %g %g\n",x_inicial+26, x_final+26,
+                                                z_inicial+26, z_final+26,
+                                                y_inicial+26, y_final+26,
+                                                param.parametros.X,
+                                                param.parametros.Z,
+                                                1.0);
 }
 void Cena::geraMalhaCilindro(irr::core::aabbox3df box, const nodeParam &param, FILE *file){
     intVector position;
@@ -1078,6 +1096,7 @@ void Cena::insertCubo(int id, IrrNode* node, nodeParam* param)
         cube_parameters->parametros = param->parametros;
         cube_parameters->box = aux->getBoundingBox();
         cube_parameters->type = Cube;
+        cube_parameters->propriedade = param->propriedade;
 
         myMap[id] = *cube_parameters;
         nodeId[nodeName] = id;
@@ -1237,7 +1256,9 @@ void Cena::duplicateSceneNode()
         if(selectedSceneNode){
             irr::scene::IMeshSceneNode* node = (irr::scene::IMeshSceneNode*)selectedSceneNode->clone();
 
-            node->setPosition(mouse_release_position);
+            node->setPosition(Vector3df(selectedSceneNode->getPosition().X + 10*delta,
+                                        selectedSceneNode->getPosition().Y,
+                                        selectedSceneNode->getPosition().Z));
             node->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
             selectedSceneNode->setMaterialFlag(irr::video::EMF_WIREFRAME, false);
 
@@ -1364,7 +1385,7 @@ void Cena::selection()
              IrrNode* node = new IrrNode();
              nodeDimensions *dimension = new nodeDimensions;
 
-             const irr::c8* test = MoveSceneNode->getName();
+             const irr::c8* test = selectedSceneNode->getName();
              int id = getIdFromNode(test);
 
              dimension->dimension = myMap[id].dimension;
@@ -1372,8 +1393,9 @@ void Cena::selection()
              dimension->raio_haste = myMap[id].raio_haste;
              dimension->parametros = myMap[id].parametros;
              dimension->position = myMap[id].position;
+             dimension->propriedade = myMap[id].propriedade;
 
-             irr::core::aabbox3df box = MoveSceneNode->getBoundingBox();
+             irr::core::aabbox3df box = selectedSceneNode->getBoundingBox();
 
              gizmo_X->remove();
              gizmo_X = 0;

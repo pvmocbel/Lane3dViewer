@@ -23,7 +23,7 @@ void MainWindow::init()
     dim_aux->position.set(0,0,0);
 
 
-    ui->painel_lateral->setCurrentIndex(0);
+    ui->stackedWidget_Lateral->setCurrentIndex(0);
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(new_triggered()));
     connect(ui->actionSave, SIGNAL(triggered()), this , SLOT(save_triggered()));
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open_triggered()));
@@ -54,15 +54,40 @@ void MainWindow::change_position(){
         emit send_to_cena_changed_position(pos);
     }
 }
-
 void MainWindow::receiver_selection(nodeDimensions* param){
-    if(cena&&cena->MoveSceneNode){
+    if(cena&&cena->selectedSceneNode){
+        const irr::c8* test = cena->selectedSceneNode->getName();
+        int id = cena->getIdFromNode(test);
 
-    ui->position_X->setValue(param->position.X);
-    ui->position_Y->setValue(param->position.Y);
-    ui->position_Z->setValue(param->position.Z);
+        dim_aux->dimension = param->dimension;
+        dim_aux->dimension2 = param->dimension2;
+        dim_aux->parametros = param->parametros;
+        dim_aux->raio_haste = param->raio_haste;
+        dim_aux->position = param->position;
+        dim_aux->propriedade  = param->propriedade;
+        cena->parametros(dim_aux, id);
 
-    switch((cena->MoveSceneNode->getID()&MASK)){
+        set_selection();        
+    }
+}
+void MainWindow::set_selection(){
+    if(cena && cena->selectedSceneNode){
+
+    ui->position_X->setValue(dim_aux->position.X);
+    ui->position_Y->setValue(dim_aux->position.Y);
+    ui->position_Z->setValue(dim_aux->position.Z);
+
+    ui->propriedade->setCurrentIndex(dim_aux->propriedade);
+
+    pe.setNum(dim_aux->parametros.X);
+    pm.setNum(dim_aux->parametros.Y);
+    c.setNum(dim_aux->parametros.Z);
+
+    ui->permissividade->setText(pe);
+    ui->permeabilidade->setText(pm);
+    ui->condutibilidade->setText(c);
+
+    switch((cena->selectedSceneNode->getID()&MASK)){
          case(ID_FLAG_CUBO):
              setPainelCubo();
              cena->setFocus();
@@ -71,17 +96,9 @@ void MainWindow::receiver_selection(nodeDimensions* param){
              ui->position_Y->setEnabled(true);
              ui->position_Z->setEnabled(true);
 
-             pe.setNum(param->parametros.X);
-             pm.setNum(param->parametros.Y);
-             c.setNum(param->parametros.Z);
-
-             ui->permissividade_cubo->setText(pe);
-             ui->permeabilidade_cubo->setText(pm);
-             ui->condutibilidade_cubo->setText(c);
-
-             ui->cube_dim_X->setValue(param->dimension.X);
-             ui->cube_dim_Y->setValue(param->dimension.Y);
-             ui->cube_dim_Z->setValue(param->dimension.Z);
+             ui->cube_dim_X->setValue(dim_aux->dimension.X);
+             ui->cube_dim_Y->setValue(dim_aux->dimension.Y);
+             ui->cube_dim_Z->setValue(dim_aux->dimension.Z);
              break;
 
          case(ID_FLAG_ESFERA):
@@ -92,15 +109,7 @@ void MainWindow::receiver_selection(nodeDimensions* param){
              ui->position_Y->setEnabled(true);
              ui->position_Z->setEnabled(true);
 
-             pe.setNum(param->parametros.X);
-             pm.setNum(param->parametros.Y);
-             c.setNum(param->parametros.Z);
-
-             ui->permissividade_esfera->setText(pe);
-             ui->permeabilidade_esfera->setText(pm);
-             ui->condutibilidade_esfera->setText(c);
-
-             ui->raio_esfera->setValue(param->dimension.X);
+             ui->raio_esfera->setValue(dim_aux->dimension.X);
              break;
 
          case(ID_FLAG_CILINDRO):
@@ -111,16 +120,8 @@ void MainWindow::receiver_selection(nodeDimensions* param){
              ui->position_Y->setEnabled(true);
              ui->position_Z->setEnabled(true);
 
-             pe.setNum(param->parametros.X);
-             pm.setNum(param->parametros.Y);
-             c.setNum(param->parametros.Z);
-
-             ui->permissividade_cilindro->setText(pe);
-             ui->permeabilidade_cilindro->setText(pm);
-             ui->condutibilidade_cilindro->setText(c);
-
-             ui->raio_cilindro->setValue(param->dimension.X);
-             ui->comprimento_cilindro->setValue(param->dimension.Y);
+             ui->raio_cilindro->setValue(dim_aux->dimension.X);
+             ui->comprimento_cilindro->setValue(dim_aux->dimension.Y);
              break;
 
          case(ID_FLAG_CONE):
@@ -131,16 +132,8 @@ void MainWindow::receiver_selection(nodeDimensions* param){
              ui->position_Y->setEnabled(true);
              ui->position_Z->setEnabled(true);
 
-             pe.setNum(param->parametros.X);
-             pm.setNum(param->parametros.Y);
-             c.setNum(param->parametros.Z);
-
-             ui->permissividade_cone->setText(pe);
-             ui->permeabilidade_cone->setText(pm);
-             ui->condutibilidade_cone->setText(c);
-
-             ui->raio_cone->setValue(param->dimension.X);
-             ui->comprimento_cone->setValue(param->dimension.Y);
+             ui->raio_cone->setValue(dim_aux->dimension.X);
+             ui->comprimento_cone->setValue(dim_aux->dimension.Y);
              break;
 
          case(ID_FLAG_HASTE):
@@ -151,21 +144,20 @@ void MainWindow::receiver_selection(nodeDimensions* param){
             ui->position_Y->setEnabled(false);
             ui->position_Z->setEnabled(false);
 
-            ui->haste_inicial_x->setValue(param->dimension.X);
-            ui->haste_inicial_y->setValue(param->dimension.Y);
-            ui->haste_inicial_z->setValue(param->dimension.Z);
+            ui->haste_inicial_x->setValue(dim_aux->dimension.X);
+            ui->haste_inicial_y->setValue(dim_aux->dimension.Y);
+            ui->haste_inicial_z->setValue(dim_aux->dimension.Z);
 
-            ui->haste_final_x->setValue(param->dimension2.X);
-            ui->haste_final_y->setValue(param->dimension2.Y);
-            ui->haste_final_z->setValue(param->dimension2.Z);
+            ui->haste_final_x->setValue(dim_aux->dimension2.X);
+            ui->haste_final_y->setValue(dim_aux->dimension2.Y);
+            ui->haste_final_z->setValue(dim_aux->dimension2.Z);
 
-            ui->raio_haste->setValue(param->raio_haste);
+            ui->raio_haste->setValue(dim_aux->raio_haste);
             break;
 
          case(ID_FLAG_PONTO):
             setPainelPonto();
             cena->setFocus();
-
             break;
 
         case(ID_FLAG_ANTENNA):
@@ -178,7 +170,7 @@ void MainWindow::receiver_selection(nodeDimensions* param){
             break;
      }
 
-    }
+    }//end if
 }
 
 void MainWindow::set_haste(){
@@ -218,12 +210,34 @@ void MainWindow::set_haste(){
 //            if(ui->haste_inicial_y->value() != ui->haste_final_y->value())
 //                ui->haste_final_y->setValue(ui->haste_inicial_y->value());
 //        }
+        float  x, y, z;
+        bool ok = false;
+
+        x  = ui->permissividade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
+           return;
+        }
+        y  = ui->permeabilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
+           return;
+        }
+        z  = ui->condutibilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
+           return;
+        }
+
+        Vector3df p;
+        p.set(x,y,z);
 
         param->dimension.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
         param->dimension2.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
         param->raio_haste = ui->raio_haste->value();
         param->type = Haste;
         param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros = p;
 
         emit send_changed_dimension(param);
         delete param;
@@ -235,21 +249,23 @@ void MainWindow::set_cube(){
         float  x, y, z;
         bool ok = false;
 
-        x  = ui->permissividade_cubo->text().toFloat(&ok);
+        x  = ui->permissividade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
            return;
         }
-        y  = ui->permeabilidade_cubo->text().toFloat(&ok);
+        y  = ui->permeabilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
            return;
         }
-        z  = ui->condutibilidade_cubo->text().toFloat(&ok);
+        z  = ui->condutibilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
            return;
         }
+
+        qDebug()<<"prop "<<ui->propriedade->currentIndex();
 
         Vector3df p;
         p.set(x,y,z);
@@ -258,6 +274,7 @@ void MainWindow::set_cube(){
         param->type = Cube;
         param->box = cena->selectedSceneNode->getBoundingBox();
         param->parametros = p;
+        param->propriedade = ui->propriedade->currentIndex();
 
         emit send_changed_dimension(param);
         delete param;
@@ -269,17 +286,17 @@ void MainWindow::set_esfera(){
         float  x, y, z;
         bool ok = false;
 
-        x  = ui->permissividade_esfera->text().toFloat(&ok);
+        x  = ui->permissividade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
            return;
         }
-        y  = ui->permeabilidade_esfera->text().toFloat(&ok);
+        y  = ui->permeabilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
            return;
         }
-        z  = ui->condutibilidade_esfera->text().toFloat(&ok);
+        z  = ui->condutibilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
            return;
@@ -303,17 +320,17 @@ void MainWindow::set_cilindro(){
         float  x, y, z;
         bool ok = false;
 
-        x  = ui->permissividade_cilindro->text().toFloat(&ok);
+        x  = ui->permissividade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
            return;
         }
-        y  = ui->permeabilidade_cilindro->text().toFloat(&ok);
+        y  = ui->permeabilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
            return;
         }
-        z  = ui->condutibilidade_cilindro->text().toFloat(&ok);
+        z  = ui->condutibilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
            return;
@@ -337,17 +354,17 @@ void MainWindow::set_cone(){
         float  x, y, z;
         bool ok = false;
 
-        x  = ui->permissividade_cone->text().toFloat(&ok);
+        x  = ui->permissividade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
            return;
         }
-        y  = ui->permeabilidade_cone->text().toFloat(&ok);
+        y  = ui->permeabilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
            return;
         }
-        z  = ui->condutibilidade_cone->text().toFloat(&ok);
+        z  = ui->condutibilidade->text().toFloat(&ok);
         if(!ok){
            QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
            return;
@@ -368,14 +385,74 @@ void MainWindow::set_cone(){
 void MainWindow::set_antenna(){
     if(cena && cena->selectedSceneNode){
         nodeParam *param = new nodeParam();
+        float  x, y, z;
+        bool ok = false;
 
+        x  = ui->permissividade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
+           return;
+        }
+        y  = ui->permeabilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
+           return;
+        }
+        z  = ui->condutibilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
+           return;
+        }
+
+        Vector3df p;
+        p.set(x,y,z);
         param->position.set(ui->position_X->value(), ui->position_Y->value(), ui->position_Z->value());
         param->type = Antenna;
         param->box = cena->selectedSceneNode->getBoundingBox();
+        param->parametros = p;
 
         emit send_changed_dimension(param);
         delete param;
     }
+}
+void MainWindow::set_material_parametros(){
+    if(cena->selectedSceneNode){
+        QLocale::setDefault(QLocale::C);
+
+        const irr::c8* test = cena->selectedSceneNode->getName();
+        int id = cena->getIdFromNode(test);
+        if(id == 0)return;
+
+        float  x, y, z;
+        bool ok = false;
+
+        x  = ui->permissividade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
+           return;
+        }
+        y  = ui->permeabilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
+           return;
+        }
+        z  = ui->condutibilidade->text().toFloat(&ok);
+        if(!ok){
+           QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
+           return;
+        }
+
+        Vector3df param;
+        param.set(x,y,z);
+        emit send_changed_material_parametros(param, id);
+    }
+}
+void MainWindow::set_propriedade(){
+    const irr::c8* test = cena->selectedSceneNode->getName();
+    int id = cena->getIdFromNode(test);
+    qDebug()<<"propriedade "<<ui->propriedade->currentIndex();
+    if(id == 0)return;
+    emit send_changed_propriedade(ui->propriedade->currentIndex(), id);
 }
 
 void MainWindow::new_triggered()
@@ -451,7 +528,7 @@ void MainWindow::new_triggered()
     ui->raio_esfera->setMinimum(d->delta*4);
     ui->raio_esfera->setSingleStep(d->delta);
 
-    ui->painel_lateral->setCurrentIndex(0);
+    ui->stackedWidget_Lateral->setCurrentIndex(0);
 
     delete d;
 }
@@ -487,9 +564,31 @@ void MainWindow::linha_triggered()
     setPainelHaste();
     int id = cena->get_serialize_id();
     nodeParam *param = new nodeParam();
+    float  x, y, z;
+    bool ok = false;
+
+    x  = ui->permissividade->text().toFloat(&ok);
+    if(!ok){
+       QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
+       return;
+    }
+    y  = ui->permeabilidade->text().toFloat(&ok);
+    if(!ok){
+       QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
+       return;
+    }
+    z  = ui->condutibilidade->text().toFloat(&ok);
+    if(!ok){
+       QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
+       return;
+    }
+
+    Vector3df p;
+    p.set(x,y,z);
 
     param->dimension.set(ui->haste_inicial_x->value(), ui->haste_inicial_y->value(), ui->haste_inicial_z->value());
     param->dimension2.set(ui->haste_final_x->value(), ui->haste_final_y->value(), ui->haste_final_z->value());
+    param->parametros = p;
     param->type = Haste;
     param->raio_haste = ui->raio_haste->value();
 
@@ -508,17 +607,17 @@ void MainWindow::cubo_triggered()
     float  x, y, z;
     bool ok = false;
 
-    x  = ui->permissividade_cubo->text().toFloat(&ok);
+    x  = ui->permissividade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
        return;
     }
-    y  = ui->permeabilidade_cubo->text().toFloat(&ok);
+    y  = ui->permeabilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
        return;
     }
-    z  = ui->condutibilidade_cubo->text().toFloat(&ok);
+    z  = ui->condutibilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
        return;
@@ -547,17 +646,17 @@ void MainWindow::esfera_triggered()
     float  x, y, z;
     bool ok = false;
 
-    x  = ui->permissividade_esfera->text().toFloat(&ok);
+    x  = ui->permissividade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
        return;
     }
-    y  = ui->permeabilidade_esfera->text().toFloat(&ok);
+    y  = ui->permeabilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
        return;
     }
-    z  = ui->condutibilidade_esfera->text().toFloat(&ok);
+    z  = ui->condutibilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
        return;
@@ -586,17 +685,17 @@ void MainWindow::cilindro_triggered()
     float  x, y, z;
     bool ok = false;
 
-    x  = ui->permissividade_cilindro->text().toFloat(&ok);
+    x  = ui->permissividade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
        return;
     }
-    y  = ui->permeabilidade_cilindro->text().toFloat(&ok);
+    y  = ui->permeabilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
        return;
     }
-    z  = ui->condutibilidade_cilindro->text().toFloat(&ok);
+    z  = ui->condutibilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
        return;
@@ -625,17 +724,17 @@ void MainWindow::cone_triggered()
     float  x, y, z;
     bool ok = false;
 
-    x  = ui->permissividade_cone->text().toFloat(&ok);
+    x  = ui->permissividade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.E tem que ser um numero real");
        return;
     }
-    y  = ui->permeabilidade_cone->text().toFloat(&ok);
+    y  = ui->permeabilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo P.M tem que ser um numero real");
        return;
     }
-    z  = ui->condutibilidade_cone->text().toFloat(&ok);
+    z  = ui->condutibilidade->text().toFloat(&ok);
     if(!ok){
        QMessageBox::warning(0,"Entrada Inválida","O campo C tem que ser um numero real");
        return;
@@ -672,23 +771,24 @@ void MainWindow::setPainelPonto()
 {
     ui->label_PainelTitulo_1->setText("PONTO");
     ui->lineEdit_Name->setText("Ponto");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(0);
-    ui->painel_objetos->setMinimumHeight(0);
-    ui->painel_objetos->setMaximumHeight(0);
-    ui->painel_objetos->setMinimumHeight(122);
-    ui->painel_objetos->setMaximumHeight(122);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(0);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(0);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(0);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 void MainWindow::setPainelHaste()
 {
     ui->label_PainelTitulo_1->setText("Haste");
     ui->lineEdit_Name->setText("Haste");
 
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setMinimumHeight(600);
-    ui->painel_objetos->setCurrentIndex(1);
-    ui->painel_objetos->setMinimumHeight(230);
-    ui->painel_objetos->setMaximumHeight(230);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(230);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(230);
+//    ui->stackedWidget_pnLateralObj->setMinimumWidth(200);
+//    ui->stackedWidget_Lateral->setMinimumWidth(200);
 
     ui->haste_inicial_x->setMinimumWidth(62);
     ui->haste_inicial_y->setMinimumWidth(62);
@@ -702,43 +802,43 @@ void MainWindow::setPainelCubo()
 {
     ui->label_PainelTitulo_1->setText("CUBO");
     ui->lineEdit_Name->setText("Cubo");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(2);
-    ui->painel_objetos->setMinimumHeight(200);
-    ui->painel_objetos->setMaximumHeight(400);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(2);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 void MainWindow::setPainelEsfera()
 {
     ui->label_PainelTitulo_1->setText("ESFERA");
     ui->lineEdit_Name->setText("Helipse");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(3);
-    ui->painel_objetos->setMinimumHeight(600);
-    ui->painel_objetos->setMaximumHeight(600);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(3);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 void MainWindow::setPainelCilindro(){
     ui->label_PainelTitulo_1->setText("CILINDRO");
     ui->lineEdit_Name->setText("Cilindro");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(4);
-    ui->painel_objetos->setMinimumHeight(600);
-    ui->painel_objetos->setMaximumHeight(600);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(4);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 void MainWindow::setPainelCone(){
     ui->label_PainelTitulo_1->setText("CONE");
     ui->lineEdit_Name->setText("Cone");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(5);
-    ui->painel_objetos->setMinimumHeight(600);
-    ui->painel_objetos->setMaximumHeight(600);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(5);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(122);
 }
 void MainWindow::setPainelAntenna(){
     ui->label_PainelTitulo_1->setText("Eye Antenna");
     ui->lineEdit_Name->setText("Eye Antenna");
-    ui->painel_lateral->setCurrentIndex(1);
-    ui->painel_objetos->setCurrentIndex(6);
-    ui->painel_objetos->setMinimumHeight(122);
-    ui->painel_objetos->setMaximumHeight(200);
+    ui->stackedWidget_Lateral->setCurrentIndex(1);
+    ui->stackedWidget_pnLateralObj->setCurrentIndex(6);
+    ui->stackedWidget_pnLateralObj->setMinimumHeight(122);
+    ui->stackedWidget_pnLateralObj->setMaximumHeight(200);
 }
 
 void MainWindow::keyPressEvent( QKeyEvent * event){
