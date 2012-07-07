@@ -469,6 +469,7 @@ void MainWindow::new_triggered()
     connect(cena, SIGNAL(send_selection_call(nodeDimensions*)), this, SLOT(receiver_selection(nodeDimensions*)));
     connect(this, SIGNAL(send_changed_dimension(nodeParam*)), cena, SLOT(receiver_changed_dimension(nodeParam*)));
     connect(this, SIGNAL(send_changed_material_parametros(Vector3df, int)), cena, SLOT(receiver_changed_material_parameter(Vector3df,int)));
+    connect(this, SIGNAL(send_changed_propriedade(int,int)), cena, SLOT(receiver_changed_propriedade(int,int)));
 
     cena->resize(2048, 2048);
     ui->grid_Interface->addWidget(cena, 0, 0);

@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog_cgerais.ui'
 **
-** Created: Wed Jun 6 14:06:09 2012
-**      by: Qt User Interface Compiler version 4.6.3
+** Created: Mon Jun 18 17:52:25 2012
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/

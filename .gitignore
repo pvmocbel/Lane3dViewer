@@ -7,4 +7,5 @@ Makefile
 *.pro.user
 *autosave
 mainwindow1.ui
+*~
 

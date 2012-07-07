@@ -131,30 +131,28 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
 {
     if(smgr)
     {
-//         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
          irr::scene::IMesh *mesh_cube_node = createCube(param->dimension);
-//        color.set(255, 200, 200 ,200);
-//        switch(param->propriedade){
-//         case(1):
-//            color.set(255, 169, 169, 169 );
-//            break;
-//        case(2):
-//            color.set(255, 205, 133, 63 );
-//            break;
-//        case(3):
-//            color.set(255, 221, 221, 221 );
-//            break;
-//        case(4):
-//            color.set(255, 255, 231, 186 );
-//            break;
-//        case(5):
-//            color.set(255, 232, 232, 232 );
-//            break;
-//        case(6):
-//            color.set(255, 139, 71, 38 );
-//            break;
-//        }
-
+        color.set(255, 200, 200 ,200);
+        switch(param->propriedade){
+         case(1):
+            color.set(255, 169, 169, 169 );
+            break;
+        case(2):
+            color.set(255, 205, 133, 63 );
+            break;
+        case(3):
+            color.set(255, 221, 221, 221 );
+            break;
+        case(4):
+            color.set(255, 255, 231, 186 );
+            break;
+        case(5):
+            color.set(255, 232, 232, 232 );
+            break;
+        case(6):
+            color.set(255, 139, 71, 38 );
+            break;
+        }
 
         irr::scene::IMeshSceneNode *cube_node = smgr->addMeshSceneNode(mesh_cube_node);
 
@@ -165,7 +163,7 @@ void IrrNode::criaCubo(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
            cube_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
            cube_node->setID(ID_FLAG_CUBO|S);
 
-           smgr->getMeshManipulator()->setVertexColors(cube_node->getMesh(), irr::video::SColor(255,255,0,0));
+           smgr->getMeshManipulator()->setVertexColors(cube_node->getMesh(), color);
            seletor = smgr->createOctTreeTriangleSelector(cube_node->getMesh(), cube_node, 128);
            cube_node->setTriangleSelector(seletor);
            seletor->drop();
@@ -181,6 +179,28 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* n
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
         irr::scene::IMesh *mesh_esfera_node = geo->createSphereMesh(param->dimension.X, 8, 8);
         irr::scene::IMeshSceneNode *esfera_node = smgr->addMeshSceneNode(mesh_esfera_node);
+        color.set(255, 200, 200 ,200);
+        switch(param->propriedade){
+         case(1):
+            color.set(255, 169, 169, 169 );
+            break;
+        case(2):
+            color.set(255, 205, 133, 63 );
+            break;
+        case(3):
+            color.set(255, 221, 221, 221 );
+            break;
+        case(4):
+            color.set(255, 255, 231, 186 );
+            break;
+        case(5):
+            color.set(255, 232, 232, 232 );
+            break;
+        case(6):
+            color.set(255, 139, 71, 38 );
+            break;
+        }
+
 
         if (esfera_node)
         {
@@ -188,6 +208,7 @@ void IrrNode::criaEsfera(IrrSmgr* const smgr, nodeParam* param, const irr::c8* n
           esfera_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           esfera_node->setID(ID_FLAG_ESFERA|S);
 
+          smgr->getMeshManipulator()->setVertexColors(esfera_node->getMesh(), color);
           seletor = smgr->createOctTreeTriangleSelector(esfera_node->getMesh(), esfera_node, 128);
           esfera_node->setTriangleSelector(seletor);
           seletor->drop();
@@ -204,13 +225,14 @@ void IrrNode::criaCilindro(IrrSmgr *const smgr, nodeParam* param, const irr::c8*
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
         irr::scene::IMesh *mesh_cilindro_node = geo->createCylinderMesh(param->dimension.X, param->dimension.Y, 8);
         irr::scene::IMeshSceneNode *cilindro_node = smgr->addMeshSceneNode(mesh_cilindro_node);
-
+        color.set(255, 200, 200 ,200);
         if (cilindro_node)
         {
           cilindro_node->setPosition(param->position);
           cilindro_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           cilindro_node->setID(ID_FLAG_CILINDRO|S);
 
+          smgr->getMeshManipulator()->setVertexColors(cilindro_node->getMesh(), color);
           seletor = smgr->createOctTreeTriangleSelector(cilindro_node->getMesh(), cilindro_node, 128);
           cilindro_node->setTriangleSelector(seletor);
           seletor->drop();
@@ -228,13 +250,14 @@ void IrrNode::criaCone(IrrSmgr* const smgr, nodeParam* param, const irr::c8 *nod
         const irr::scene::IGeometryCreator *geo = smgr->getGeometryCreator();
         irr::scene::IMesh *mesh_cone_node = geo->createConeMesh(param->dimension.X, param->dimension.Y, 8);
         irr::scene::IMeshSceneNode *cone_node = smgr->addMeshSceneNode(mesh_cone_node);
-
+         color.set(255, 200, 200 ,200);
         if (cone_node)
         {
           cone_node->setPosition(param->position);
           cone_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
           cone_node->setID(ID_FLAG_CONE|S);
 
+          smgr->getMeshManipulator()->setVertexColors(cone_node->getMesh(), color);
           seletor = smgr->createOctTreeTriangleSelector(cone_node->getMesh(), cone_node, 32);
           cone_node->setTriangleSelector(seletor);
           seletor->drop();

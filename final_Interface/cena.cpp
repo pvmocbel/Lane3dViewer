@@ -298,9 +298,11 @@ void Cena::parametros( NodeParameters * param, int id){
         myMap[id].dimension2 = param->dimension2;
         myMap[id].raio_haste = param->raio_haste;
         myMap[id].parametros = param->parametros;
-//        myMap[id].position = param->position;
+        myMap[id].position = param->position;
+        myMap[id].propriedade = param->propriedade;
     }
 }
+
 
 void Cena::receiver_changed_position_mainwindow(const Pos3df &pos)
 {
@@ -394,6 +396,7 @@ void Cena::receiver_changed_material_parameter(const Vector3df &param, int id){
 }
 void Cena::receiver_changed_propriedade(int valor, int id){
     myMap[id].propriedade = valor;
+    qDebug()<<"Receiver prop valor "<<valor;
 }
 
 void Cena::geraMalha(){
@@ -1098,6 +1101,7 @@ void Cena::insertCubo(int id, IrrNode* node, nodeParam* param)
         cube_parameters->type = Cube;
         cube_parameters->propriedade = param->propriedade;
 
+        qDebug()<<"Create prop valor "<<param->propriedade;
         myMap[id] = *cube_parameters;
         nodeId[nodeName] = id;
 
@@ -1112,6 +1116,7 @@ void Cena::insertCuboChanged(IrrNode *node, nodeParam* param, int id){
         irr::c8 nodeName[50];
         sprintf(nodeName, "%d", id);
         node->criaCubo(smgr, param, nodeName);
+        qDebug()<<"Change prop valor "<<param->propriedade;
         drawIrrlichtScene();
         delete node;
     }
@@ -1407,6 +1412,7 @@ void Cena::selection()
              gizmo_Z = 0;
 
              node->criaGizmo(smgr, &gizmo_X, &gizmo_Y, &gizmo_Z, box);
+             qDebug()<<"Selection prop valor "<<dimension->propriedade;
 
              emit send_selection_call(dimension);
              delete node;
